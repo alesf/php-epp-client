@@ -19,8 +19,7 @@ class siEppConnection extends eppConnection
 
         parent::enableDnssec();
 
-        parent::addCommandResponse('Metaregistrar\EPP\siEppCreateDomainRequest', 'Metaregistrar\EPP\eppCreateDomainRequest');
-        parent::addCommandResponse('Metaregistrar\EPP\siEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactRequest');
-        parent::addCommandResponse('Metaregistrar\EPP\siEppContactPostalInfo', 'Metaregistrar\EPP\eppContactPostalInfo');
+        parent::addCommandResponse('Metaregistrar\EPP\siEppCreateDomainRequest', 'Metaregistrar\EPP\eppCreateDomainResponse');
+        parent::addCommandResponse('Metaregistrar\EPP\siEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
     }
 }
