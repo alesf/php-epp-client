@@ -8,6 +8,7 @@ class siEppCreateContactRequest extends eppCreateContactRequest
         parent::__construct($createinfo);
 
         if ($createinfo instanceof eppContact) {
+            $this->addExtension('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
             $this->addExtension('xmlns:dnssi', 'http://www.arnes.si/xml/epp/dnssi-1.2');
             $this->addDnssiExtension($createinfo);
         }
