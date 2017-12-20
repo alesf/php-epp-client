@@ -3,3 +3,6 @@ vendor/*
 .idea
 .ini
 Tests/testsetup*
+*.ini
+
+*.pem

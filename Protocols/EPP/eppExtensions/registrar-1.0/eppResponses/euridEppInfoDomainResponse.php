@@ -1,8 +1,10 @@
 <?php
 namespace Metaregistrar\EPP;
 
-class euridEppInfoDomainResponse extends eppInfoDomainResponse {
-    function __construct() {
+class euridEppInfoDomainResponse extends eppInfoDomainResponse
+{
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -12,7 +14,8 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse {
      *
      * @return array eppContactHandles
      */
-    public function getDomainContacts() {
+    public function getDomainContacts()
+    {
         $xpath = $this->xPath();
         $cont = null;
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/domain:infData/domain:contact');
@@ -42,7 +45,8 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse {
      * Get the date until the auth code is valie
      * @return null|string
      */
-    public function getAuthorisationCodeValidDate() {
+    public function getAuthorisationCodeValidDate()
+    {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:extension/authInfo:infData/authInfo:validUntil');
         if ($result->length > 0) {
@@ -57,7 +61,8 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse {
      *
      * @return boolean
      */
-    public function getQuarantined() {
+    public function getQuarantined()
+    {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:extension/eurid:ext/eurid:infData/eurid:domain/eurid:quarantined');
         if ($result->length > 0) {
@@ -76,7 +81,8 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse {
      *
      * @return boolean
      */
-    public function getOnHold() {
+    public function getOnHold()
+    {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:extension/eurid:ext/eurid:infData/eurid:domain/eurid:onhold');
         if ($result->length > 0) {
@@ -90,4 +96,3 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse {
         }
     }
 }
-
