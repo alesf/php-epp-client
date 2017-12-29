@@ -1,12 +1,15 @@
 <?php
 namespace Metaregistrar\EPP;
 
-class eppCheckResponse extends eppResponse {
-    function __construct() {
+class eppCheckResponse extends eppResponse
+{
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
     }
 
@@ -14,7 +17,8 @@ class eppCheckResponse extends eppResponse {
      *
      * @return array of checked domains with status true/false
      */
-    public function getCheckedDomains() {
+    public function getCheckedDomains()
+    {
         $result = null;
         if ($this->getResultCode() == self::RESULT_SUCCESS) {
             $result = array();
@@ -54,7 +58,8 @@ class eppCheckResponse extends eppResponse {
      *
      * @return array of checked hosts with status true/false
      */
-    public function getCheckedHosts() {
+    public function getCheckedHosts()
+    {
         $result = null;
         if ($this->getResultCode() == self::RESULT_SUCCESS) {
             $xpath = $this->xPath();
@@ -77,7 +82,6 @@ class eppCheckResponse extends eppResponse {
                 $result[$host->nodeValue] = $avail;
             }
         }
-        var_dump($result);
         return ($result);
     }
 
@@ -85,7 +89,8 @@ class eppCheckResponse extends eppResponse {
      *
      * @return array of checked hosts with status true/false
      */
-    public function getCheckedHostsExtended() {
+    public function getCheckedHostsExtended()
+    {
         $result = null;
         if ($this->getResultCode() == self::RESULT_SUCCESS) {
             $xpath = $this->xPath();
@@ -105,7 +110,11 @@ class eppCheckResponse extends eppResponse {
                         $avail = true;
                         break;
                 }
-                $result[] = ['hostname'=>$host->nodeValue, 'available'=>$avail,'reason'=>$reasons->item($idx)->nodeValue];
+                $result[] = [
+                    'hostname' => $host->nodeValue,
+                    'available' => $avail,
+                    'reason' => $reasons->item($idx) ? $reasons->item($idx)->nodeValue : null
+                ];
             }
         }
         return ($result);
@@ -115,7 +124,8 @@ class eppCheckResponse extends eppResponse {
      *
      * @return array of checked contacts with status true/false
      */
-    public function getCheckedContacts() {
+    public function getCheckedContacts()
+    {
         $result = null;
         if ($this->getResultCode() == self::RESULT_SUCCESS) {
             $xpath = $this->xPath();
@@ -140,4 +150,3 @@ class eppCheckResponse extends eppResponse {
         return ($result);
     }
 }
-

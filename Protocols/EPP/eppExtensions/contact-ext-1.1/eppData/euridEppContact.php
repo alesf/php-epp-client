@@ -3,20 +3,22 @@ namespace Metaregistrar\EPP;
 
 class euridEppContact extends eppContact
 {
-    private $accepted_lang_codes = [
+    private $acceptedLangCodes = [
         'bg', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'fi', 'fr', 'ga', 'hr',
         'hu', 'it', 'lt', 'lv', 'mt', 'nl', 'pl', 'pt', 'ro', 'sk', 'sl', 'sv'
     ];
 
-    const EXT_TYPE_BILLING = 'billing';
-    const EXT_TYPE_TECH = 'tech';
-    const EXT_TYPE_REGISTRANT = 'registrant';
-    const EXT_TYPE_ONSITE = 'onsite';
-    const EXT_TYPE_RESELLER = 'reseller';
+    const CONTACT_EXT_TYPES = [
+        'billing',
+        'registrant',
+        'tech',
+        'onsite',
+        'reseller',
+    ];
 
-    private $ext_type;
-    private $ext_lang = 'en';
-    private $ext_vat;
+    private $contactExtType;
+    private $contactExtLang = 'en';
+    private $contactExtVat  = null;
 
     /**
      *
@@ -32,37 +34,41 @@ class euridEppContact extends eppContact
         parent::__construct($postalInfo, $email, $voice, $fax, $password, $status);
     }
 
-    public function setExtType($type)
+    public function setContactExtType($type)
     {
-        $this->ext_type = $type;
+        if (in_array($type, self::CONTACT_EXT_TYPES)) {
+            $this->contactExtType =  $type;
+        } else {
+            throw new \Exception('Contact ext type not supported.');
+        }
     }
 
-    public function getExtType()
+    public function setContactExtLang($lang)
     {
-        return $this->ext_type;
-    }
-
-    public function setExtVat($vat)
-    {
-        $this->ext_vat = $vat;
-    }
-
-    public function getExtVat()
-    {
-        return $this->ext_vat;
-    }
-
-    public function setExtLang($lang)
-    {
-        if (in_array($lang, $this->accepted_lang_codes)) {
-            $this->ext_lang = $lang;
+        if (in_array($lang, $this->acceptedLangCodes)) {
+            $this->contactExtLang = $lang;
         } else {
             throw new \Exception('Contact language code not supported.');
         }
     }
 
-    public function getExtLang()
+    public function setContactExtVat($vat)
     {
-        return $this->ext_lang;
+        $this->contactExtVat =  $vat;
+    }
+
+    public function getContactExtType()
+    {
+        return $this->contactExtType;
+    }
+
+    public function getContactExtLang()
+    {
+        return $this->contactExtLang;
+    }
+
+    public function getContactExtVat()
+    {
+        return $this->contactExtVat;
     }
 }

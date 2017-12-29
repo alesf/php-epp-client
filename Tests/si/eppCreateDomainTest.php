@@ -19,7 +19,19 @@ class eppCreateDomainTest extends eppTestCase
         /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */
         $this->assertTrue($response->Success());
         $this->assertEquals('Command completed successfully', $response->getResultMessage());
-        $this->assertEquals(1001, $response->getResultCode());
+        $this->assertEquals(1000, $response->getResultCode());
+    }
+
+    public function testCreateDomainWithOneHost()
+    {
+        // TODO: one host is not allowed
+        # code...
+    }
+
+    public function testCreateDomainWithTwoHosts()
+    {
+        // TODO: succesfull two hosts
+        # code...
     }
 
     public function testCreateDomainWithoutRegistrant()

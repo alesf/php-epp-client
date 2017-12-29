@@ -25,19 +25,25 @@ class euridEppCreateContactRequest extends eppCreateContactRequest
     public function __construct($createinfo, $namespaceinroot = true)
     {
         parent::__construct($createinfo, $namespaceinroot);
-        $this->addEURIDExtension($createinfo);
+        $this->addContactExtension($createinfo);
         $this->addSessionId();
     }
 
-    public function addEURIDExtension($createinfo)
+    public function addContactExtension(eppContact $createinfo)
     {
-        $ext = $this->createElement('extension');
-        $contactext = $this->createElement('contact-ext:create');
-        $contactext->setAttribute('xmlns:contact-ext', 'http://www.eurid.eu/xml/epp/contact-ext-1.1');
-        $contactext->appendChild($this->createElement('contact-ext:type', $createinfo->getExtType()));
-        $contactext->appendChild($this->createElement('contact-ext:vat', $createinfo->getExtVat()));
-        $contactext->appendChild($this->createElement('contact-ext:lang', $createinfo->getExtLang()));
-        $ext->appendChild($contactext);
-        $this->getCommand()->appendChild($ext);
+        $this->addExtension('xmlns:contact-ext', 'http://www.eurid.eu/xml/epp/contact-ext-1.1');
+
+        $create = $this->createElement('contact-ext:create');
+        // $create->setAttribute('xmlns:contact-ext', 'http://www.eurid.eu/xml/epp/contact-ext-1.1');
+
+        if (!empty($createinfo->getContactExtType())) {
+            $create->appendChild($this->createElement('contact-ext:type', $createinfo->getContactExtType()));
+        }
+        if (!empty($createinfo->getContactExtVat())) {
+            $create->appendChild($this->createElement('contact-ext:vat', $createinfo->getContactExtVat()));
+        }
+        $create->appendChild($this->createElement('contact-ext:lang', $createinfo->getContactExtLang()));
+
+        $this->getExtension()->appendChild($create);
     }
 }

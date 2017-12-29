@@ -27,8 +27,8 @@ class eppCreateContactTest extends eppTestCase
         );
         $contactinfo = new Metaregistrar\EPP\euridEppContact($postalinfo, $email, $telephone);
         $contactinfo->setPassword($password);
-        $contactinfo->setExtType(Metaregistrar\EPP\euridEppContact::EXT_TYPE_REGISTRANT);
-        $contactinfo->setExtLang('sl');
+        $contactinfo->setContactExtType('registrant');
+        $contactinfo->setContactExtLang('sl');
         $create = new Metaregistrar\EPP\euridEppCreateContactRequest($contactinfo);
 
         try {

@@ -1,13 +1,13 @@
 <?php
 include_once(dirname(__FILE__).'/eppTestCase.php');
 
-class eppDeletionDomainTest extends eppTestCase
+class eppDeleteDomainTest extends eppTestCase
 {
     /**
      * Test successful domain restore
      * @throws \Metaregistrar\EPP\eppException
      */
-    public function testRestoreDomainSuccess()
+    public function testDeleteDomainSuccess()
     {
         // Prepare a domain name by creating it
         $domainname = $this->createDomain();

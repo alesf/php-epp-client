@@ -5,17 +5,18 @@ class eppDeleteHostTest extends eppTestCase
 {
 
     /**
-     * Test succesful contact deletion
+     * Test succesful host deletion
      * @throws \Metaregistrar\EPP\eppException
      */
     public function testDeleteHost()
     {
-        $domainname = $this->createDomain();
-        $name = 'ns1.'.$domainname;
-        $hostname = $this->createHost($name);
-        $this->assertEquals($hostname, $name);
+        $hostname = 'ns1.'.self::randomstring(30).'.net';
+        $hostname_result = $this->createHost($hostname);
+
+        $this->assertEquals($hostname_result, $hostname);
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $delete = new Metaregistrar\EPP\eppDeleteHostRequest($host);
+
         $response = $this->conn->writeandread($delete);
         $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
         /* @var $response Metaregistrar\EPP\eppDeleteResponse */
@@ -31,7 +32,7 @@ class eppDeleteHostTest extends eppTestCase
     public function testDeleteNonexistentHost()
     {
         $message = null;
-        $domainname = self::randomstring(8).'.frl';
+        $domainname = self::randomstring(8).'.net';
         $hostname = 'ns1.'.$domainname;
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $delete = new Metaregistrar\EPP\eppDeleteHostRequest($host);
@@ -44,5 +45,11 @@ class eppDeleteHostTest extends eppTestCase
             $message = $e->getMessage();
         }
         $this->assertEquals('Error 2303: Object does not exist', $message);
+    }
+
+    public function testDeleteHostThatBelongsToDomain()
+    {
+        // TODO: create domain, create host and addit to domain, remote this host
+        $this->assertTrue(true);
     }
 }

@@ -19,6 +19,7 @@ class siEppCreateContactRequest extends eppCreateContactRequest
     {
         $postalInfo = $contact->getPostalInfo(0);
 
+        /* @var $postalInfo \Metaregistrar\EPP\siEppContactPostalInfo */
         if ($postalInfo) {
             $dnssiext = $this->createElement('dnssi:ext');
             $create = $this->createElement('dnssi:create');

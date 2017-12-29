@@ -28,10 +28,12 @@ class eppDeleteContactTest extends eppTestCase
     public function testDeleteNonexistentContact()
     {
         $message = null;
-        $contacthandle = self::randomnumber(8);
+        $contacthandle = 'O99999';
         $contact = new Metaregistrar\EPP\eppContactHandle($contacthandle);
         $delete = new Metaregistrar\EPP\eppDeleteContactRequest($contact);
+        // echo $delete->saveXML();
         $response = $this->conn->writeandread($delete);
+        // print_r($response);
         $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
         /* @var $response Metaregistrar\EPP\eppDeleteResponse */
         try {
@@ -43,11 +45,14 @@ class eppDeleteContactTest extends eppTestCase
     }
 
     /**
-     * Test unsuccesful deletion because contact is not an integer
+     * Test unsuccesful deletion because contact is linked to a domain
      * @throws \Metaregistrar\EPP\eppException
      */
     public function testDeleteWrongContact()
     {
+        // TODO: create contact that is linked to domain and then try to remove it
+        // it should return an erroe
+
         $message = null;
         $contacthandle = self::randomstring(8);
         $contact = new Metaregistrar\EPP\eppContactHandle($contacthandle);

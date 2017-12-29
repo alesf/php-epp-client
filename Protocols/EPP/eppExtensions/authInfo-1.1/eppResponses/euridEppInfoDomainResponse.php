@@ -8,7 +8,6 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse
         parent::__construct();
     }
 
-
     /**
      * Return EURid specific contact type 'onsite', which is not EPP standard
      *
@@ -42,7 +41,7 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse
     }
 
     /**
-     * Get the date until the auth code is valie
+     * Get the date until the auth code is valid
      * @return null|string
      */
     public function getAuthorisationCodeValidDate()
@@ -55,7 +54,6 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse
             return null;
         }
     }
-
 
     /**
      *
@@ -75,7 +73,6 @@ class euridEppInfoDomainResponse extends eppInfoDomainResponse
             return null;
         }
     }
-
 
     /**
      *

@@ -96,7 +96,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
      * @return string
      * @throws \Metaregistrar\EPP\eppException
      */
-    protected function createContact($type = Metaregistrar\EPP\euridEppContact::EXT_TYPE_REGISTRANT)
+    protected function createContact($type = 'registrant')
     {
         $name = 'Test name';
         $city = 'City';
@@ -111,8 +111,8 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         $postalinfo = new Metaregistrar\EPP\eppContactPostalInfo($name, $city, $country, $organization, $address, $province, $postcode, Metaregistrar\EPP\eppContact::TYPE_LOC);
         $contactinfo = new Metaregistrar\EPP\euridEppContact($postalinfo, $email, $telephone);
         $contactinfo->setPassword($password);
-        $contactinfo->setExtType($type);
-        $contactinfo->setExtLang('en');
+        $contactinfo->setContactExtType($type);
+        $contactinfo->setContactExtLang('en');
         $create = new Metaregistrar\EPP\euridEppCreateContactRequest($contactinfo);
 
         $response = null;
@@ -154,7 +154,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
             $domainname = 'a-test-'.$this->randomstring(20).'.eu';
         }
 
-        $c_reg = $this->createContact(\Metaregistrar\EPP\euridEppContact::EXT_TYPE_REGISTRANT);
+        $c_reg = $this->createContact('registrant');
         $c_billing = 'c446232'; // you probably already have a billing contact
         $c_tech = 'c446264'; // you probably already have a tech contact
 
@@ -163,8 +163,8 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         $domain->setPeriod(1);
         $domain->setRegistrant($c_reg);
         $domain->setAuthorisationCode('fubar');
-        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_tech, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
-        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_billing, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_tech, 'tech'));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_billing, 'billing'));
         $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain, $forcehostattr = true);
 
         if ($response = $this->conn->request($create)) {

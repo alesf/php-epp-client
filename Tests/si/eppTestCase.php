@@ -21,7 +21,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
 
     protected function tearDown()
     {
-        self::teardownConncection($this->conn);
+        self::teardownConnection($this->conn);
     }
 
     private static function setupConnection($configfile)
@@ -44,7 +44,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
     /**
      * @param Metaregistrar\EPP\eppConnection $conn
      */
-    private static function teardownConncection($conn)
+    private static function teardownConnection($conn)
     {
         if ($conn) {
             $conn->logout();
@@ -79,10 +79,13 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
      * @return string
      * @throws \Metaregistrar\EPP\eppException
      */
-    protected function createHost($hostname)
+    protected function createHost($hostname = null)
     {
+        if (!$hostname) {
+            $hostname = 'ns1.'.self::randomstring(30).'.net';
+        }
         $host = new Metaregistrar\EPP\eppHost($hostname);
-        $host->setIpAddress('81.4.97.247');
+        // $host->setIpAddress('81.4.97.247');
         $create = new Metaregistrar\EPP\eppCreateHostRequest($host);
         if ($response = $this->conn->request($create)) {
             /* @var $response Metaregistrar\EPP\eppCreateHostResponse */
@@ -90,8 +93,6 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         }
         return null;
     }
-
-
 
     /**
      * Create a contact to be used in create contact or create domain testing
@@ -153,20 +154,34 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
 
     protected function createDomain($domainname = null)
     {
-        // If no domain name was given, test with a random .FRL domain name
+        // If no domain name was given, test with a random .si domain name
         if (!$domainname) {
             $domainname = $this->randomstring(20).'.si';
         }
-        $contactid = $this->createContact();
+
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $domain->setPeriod(1);
-        $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode('fubar01');
+
+        $contactid = $this->createContact();
+        $domain->setRegistrant($contactid);
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
+
+        $hostname = $this->createHost();
+        $host = new \Metaregistrar\EPP\eppHost($hostname);
+        $domain->addHost($host);
+
+        $hostname = $this->createHost();
+        $host = new \Metaregistrar\EPP\eppHost($hostname);
+        $domain->addHost($host);
+
         $create = new \Metaregistrar\EPP\siEppCreateDomainRequest($domain);
-        if ($response = $this->conn->request($create)) {
+
+        $response = $this->conn->writeandread($create);
+
+        if ($response) {
             /* @var $response \Metaregistrar\EPP\eppCreateDomainResponse */
             return $response->getDomainName();
         }
@@ -178,7 +193,39 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $delete = new \Metaregistrar\EPP\eppDeleteDomainRequest($domain);
         if ($response = $this->conn->request($delete)) {
-            if ($response->getResultCode()==1000) {
+            if ($response->getResultCode() == 1000) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected function updateDomain($domainname, $data)
+    {
+        $domain = new Metaregistrar\EPP\eppDomain($domainname);
+        $add = null;
+        $del = null;
+        $mod = null;
+        foreach ($data as $type => $var) {
+            if (!empty($var)) {
+                $$type = new Metaregistrar\EPP\eppDomain($domainname);
+            }
+            if (isset($var['hosts'])) {
+                foreach ($var['hosts'] as $host) {
+                    $host = new Metaregistrar\EPP\eppHost($host);
+                    $$type->addHost($host);
+                }
+            }
+            if (isset($var['auth'])) {
+                $$type->setAuthorisationCode($var['auth']);
+            }
+        }
+
+        $update = new Metaregistrar\EPP\eppUpdateDomainRequest($domain, $add, $del, $mod, true);
+        echo $update->saveXML();
+        // $response = $this->conn->writeandread($update);
+        if ($response = $this->conn->request($update)) {
+            if ($response->getResultCode() == 1000) {
                 return true;
             }
         }
