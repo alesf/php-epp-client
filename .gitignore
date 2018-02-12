@@ -4,5 +4,5 @@ vendor/*
 .ini
 Tests/testsetup*
 *.ini
-
 *.pem
+*.crt
