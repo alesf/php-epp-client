@@ -15,6 +15,7 @@ class eppCreateDomainTest extends eppTestCase
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
         $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain);
         $response = $this->conn->writeandread($create);
+        echo $response->saveXML();
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateDomainResponse', $response);
         /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */
         $this->assertTrue($response->Success());
@@ -22,16 +23,56 @@ class eppCreateDomainTest extends eppTestCase
         $this->assertEquals(1000, $response->getResultCode());
     }
 
+    /**
+     * @group test
+     */
     public function testCreateDomainWithOneHost()
     {
-        // TODO: one host is not allowed
-        # code...
+        $contactid = $this->createContact();
+        $domain = new \Metaregistrar\EPP\eppDomain($this->randomstring(20).'.si');
+        $domain->setPeriod(1);
+        $domain->setRegistrant($contactid);
+        $domain->setAuthorisationCode('fubar');
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
+
+        $host1 = $this->createHost();
+        $domain->addHost(new \Metaregistrar\EPP\eppHost($host1));
+
+        $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain);
+
+        $response = $this->conn->writeandread($create);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCreateDomainResponse', $response);
+        /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */
+        $this->expectException('Metaregistrar\EPP\eppException', 'Error 2306: Parameter value policy error');
+        $response->Success();
     }
 
     public function testCreateDomainWithTwoHosts()
     {
-        // TODO: succesfull two hosts
-        # code...
+        $contactid = $this->createContact();
+        $domain = new \Metaregistrar\EPP\eppDomain($this->randomstring(20).'.si');
+        $domain->setPeriod(1);
+        $domain->setRegistrant($contactid);
+        $domain->setAuthorisationCode('fubar');
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
+
+        $host1 = $this->createHost();
+        $host2 = $this->createHost();
+        $domain->addHost(new \Metaregistrar\EPP\eppHost($host1));
+        $domain->addHost(new \Metaregistrar\EPP\eppHost($host2));
+
+        $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain);
+
+        $response = $this->conn->writeandread($create);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCreateDomainResponse', $response);
+        /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */
+        $this->assertTrue($response->Success());
+        $this->assertEquals('Command completed successfully', $response->getResultMessage());
+        $this->assertEquals(1000, $response->getResultCode());
     }
 
     public function testCreateDomainWithoutRegistrant()

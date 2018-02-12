@@ -174,7 +174,7 @@ class eppConnection
         }
         if (isset($result['interface'])) {
             $classname = 'Metaregistrar\\EPP\\'.$result['interface'];
-            $c = new $classname($debug);
+            $c = new $classname($debug, $configfile);
             /* @var $c eppConnection */
             $c->setConnectionDetails($configfile);
             return $c;
@@ -236,9 +236,9 @@ class eppConnection
             $settingsfile = 'settings.ini';
         }
         $test = pathinfo($settingsfile);
-        if ($test['dirname']!='.') {
+        if ($test['dirname'] != '.') {
             $path = $test['dirname'];
-            $settingsfile=$test['basename'];
+            $settingsfile = $test['basename'];
         }
         if ($settings = $this->loadSettings($path, $settingsfile)) {
             $this->setHostname($settings['hostname']);
@@ -471,6 +471,7 @@ class eppConnection
                 break;
             }
         }
+
         if (($response = $this->writeandread($eppRequest)) instanceof $check) {
             // $response->Success() will trigger an eppException when fails have occurred
             $response->Success();
@@ -487,7 +488,7 @@ class eppConnection
      * @return string
      * @throws eppException
      */
-    public function read($nonBlocking=false)
+    public function read($nonBlocking = false)
     {
         $content = '';
         $time = time() + $this->timeout;
@@ -621,6 +622,7 @@ class eppConnection
         if (is_string($this->connectionComment)) {
             $content->epp->appendChild($content->createComment($this->connectionComment));
         }
+
         /*
          * $content->login is only set if this is an instance or a sub-instance of an eppLoginRequest
          */
@@ -732,6 +734,15 @@ class eppConnection
         if (is_string($this->connectionComment)) {
             $content->epp->appendChild($content->createComment($this->connectionComment));
         }
+
+        // append common extensions
+        if (!empty($content->extensions)) {
+            foreach ($content->extensions as $extension) {
+                $content->appendExtension($extension);
+            }
+            $requestsessionid = $content->addSessionId();
+        }
+
         /*
          * $content->login is only set if this is an instance or a sub-instance of an eppLoginRequest
          */
