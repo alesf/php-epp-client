@@ -10,7 +10,7 @@ namespace Metaregistrar\EPP;
 class eppContactPostalInfo {
     private $name;
     private $organisationName;
-    private $street;
+    private $street = array();
     private $city;
     private $province;
     private $zipcode;
@@ -75,7 +75,7 @@ class eppContactPostalInfo {
      * @return string
      */
     public function getStreet($line) {
-        if ($this->street[$line]) {
+        if (isset($this->street[$line]) && $this->street[$line]) {
             return $this->street[$line];
         }
         return null;
