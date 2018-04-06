@@ -114,7 +114,9 @@ class eppCreateDomainRequest extends eppDomainRequest
             }
             $this->domainobject->appendChild($nameservers);
         }
-        $this->domainobject->appendChild($this->createElement('domain:registrant', $domain->getRegistrant()));
+        if (!$this->thin) {
+            $this->domainobject->appendChild($this->createElement('domain:registrant', $domain->getRegistrant()));
+        }
         $contacts = $domain->getContacts();
         if ($domain->getContactLength() > 0) {
             foreach ($contacts as $contact) {
