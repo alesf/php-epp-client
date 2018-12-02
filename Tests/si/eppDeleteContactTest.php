@@ -67,4 +67,19 @@ class eppDeleteContactTest extends eppTestCase
         }
         $this->assertEquals('Error 2303: Object does not exist', $message);
     }
+
+    /**
+     * Test
+    */
+    public function testDeleteAssociatedContact()
+    {
+        $contactid = $this->createContact();
+        $domain1 = $this->createDomain($this->randomstring(20).'.si', $contactid, true);
+        $delete = new Metaregistrar\EPP\eppDeleteContactRequest(new Metaregistrar\EPP\eppContactHandle($contactid));
+        $response = $this->conn->writeandread($delete);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
+        $this->expectException('Metaregistrar\EPP\eppException', '2305: Object association prohibits operation');
+        $this->assertFalse($response->Success());
+
+    }
 }

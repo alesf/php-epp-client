@@ -55,6 +55,33 @@ class eppCreateContactTest extends eppTestCase
         $this->assertEquals(1, $postalinfo->getStreetCount());
     }
 
+    public function testCreateContactWrongEmailFormat()
+    {
+        $name = 'Test name';
+        $city = 'Celje';
+        $country = 'SI';
+        $organization = 'Test company';
+        $address = 'Teststreet 1';
+        $province = '';
+        $postcode = '3000';
+        $email = 'testATtest.com';
+        $telephone = '+1.55500000';
+        $password = self::randomstring(8);
+        $postalinfo = new Metaregistrar\EPP\siEppContactPostalInfo($name, $city, $country, $organization, $address, $province, $postcode, Metaregistrar\EPP\eppContact::TYPE_INT);
+        $postalinfo->setContactType(Metaregistrar\EPP\siEppContactPostalInfo::ARNES_CONTACT_TYPE_PERSON);
+        $postalinfo->setContactID('2010982500111');
+        $this->assertInstanceOf('Metaregistrar\EPP\eppContactPostalInfo', $postalinfo);
+        $contactinfo = new Metaregistrar\EPP\eppContact($postalinfo, $email, $telephone);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppContact', $contactinfo);
+        $contactinfo->setPassword($password);
+        $contact = new Metaregistrar\EPP\siEppCreateContactRequest($contactinfo);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCreateContactRequest', $contact);
+        $response = $this->conn->writeandread($contact);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCreateContactResponse', $response);
+        $this->expectException('Metaregistrar\EPP\eppException', '2005: Parameter value syntax error');
+        $this->assertFalse($response->Success());
+    }
+
     public function testCreateContactUtf8Chars()
     {
         // Arnes does not allow LOC as eppContact Type so all data must be in US-ASCII

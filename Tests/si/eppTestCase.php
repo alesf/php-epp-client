@@ -152,7 +152,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         return $domainname;
     }
 
-    protected function createDomain($domainname = null)
+    protected function createDomain($domainname = null, $contactid = null, $givedomain = false)
     {
         // If no domain name was given, test with a random .si domain name
         if (!$domainname) {
@@ -162,8 +162,9 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $domain->setPeriod(1);
         $domain->setAuthorisationCode('fubar01');
-
-        $contactid = $this->createContact();
+        if (!$contactid) {
+            $contactid = $this->createContact();
+        }
         $domain->setRegistrant($contactid);
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
@@ -180,7 +181,9 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         $create = new \Metaregistrar\EPP\siEppCreateDomainRequest($domain);
 
         $response = $this->conn->writeandread($create);
-
+        if ($response && $givedomain) {
+            return $domain;
+        }
         if ($response) {
             /* @var $response \Metaregistrar\EPP\eppCreateDomainResponse */
             return $response->getDomainName();

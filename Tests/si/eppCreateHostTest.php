@@ -3,7 +3,7 @@ include_once(dirname(__FILE__).'/eppTestCase.php');
 
 class eppCreateHostTest extends eppTestCase
 {
-    public function testCreateHostSi()
+    public function testCreateHostSiWithoutIpError()
     {
         $hostname = self::randomstring(10).'.test.si';
         $host = new Metaregistrar\EPP\eppHost($hostname);
@@ -15,7 +15,8 @@ class eppCreateHostTest extends eppTestCase
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateHostResponse', $response);
 
         if ($response instanceof Metaregistrar\EPP\eppCreateHostResponse) {
-            $this->assertTrue($response->Success());
+            $this->expectException('Metaregistrar\EPP\eppException', "Error 2308: Data management policy violation");
+            $this->assertFalse($response->Success());
         }
     }
 
@@ -119,7 +120,7 @@ class eppCreateHostTest extends eppTestCase
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateHostResponse', $response);
 
         if ($response instanceof Metaregistrar\EPP\eppCreateHostResponse) {
-            $this->expectException('Metaregistrar\EPP\eppException', "Error 2202: Object exists");
+            $this->expectException('Metaregistrar\EPP\eppException', "Error 2302: Object exists");
             $this->assertFalse($response->Success());
         }
     }
