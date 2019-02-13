@@ -43,5 +43,6 @@ $this->addCommandResponse('Metaregistrar\EPP\verisignEppCreateHostRequest', 'Met
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppDeleteHostRequest', 'Metaregistrar\EPP\eppDeleteHostResponse');
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppInfoHostRequest', 'Metaregistrar\EPP\eppInfoHostResponse');
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppUpdateHostRequest', 'Metaregistrar\EPP\eppUpdateHostResponse');
+$this->addCommandResponse('Metaregistrar\EPP\verisignEppRenewRequest', 'Metaregistrar\EPP\eppRenewResponse');
 
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppTransferRequest', 'Metaregistrar\EPP\eppTransferResponse');
