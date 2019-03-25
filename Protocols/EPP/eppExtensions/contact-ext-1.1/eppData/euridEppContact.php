@@ -1,20 +1,30 @@
 <?php
 namespace Metaregistrar\EPP;
+/**
+ * The Contact Info Object
+ *
+ * This will hold the complete contact info a registry can receive and give you
+ *
+ */
 
-class euridEppContact extends eppContact
-{
+class euridEppContact extends eppContact {
+
     private $acceptedLangCodes = [
         'bg', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'fi', 'fr', 'ga', 'hr',
         'hu', 'it', 'lt', 'lv', 'mt', 'nl', 'pl', 'pt', 'ro', 'sk', 'sl', 'sv'
     ];
 
-    const CONTACT_EXT_TYPES = [
-        'billing',
-        'registrant',
-        'tech',
-        'onsite',
-        'reseller',
-    ];
+    #
+    # These values can be set into the contactExtType field
+    # The type of contact to create. Can be one of: “registrant”, “onsite”, "reseller", “tech”.
+    #
+
+    const CONTACT_EXT_TYPES = ['registrant', 'tech', 'onsite', 'reseller'];
+    const EURID_EXT_CONTACT_REGISTRANT = 'registrant';
+    const EURID_EXT_CONTACT_TECH = 'tech';
+    const EURID_EXT_CONTACT_ONSITE = 'onsite';
+    const EURID_EXT_CONTACT_RESELLER = 'reseller';
+    const EURID_EXT_CONTACT_BILLING = 'billing';
 
     private $contactExtType;
     private $contactExtLang = 'en';

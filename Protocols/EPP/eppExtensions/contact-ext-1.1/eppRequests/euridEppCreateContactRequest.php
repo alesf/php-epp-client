@@ -29,8 +29,10 @@ class euridEppCreateContactRequest extends eppCreateContactRequest
         $this->addSessionId();
     }
 
-    public function addContactExtension(eppContact $createinfo)
-    {
+    /**
+     * @param object eppContact
+     */
+    public function addContactExtension(euridEppContact $createinfo) {
         $this->addExtension('xmlns:contact-ext', 'http://www.eurid.eu/xml/epp/contact-ext-1.1');
 
         $create = $this->createElement('contact-ext:create');

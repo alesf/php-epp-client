@@ -1,7 +1,8 @@
 <?php
 require(dirname(__FILE__).'/../autoloader.php');
+use PHPUnit\Framework\TestCase;
 
-class eppTestCase extends PHPUnit_Framework_TestCase {
+class eppTestCase extends TestCase {
     /**
      * @var Metaregistrar\EPP\eppConnection
      *
@@ -23,7 +24,6 @@ class eppTestCase extends PHPUnit_Framework_TestCase {
         try {
             if ($conn = Metaregistrar\EPP\metaregEppConnection::create($configfile)) {
                 /* @var $conn Metaregistrar\EPP\eppConnection */
-                //$conn->enableRgp();
                 if ($conn->login()) {
                     return $conn;
                 }

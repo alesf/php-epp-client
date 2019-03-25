@@ -17,12 +17,12 @@ namespace Metaregistrar\EPP;
   </command>
 </epp>
 */
-
-class euridEppInfoDomainRequest extends eppInfoDomainRequest
-{
-    public function __construct($infodomain, $hosts = null) {
+class euridEppInfoDomainRequest extends eppInfoDomainRequest {
+    public function __construct($infodomain, $hosts = null, $withAuthcode = false) {
         parent::__construct($infodomain, $hosts);
-        $this->addEURIDExtension();
+        if($withAuthcode == true) {
+            $this->addEURIDExtension();
+        }
         $this->addSessionId();
     }
 
