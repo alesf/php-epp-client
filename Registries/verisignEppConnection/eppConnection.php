@@ -10,9 +10,9 @@ class verisignEppConnection extends eppConnection
         parent::setLanguage('en');
         parent::setVersion('1.0');
 
-        parent::addService('http://www.verisign.com/epp/registry-1.0', 'registry');
-        parent::addService('http://www.verisign.com/epp/lowbalance-poll-1.0', 'lowbalance-poll');
-        parent::addService('http://www.verisign.com/epp/rgp-poll-1.0', 'rgp-poll');
+        parent::addService('registry', 'http://www.verisign.com/epp/registry-1.0');
+        parent::addService('lowbalance-poll', 'http://www.verisign.com/epp/lowbalance-poll-1.0');
+        parent::addService('rgp-poll', 'http://www.verisign.com/epp/rgp-poll-1.0');
 
         parent::useExtension("namestoreExt-1.1");
         // parent::useExtension("thinRegistrar");
