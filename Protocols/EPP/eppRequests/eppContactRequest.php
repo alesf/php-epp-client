@@ -1,16 +1,14 @@
 <?php
 namespace Metaregistrar\EPP;
 
-class eppContactRequest extends eppRequest
-{
+class eppContactRequest extends eppRequest {
     /**
      * ContactObject object to add namespaces to
      * @var \DomElement
      */
     public $contactobject = null;
 
-    public function __construct($type)
-    {
+    public function __construct($type) {
         parent::__construct();
         $check = $this->createElement($type);
         $this->contactobject = $this->createElement('contact:'.$type);

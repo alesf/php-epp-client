@@ -37,7 +37,7 @@ class siEppContactPostalInfo extends eppContactPostalInfo
 
     /**
      *
-     * @param type $type person or org
+     * @param string $type person or org
      */
     public function setContactType($type)
     {

@@ -1,29 +1,25 @@
 <?php
 require(dirname(__FILE__).'/../autoloader.php');
 
-class eppTestCase extends PHPUnit_Framework_TestCase
-{
+class eppTestCase extends PHPUnit_Framework_TestCase {
     /**
      * @var Metaregistrar\EPP\eppConnection
      *
      */
     protected $conn;
 
-    protected function setUp($configfile = null)
-    {
+    protected function setUp($configfile = null) {
         if (!$configfile) {
             $configfile = dirname(__FILE__).'/testsetup.ini';
         }
         $this->conn = self::setupConnection($configfile);
     }
 
-    protected function tearDown()
-    {
+    protected function tearDown() {
         self::teardownConncection($this->conn);
     }
 
-    private static function setupConnection($configfile)
-    {
+    private static function setupConnection($configfile) {
         try {
             if ($conn = Metaregistrar\EPP\metaregEppConnection::create($configfile)) {
                 /* @var $conn Metaregistrar\EPP\eppConnection */
@@ -42,15 +38,13 @@ class eppTestCase extends PHPUnit_Framework_TestCase
     /**
      * @param Metaregistrar\EPP\eppConnection $conn
      */
-    private static function teardownConncection($conn)
-    {
+    private static function teardownConncection($conn) {
         if ($conn) {
             $conn->logout();
         }
     }
 
-    protected static function randomstring($length)
-    {
+    protected static function randomstring($length) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -60,8 +54,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
         return $randomString;
     }
 
-    protected static function randomnumber($length)
-    {
+    protected static function randomnumber($length) {
         $characters = '0123456789';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -77,8 +70,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
      * @return string
      * @throws \Metaregistrar\EPP\eppException
      */
-    protected function createHost($hostname)
-    {
+    protected function createHost($hostname) {
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $host->setIpAddress('81.4.97.247');
         $create = new Metaregistrar\EPP\eppCreateHostRequest($host);
@@ -94,8 +86,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
      * @return string
      * @throws \Metaregistrar\EPP\eppException
      */
-    protected function createNLContact()
-    {
+    protected function createNLContact() {
         $name = 'Test name';
         $city = 'Test city';
         $country = 'NL';
@@ -124,8 +115,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
      * @return string
      * @throws \Metaregistrar\EPP\eppException
      */
-    protected function createContact()
-    {
+    protected function createContact() {
         $name = 'Test name';
         $city = 'Test city';
         $country = 'NL';
@@ -149,8 +139,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
         return null;
     }
 
-    protected function createDns($domainname = null)
-    {
+    protected function createDns($domainname = null) {
         $domainname = $this->createDomain($domainname);
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
         $records[] = ['name' => $domainname, 'type' => 'A', 'content' => '127.0.0.1', 'ttl' => 3600];
@@ -163,8 +152,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
         return $domainname;
     }
 
-    protected function createNLDomain($domainname = null, $extension='.frl')
-    {
+    protected function createNLDomain($domainname = null, $extension='.frl') {
         // If no domain name was given, test with a random .FRL domain name
         if (!$domainname) {
             $domainname = $this->randomstring(20).$extension;
@@ -185,8 +173,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
         return null;
     }
 
-    protected function createDomain($domainname = null, $extension='.frl')
-    {
+    protected function createDomain($domainname = null, $extension='.frl') {
         // If no domain name was given, test with a random .FRL domain name
         if (!$domainname) {
             $domainname = $this->randomstring(20).$extension;
@@ -207,8 +194,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
         return null;
     }
 
-    protected function deleteDomain($domainname)
-    {
+    protected function deleteDomain($domainname) {
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $delete = new \Metaregistrar\EPP\eppDeleteDomainRequest($domain);
         if ($response = $this->conn->request($delete)) {
@@ -225,8 +211,7 @@ class eppTestCase extends PHPUnit_Framework_TestCase
      * @return \Metaregistrar\EPP\eppInfoContactResponse|\Metaregistrar\EPP\eppResponse
      * @throws \Metaregistrar\EPP\eppException
      */
-    protected function getContactInfo($contacthandle)
-    {
+    protected function getContactInfo($contacthandle) {
         $epp = new Metaregistrar\EPP\eppContactHandle($contacthandle);
         $info = new Metaregistrar\EPP\eppInfoContactRequest($epp);
         if ((($response = $this->conn->writeandread($info)) instanceof Metaregistrar\EPP\eppInfoContactResponse) && ($response->Success())) {

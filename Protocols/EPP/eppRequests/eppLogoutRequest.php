@@ -5,10 +5,8 @@ namespace Metaregistrar\EPP;
  * This object contains all the logic to create an EPP hello command
  */
 
-class eppLogoutRequest extends eppRequest
-{
-    public function __construct()
-    {
+class eppLogoutRequest extends eppRequest {
+    public function __construct() {
         parent::__construct();
         #
         # Create logout command
@@ -18,7 +16,6 @@ class eppLogoutRequest extends eppRequest
         $this->addSessionId();
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
     }
 }

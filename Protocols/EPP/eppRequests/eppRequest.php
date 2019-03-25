@@ -5,8 +5,7 @@ namespace Metaregistrar\EPP;
  * This object contains all the logic to create an EPP command
  */
 
-class eppRequest extends \DOMDocument
-{
+class eppRequest extends \DOMDocument {
     const TYPE_CHECK = 'check';
     const TYPE_CREATE = 'create';
     const TYPE_INFO = 'info';
@@ -57,8 +56,7 @@ class eppRequest extends \DOMDocument
      */
     private $namespacesinroot = true;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->sessionid = uniqid();
         parent::__construct('1.0', 'UTF-8');
         $this->formatOutput = true;
@@ -66,24 +64,21 @@ class eppRequest extends \DOMDocument
         #$this->validateOnParse = true;
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
     }
 
     /**
      * Determine whether the namespaces must be put in the root or at the corresponding objects
      * @param bool $setting
      */
-    public function setNamespacesinroot($setting)
-    {
+    public function setNamespacesinroot($setting) {
         $this->namespacesinroot = $setting;
     }
 
     /**
      * @return bool
      */
-    public function rootNamespaces()
-    {
+    public function rootNamespaces() {
         return $this->namespacesinroot;
     }
 
@@ -91,8 +86,7 @@ class eppRequest extends \DOMDocument
      * Get the epp element of the epp structure
      * @return \DomElement
      */
-    public function getEpp()
-    {
+    public function getEpp() {
         if (!$this->epp) {
             #
             # if its not there, then create base epp structure
@@ -107,8 +101,7 @@ class eppRequest extends \DOMDocument
      * Get the command element of the epp structure
      * @return \DomElement
      */
-    protected function getCommand()
-    {
+    protected function getCommand() {
         if (!$this->command) {
             #
             # If its not there, then create command structure
@@ -122,8 +115,7 @@ class eppRequest extends \DOMDocument
     /**
      * @return \DomElement
      */
-    public function getExtension()
-    {
+    public function getExtension() {
         if (!$this->extension) {
             #
             # If its not there, then create extension structure
@@ -138,13 +130,11 @@ class eppRequest extends \DOMDocument
      * Appends an extension
      * @param  DomElement $extension
      */
-    public function appendExtension(\DomElement $extension)
-    {
+    public function appendExtension(\DomElement $extension) {
         $this->getExtension()->appendChild($extension);
     }
 
-    public function addExtension($name, $value)
-    {
+    public function addExtension($name, $value) {
         if ($epp = $this->getEpp()) {
             $epp->setAttribute($name, $value);
         } else {
@@ -158,8 +148,7 @@ class eppRequest extends \DOMDocument
      * @param string $namespace
      * @param \DOMElement $object
      */
-    protected function setNamespace($xmlns, $namespace, $object = null)
-    {
+    protected function setNamespace($xmlns, $namespace, $object = null) {
         $xmlns = str_replace('xmlns:', '', $xmlns);
         if ($this->rootNamespaces()) {
             $this->getEpp()->setAttribute('xmlns:'.$xmlns, $namespace);
@@ -170,8 +159,7 @@ class eppRequest extends \DOMDocument
         }
     }
 
-    public function addSessionId()
-    {
+    public function addSessionId() {
         #
         # Remove earlier session id's to make sure session id is at the end
         #
@@ -185,24 +173,20 @@ class eppRequest extends \DOMDocument
         $this->getCommand()->appendChild($this->createElement('clTRID', $this->sessionid));
     }
 
-    public function getSessionId()
-    {
+    public function getSessionId() {
         return $this->sessionid;
     }
 
-    public function dumpContents()
-    {
+    public function dumpContents() {
         echo $this->saveXML();
     }
 
 
-    protected static function isAscii($str)
-    {
+    protected static function isAscii($str) {
         return mb_check_encoding($str, 'ASCII');
     }
 
-    public function addNamespaces($namespaces)
-    {
+    public function addNamespaces($namespaces) {
         if (is_array($namespaces)) {
             foreach ($namespaces as $namespace => $xmlns) {
                 $this->getEpp()->setAttribute('xmlns:' . $xmlns, $namespace);

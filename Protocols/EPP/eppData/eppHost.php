@@ -48,8 +48,7 @@ class eppHost
      * @param <string> $ipaddress
      * @param <string> $hoststatus
      */
-    public function __construct($hostname, $ipaddress = null, $hoststatus = null)
-    {
+    public function __construct($hostname, $ipaddress = null, $hoststatus = null) {
         $this->setHostname($hostname);
         if (is_array($ipaddress)) {
             foreach ($ipaddress as $ip) {
@@ -76,39 +75,32 @@ class eppHost
     }
 
     // getters
-    public function getHostname()
-    {
+    public function getHostname() {
         return $this->hostname;
     }
 
-    public function getIpAddresses()
-    {
+    public function getIpAddresses() {
         return $this->ipaddresses;
     }
 
-    public function getIpAddressCount()
-    {
+    public function getIpAddressCount() {
         return count($this->ipaddresses);
     }
 
-    public function getHostStatusCount()
-    {
+    public function getHostStatusCount() {
         return count($this->hoststatus);
     }
 
-    public function getHostStatuses()
-    {
+    public function getHostStatuses() {
         return $this->hoststatus;
     }
 
-    public function setHostStatus($hoststatus)
-    {
+    public function setHostStatus($hoststatus) {
         $this->hoststatus[] = $hoststatus;
     }
 
     // setters
-    public function setHostname($hostname)
-    {
+    public function setHostname($hostname) {
         if (strlen($hostname) > 0) {
             $this->hostname = $hostname;
         } else {
@@ -116,8 +108,7 @@ class eppHost
         }
     }
 
-    public function setIpAddress($ipaddress)
-    {
+    public function setIpAddress($ipaddress) {
         if (filter_var($ipaddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             $this->ipaddresses[$ipaddress] = eppHost::HOST_ADDR_V6;
         } else {
