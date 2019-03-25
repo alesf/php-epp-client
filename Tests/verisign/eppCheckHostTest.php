@@ -5,6 +5,7 @@ class eppCheckHostTest extends eppTestCase
 {
 
     /**
+     * @group test
      * Test if random host handle is available
      * Expects a standard result for a free host handle
      */

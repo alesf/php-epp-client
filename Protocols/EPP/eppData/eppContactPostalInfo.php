@@ -33,6 +33,8 @@ class eppContactPostalInfo {
      * @param string $type POSTAL_TYPE_LOC or POSTAL_TYPE_INT
      */
     public function __construct($name = null, $city = null, $countrycode = null, $organisationName = null, $street = null, $province = null, $zipcode = null, $type = eppContact::TYPE_AUTO) {
+        $this->street = array();
+
         $this->setName($name);
         #
         # Street can be an array of max 3 streets, or a string with an address

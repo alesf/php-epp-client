@@ -25,6 +25,7 @@ class eppTransferDomainTest extends eppTestCase
         $this->tearDown();
         $this->setUp($user1);
 
+        $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $domain->setAuthorisationCode($password);
 
         $transfer = new \Metaregistrar\EPP\eppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_REQUEST, $domain);
@@ -58,6 +59,7 @@ class eppTransferDomainTest extends eppTestCase
         $this->tearDown();
         $this->setUp($user1);
 
+        $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $domain->setAuthorisationCode($password);
 
         $transfer = new \Metaregistrar\EPP\eppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_REQUEST, $domain);

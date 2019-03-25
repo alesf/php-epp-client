@@ -3,6 +3,8 @@ include_once(dirname(__FILE__).'/eppTestCase.php');
 
 class eppCreateContactTest extends eppTestCase
 {
+    /**
+     */
     public function testCreateContact()
     {
         $name = 'Test name';
@@ -56,5 +58,37 @@ class eppCreateContactTest extends eppTestCase
         $this->assertEquals($city, $postalinfo->getCity());
         $this->assertEquals($country, $postalinfo->getCountrycode());
         $this->assertEquals(1, $postalinfo->getStreetCount());
+    }
+
+    /**
+     * @group testing
+     */
+    public function testCreateContactNoNameStoreInfo()
+    {
+        $name = 'Test name';
+        $city = 'Celje';
+        $country = 'SI';
+        $organization = 'Test company';
+        $address = 'Teststreet 1';
+        $province = '';
+        $postcode = '3000';
+        $email = 'test@test.com';
+        $telephone = '+1.55500000';
+        $password = self::randomstring(8, true);
+
+        $postalinfo = new Metaregistrar\EPP\eppContactPostalInfo($name, $city, $country, $organization, $address, $province, $postcode, Metaregistrar\EPP\eppContact::TYPE_INT);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppContactPostalInfo', $postalinfo);
+
+        $contactinfo = new Metaregistrar\EPP\eppContact($postalinfo, $email, $telephone);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppContact', $contactinfo);
+        $contactinfo->setPassword($password);
+        $contact = new Metaregistrar\EPP\verisignEppCreateContactRequest($contactinfo);
+        // $contact->setSubProduct('dotCOM');
+
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCreateContactRequest', $contact);
+        $response = $this->conn->writeandread($contact);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCreateContactResponse', $response);
+        /* @var $response Metaregistrar\EPP\eppCreateContactResponse */
+        $this->expectException('Metaregistrar\EPP\eppException', "Error 2001: Command syntax error (NameStore Extension not provided)");
     }
 }
