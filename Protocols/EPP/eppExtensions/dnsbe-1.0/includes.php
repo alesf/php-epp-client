@@ -12,7 +12,7 @@ $this->addCommandResponse('Metaregistrar\EPP\dnsbeEppCreateDomainRequest', 'Meta
 
 include_once(dirname(__FILE__) . '/eppRequests/dnsbeEppCreateContactRequest.php');
 include_once(dirname(__FILE__) . '/eppResponses/dnsbeEppCreateContactResponse.php');
-$this->addCommandResponse('Metaregistrar\EPP\dnsbeEppCreateContactRequest', 'Metaregistrar\EPP\dnsbeEppCreateContactResponse');
+$this->addCommandResponse('Metaregistrar\EPP\dnsbeEppCreateContactRequest', 'Metaregistrar\EPP\euridEppDeleteResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/dnsbeEppAuthcodeRequest.php');
 $this->addCommandResponse('Metaregistrar\EPP\dnsbeEppAuthcodeRequest', 'Metaregistrar\EPP\eppResponse');

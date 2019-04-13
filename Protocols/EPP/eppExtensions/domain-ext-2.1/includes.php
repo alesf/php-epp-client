@@ -5,3 +5,4 @@ include_once(dirname(__FILE__) . '/eppRequests/euridEppDeleteRequest.php');
 include_once(dirname(__FILE__) . '/eppRequests/euridEppTransferDomainRequest.php');
 
 $this->addCommandResponse('Metaregistrar\EPP\euridEppTransferDomainRequest', 'Metaregistrar\EPP\eppTransferResponse');
+$this->addCommandResponse('Metaregistrar\EPP\euridEppDeleteRequest', 'Metaregistrar\EPP\eppDeleteResponse');

@@ -14,7 +14,7 @@ class eppTransferDomainTest extends eppTestCase
         $password = 'transfer';
         $password_hash = hash('sha256', $password);
 
-        $user2 = dirname(__FILE__).'/testsetup2.ini';
+        $user2 = dirname(__FILE__).'/../testsetup/siEpp2.ini';
         $this->tearDown();
         $this->setUp($user2);
 
@@ -27,8 +27,8 @@ class eppTransferDomainTest extends eppTestCase
      */
     public function testRequestTransferDomain()
     {
-        $user1 = dirname(__FILE__).'/testsetup.ini';
-        $user2 = dirname(__FILE__).'/testsetup2.ini';
+        $user1 = dirname(__FILE__).'/../testsetup/siEpp.ini';
+        $user2 = dirname(__FILE__).'/../testsetup/siEpp2.ini';
 
         $domainname = self::randomstring(30).'.si';
         $password = 'transfer';
@@ -62,8 +62,8 @@ class eppTransferDomainTest extends eppTestCase
 
     public function testDoubleTransferDomain()
     {
-        $user1 = dirname(__FILE__).'/testsetup.ini';
-        $user2 = dirname(__FILE__).'/testsetup2.ini';
+        $user1 = dirname(__FILE__).'/../testsetup/siEpp.ini';
+        $user2 = dirname(__FILE__).'/../testsetup/siEpp2.ini';
 
         $domainname = self::randomstring(30).'.si';
         $password = 'transfer';

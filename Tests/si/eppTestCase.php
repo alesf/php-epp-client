@@ -14,7 +14,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
     protected function setUp($configfile = null)
     {
         if (!$configfile) {
-            $configfile = dirname(__FILE__).'/testsetup.ini';
+            $configfile = dirname(__FILE__).'/../testsetup/siEpp.ini';
         }
         $this->conn = self::setupConnection($configfile);
     }

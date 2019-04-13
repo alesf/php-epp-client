@@ -14,7 +14,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
     protected function setUp($configfile = null)
     {
         if (!$configfile) {
-            $configfile = dirname(__FILE__).'/testsetup.ini';
+            $configfile = dirname(__FILE__).'/../testsetup/euridEPP.ini';
         }
         $this->conn = self::setupConnection($configfile);
     }
@@ -155,8 +155,8 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         }
 
         $c_reg = $this->createContact('registrant');
-        $c_billing = 'c446232'; // you probably already have a billing contact
-        $c_tech = 'c446264'; // you probably already have a tech contact
+        $c_billing = 'c446234'; // you probably already have a billing contact
+        $c_tech = 'c448321'; // you probably already have a tech contact
 
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
 

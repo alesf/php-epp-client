@@ -8,8 +8,8 @@ class eppCreateDomainTest extends eppTestCase
     public function testCreateDomainWithRegistrant()
     {
         $c_reg = $this->createContact('registrant');
-        $c_billing = 'c446232'; // you probably already have a billing contact
-        $c_tech = 'c446264'; // you probably already have a tech contact
+        $c_billing = 'c446234'; // you probably already have a billing contact
+        $c_tech = 'c448321'; // you probably already have a tech contact
         $domain = new \Metaregistrar\EPP\eppDomain('a-test-' . $this->randomstring(20).'.eu');
         $domain->setPeriod(1);
         $domain->setRegistrant($c_reg);

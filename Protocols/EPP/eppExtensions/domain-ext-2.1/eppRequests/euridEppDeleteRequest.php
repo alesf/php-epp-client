@@ -27,15 +27,16 @@ class euridEppDeleteRequest extends eppDeleteRequest
         return $this;
     }
 
-    public function addDomainScheduleDeleteExtension()
+    public function addDomainScheduleDeleteExtension($date)
     {
         $ext = $this->createElement('extension');
         $contactext = $this->createElement('domain-ext:delete');
         $contactext->setAttribute('xmlns:domain-ext', 'http://www.eurid.eu/xml/epp/domain-ext-2.1');
         $schedule = $contactext->appendChild($this->createElement('domain-ext:schedule'));
-        $schedule->appendChild($this->createElement('domain-ext:delDate', $this->domain_deleteDate));
+        $schedule->appendChild($this->createElement('domain-ext:delDate', $date));
         $ext->appendChild($contactext);
-        $this->getCommand()->appendChild($ext);
+        $this->getCommand()->insertBefore($ext, $this->getElementsByTagName("clTRID")->item(0));
+//        $this->getCommand()->appendChild($ext);
     }
 
     public function addDomainCancelDeleteExtension()
@@ -43,9 +44,8 @@ class euridEppDeleteRequest extends eppDeleteRequest
         $ext = $this->createElement('extension');
         $contactext = $this->createElement('domain-ext:delete');
         $contactext->setAttribute('xmlns:domain-ext', 'http://www.eurid.eu/xml/epp/domain-ext-2.1');
-        $schedule = $contactext->appendChild($this->createElement('domain-ext:schedule'));
-        $eschedule->appendChild($this->createElement('domain-ext:cancel'));
+        $contactext->appendChild($this->createElement('domain-ext:cancel'));
         $ext->appendChild($contactext);
-        $this->getCommand()->appendChild($ext);
+        $this->getCommand()->insertBefore($ext, $this->getElementsByTagName("clTRID")->item(0));
     }
 }

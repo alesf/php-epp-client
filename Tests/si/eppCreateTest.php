@@ -9,7 +9,7 @@ class eppCreateTest extends eppTestCase
      */
     public function testCreateInterface()
     {
-        $conn = Metaregistrar\EPP\eppConnection::create(dirname(__FILE__).'/testsetup.ini');
+        $conn = Metaregistrar\EPP\eppConnection::create(dirname(__FILE__).'/../testsetup/siEpp.ini');
         $this->assertInstanceOf('Metaregistrar\EPP\siEppConnection', $conn);
         /* @var $conn Metaregistrar\EPP\siEppConnection */
         $this->assertEquals($conn->getHostname(), 'ssl://epp-test.register.si');
