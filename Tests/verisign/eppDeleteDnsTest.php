@@ -5,12 +5,16 @@ class eppDeleteDnsTest extends eppTestCase
 {
     /**
      * Test successful dns delete
+     * @group ignore_me
      */
     public function testDeleteDnsSuccess()
     {
-        $domainname = $this->createDns();
+        $domainname = $this->createDns();        
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppDomain', $domain);
         $delete = new Metaregistrar\EPP\metaregDeleteDnsRequest($domain);
+        $delete->setSubProduct('dotCOM');
+        $this->assertInstanceOf('Metaregistrar\EPP\metaregDeleteDnsRequest', $delete);
         $response = $this->conn->writeandread($delete);
         $this->assertInstanceOf('Metaregistrar\EPP\metaregDeleteDnsResponse', $response);
         /* @var $response Metaregistrar\EPP\metaregDeleteDnsResponse */
@@ -24,6 +28,7 @@ class eppDeleteDnsTest extends eppTestCase
     /**
      * Test failed dns delete
      * @throws \Metaregistrar\EPP\eppException;
+     * @group ignore_me
      */
     public function testDeleteDnsWrongDomain()
     {
@@ -42,6 +47,7 @@ class eppDeleteDnsTest extends eppTestCase
     /**
      * Test failed dns delete
      * @throws \Metaregistrar\EPP\eppException;
+     * @group ignore_me
      */
     public function testDeleteDnsDomainEmpty()
     {

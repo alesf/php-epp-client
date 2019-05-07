@@ -14,8 +14,7 @@ class eppInfoHostTest extends eppTestCase
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $info = new Metaregistrar\EPP\verisignEppInfoHostRequest($host);
         $info->setSubProduct('dotCOM');
-        $response = $this->conn->writeandread($info);
-        echo $response->saveXML();
+        $response = $this->conn->writeandread($info);        
         $this->assertInstanceOf('Metaregistrar\EPP\eppInfoHostResponse', $response);
         /* @var $response Metaregistrar\EPP\eppInfoHostResponse */
         $this->assertTrue($response->Success());

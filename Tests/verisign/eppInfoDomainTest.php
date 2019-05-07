@@ -15,8 +15,7 @@ class eppInfoDomainTest extends eppTestCase
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
         $info = new Metaregistrar\EPP\verisignEppInfoDomainRequest($domain);
         $info->setSubProduct('dotCOM');
-        $response = $this->conn->writeandread($info);
-        echo $response->saveXML();
+        $response = $this->conn->writeandread($info);        
         $this->assertInstanceOf('Metaregistrar\EPP\eppInfoDomainResponse', $response);
         /* @var $response Metaregistrar\EPP\eppInfoDomainResponse */
         $this->assertTrue($response->Success());
@@ -32,13 +31,11 @@ class eppInfoDomainTest extends eppTestCase
     {
         $domainname = $this->createDomain();
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
-        $domain->setAuthorisationCode('foorbar');
-        $info = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
-
+        $domain->setAuthorisationCode('DM$r5$$78');
+        $info = new Metaregistrar\EPP\verisignEppInfoDomainRequest($domain);
+        $info->setSubProduct('dotCOM');
         $response = $this->conn->writeandread($info);
         $this->assertInstanceOf('Metaregistrar\EPP\eppInfoDomainResponse', $response);
-
-        /* @var $response Metaregistrar\EPP\eppInfoDomainResponse */
         $this->assertTrue($response->Success());
         $this->assertEquals('Command completed successfully', $response->getResultMessage());
         $this->assertEquals(1000, $response->getResultCode());
@@ -52,12 +49,10 @@ class eppInfoDomainTest extends eppTestCase
     {
         $domainname = $this->createDomain();
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
-        $info = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
-
+        $info = new Metaregistrar\EPP\verisignEppInfoDomainRequest($domain);
+        $info->setSubProduct('dotCOM');
         $response = $this->conn->writeandread($info);
         $this->assertInstanceOf('Metaregistrar\EPP\eppInfoDomainResponse', $response);
-
-        /* @var $response Metaregistrar\EPP\eppInfoDomainResponse */
         $this->assertTrue($response->Success());
         $this->assertEquals('Command completed successfully', $response->getResultMessage());
         $this->assertEquals(1000, $response->getResultCode());

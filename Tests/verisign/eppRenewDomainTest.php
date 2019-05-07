@@ -10,29 +10,24 @@ class eppRenewDomainTest extends eppTestCase
     {
         // Prepare a domain name by creating it
         $domainname = $this->createDomain();
-
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
-        $info = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
+        $info = new Metaregistrar\EPP\verisignEppInfoDomainRequest($domain);
+        $info->setSubProduct('dotCOM');
         $info_response = $this->conn->writeandread($info);
-
         $period = 3;
-
         $domain->setPeriodUnit('y');
         $domain->setPeriod($period);
         $expdate = substr($info_response->getDomainExpirationDate(), 0, 10);
-
-        $renew = new Metaregistrar\EPP\eppRenewRequest($domain, $expdate);
-
+        $renew = new Metaregistrar\EPP\verisignEppRenewRequest($domain, $expdate);
+        $renew->setSubProduct('dotCOM');        
         $response = $this->conn->writeandread($renew);
-
         if ($response instanceof Metaregistrar\EPP\eppRenewResponse) {
             $this->assertTrue($response->Success());
-
             if ($response->Success()) {
                 $domain = new Metaregistrar\EPP\eppDomain($domainname);
-                $info = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
+                $info = new Metaregistrar\EPP\verisignEppInfoDomainRequest($domain);
+                $info->setSubProduct('dotCOM');
                 $info_response = $this->conn->writeandread($info);
-
                 $new_expdate = substr($info_response->getDomainExpirationDate(), 0, 10);
                 $check_expdate = date('Y-m-d', strtotime("$expdate +$period years"));
                 $this->assertEquals($new_expdate, $check_expdate);
@@ -49,20 +44,17 @@ class eppRenewDomainTest extends eppTestCase
         $domainname = $this->createDomain();
 
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
-        $info = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
+        $info = new Metaregistrar\EPP\verisignEppInfoDomainRequest($domain);
+        $info->setSubProduct('dotCOM');
         $info_response = $this->conn->writeandread($info);
-
         $period = 10;
-
         $domain->setPeriodUnit('y');
         $domain->setPeriod($period);
         $expdate = substr($info_response->getDomainExpirationDate(), 0, 10);
-
-        $renew = new Metaregistrar\EPP\eppRenewRequest($domain, $expdate);
-
+        $renew = new Metaregistrar\EPP\verisignEppRenewRequest($domain, $expdate);
+        $renew->setSubProduct('dotCOM'); 
         $response = $this->conn->writeandread($renew);
-
-        if ($response instanceof Metaregistrar\EPP\eppRenewResponse) {
+        if ($response instanceof Metaregistrar\EPP\eppRenewResponse) {            
             $this->expectException('Metaregistrar\EPP\eppException', 'Error 2306: Parameter value policy error');
             $this->assertFalse($response->Success());
         }

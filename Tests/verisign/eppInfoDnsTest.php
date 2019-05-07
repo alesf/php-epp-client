@@ -5,6 +5,7 @@ class eppInfoDnsTest extends eppTestCase {
     /**
      * Test successful dns info
      * @throws \Metaregistrar\EPP\eppException
+     * @group ignore_me
      */
     public function testInfoDnsSuccess() {
         $domainname = $this->createDns();
@@ -33,6 +34,8 @@ class eppInfoDnsTest extends eppTestCase {
     /**
      * Test dns info when domain has no zone
      * @throws \Metaregistrar\EPP\eppException
+     *
+     * @group ignore_me
      */
     public function testInfoDnsNoZone() {
         $domainname = $this->createDomain();

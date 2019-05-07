@@ -3,6 +3,9 @@ include_once(dirname(__FILE__).'/eppTestCase.php');
 
 class eppDnssecTest extends eppTestCase {
 
+    /**
+     * @group ignore_me
+     */
     public function testCreateWithDnssecSuccess() {
         $contactid = $this->createContact();
         $domain = new \Metaregistrar\EPP\eppDomain($this->randomstring(20).'.frl');
@@ -18,6 +21,7 @@ class eppDnssecTest extends eppTestCase {
         $secdns->setKey('256', '8', 'AwEAAbWM8nWQZbDZgJjyq+tLZwPLEXfZZjfvlRcmoAVZHgZJCPn/Ytu/iOsgci+yWgDT28ENzREAoAbKMflFFdhc5DNV27TZxhv8nMo9n2f+cyyRKbQ6oIAvMl7siT6WxrLxEBIMyoyFgDMbqGScn9k19Ppa8fwnpJgv0VUemfxGqHH9');
         $domain->addSecdns($secdns);
         $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain);
+        $create->setSubProduct('dotCOM');
         $response = $this->conn->writeandread($create);
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateDomainResponse',$response);
         /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */

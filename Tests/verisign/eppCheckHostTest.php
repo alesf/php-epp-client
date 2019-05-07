@@ -14,12 +14,12 @@ class eppCheckHostTest extends eppTestCase
         $hostname = 'ns1.'.self::randomstring(30).'.test.com';
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
-        $check = new Metaregistrar\EPP\verisignEppCheckHostRequest($host);
+        $check = new Metaregistrar\EPP\verisignEppCheckRequest($host);
         $check->setSubProduct('dotCOM');
-        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckHostRequest', $check);
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckRequest', $check);
         $response = $this->conn->writeandread($check);
-        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckHostResponse', $response);
-        if ($response instanceof Metaregistrar\EPP\eppCheckHostResponse) {
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckResponse', $response);
+        if ($response instanceof Metaregistrar\EPP\eppCheckResponse) {
             $this->assertTrue($response->Success());
             // echo $response->getResultReason();
             // echo $response->saveXML();
@@ -41,13 +41,13 @@ class eppCheckHostTest extends eppTestCase
         $hostname = 'ns1.'.self::randomstring(30).'.test.com';
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
-        $check = new Metaregistrar\EPP\verisignEppCheckHostRequest($host);
+        $check = new Metaregistrar\EPP\verisignEppCheckRequest($host);
         $check->setSubProduct('dotCOM');
-        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckHostRequest', $check);
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckRequest', $check);
         $response = $this->conn->writeandread($check);
-        echo $response->saveXML();
-        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckHostResponse', $response);
-        if ($response instanceof Metaregistrar\EPP\eppCheckHostResponse) {
+        // echo $response->saveXML();
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckResponse', $response);
+        if ($response instanceof Metaregistrar\EPP\eppCheckResponse) {
             $this->assertTrue($response->Success());
             if ($response->Success()) {
                 $checks = $response->getCheckedHostsExtended();
@@ -67,19 +67,19 @@ class eppCheckHostTest extends eppTestCase
      */
     public function testCheckHostNotAvailable()
     {
-        $hostname = 'ns1.'.self::randomstring(30).'.net';
-        $this->createHost($hostname);
+        $hostname = 'dns1.siel.si';
+        // $this->createHost($hostname);
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
-        $check = new Metaregistrar\EPP\verisignEppCheckHostRequest($host);
+        $check = new Metaregistrar\EPP\verisignEppCheckRequest($host);
         $check->setSubProduct('dotCOM');
-        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckHostRequest', $check);
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckRequest', $check);
 
         $response = $this->conn->writeandread($check);
 
-        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckHostResponse', $response);
-        if ($response instanceof Metaregistrar\EPP\eppCheckHostResponse) {
-            $this->assertTrue($response->Success());
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckResponse', $response);
+        if ($response instanceof Metaregistrar\EPP\eppCheckResponse) {
+            $this->assertTrue($response->Success());            
             if ($response->Success()) {
                 $checks = $response->getCheckedHosts();
                 $this->assertCount(1, $checks);
@@ -99,13 +99,13 @@ class eppCheckHostTest extends eppTestCase
         $hostname = 'ns1.test%@test.com';
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
-        $check = new Metaregistrar\EPP\verisignEppCheckHostRequest($host);
+        $check = new Metaregistrar\EPP\verisignEppCheckRequest($host);
         $check->setSubProduct('dotCOM');
-        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckHostRequest', $check);
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppCheckRequest', $check);
         //echo $check->saveXML();
         $response = $this->conn->writeandread($check);
-        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckHostResponse', $response);
-        if ($response instanceof Metaregistrar\EPP\eppCheckHostResponse) {
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCheckResponse', $response);
+        if ($response instanceof Metaregistrar\EPP\eppCheckResponse) {
             //echo $response->saveXML();
             //$this->setExpectedException('Metaregistrar\EPP\eppException');
             $this->assertTrue($response->Success());

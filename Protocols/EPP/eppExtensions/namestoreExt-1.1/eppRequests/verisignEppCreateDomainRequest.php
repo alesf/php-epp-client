@@ -5,5 +5,5 @@ class verisignEppCreateDomainRequest extends eppCreateDomainRequest
 {
     use verisignEppRequestTrait;
 
-    public $thin = true;
+    public $thin = true;        
 }

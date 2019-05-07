@@ -7,28 +7,31 @@ class eppDeleteDomainTest extends eppTestCase
     {
         $domainname = $this->createDomain();
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
-
-        $delete = new \Metaregistrar\EPP\eppDeleteDomainRequest($domain);
-
+        $this->assertInstanceOf('Metaregistrar\EPP\eppDomain', $domain);
+        $delete = new \Metaregistrar\EPP\verisignEppDeleteDomainRequest($domain);
+        $delete->setSubProduct('dotCOM');
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppDeleteDomainRequest', $delete);
         $response = $this->conn->writeandread($delete);
-
-        $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
-
+        $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);        
         $this->assertTrue($response->Success());
-        $this->assertEquals('Command completed successfully; action pending', $response->getResultMessage());
-        $this->assertEquals(1001, $response->getResultCode());
+        // ST: Response depends on the status of the domain
+        // $this->assertEquals('Command completed successfully; action pending', $response->getResultMessage());
+        // $this->assertEquals(1001, $response->getResultCode());
+        $this->assertEquals('Command completed successfully', $response->getResultMessage());
+        $this->assertEquals(1000, $response->getResultCode());
+        
     }
 
     public function testDeleteNonexistentDomain()
     {
-        $domainname = self::randomstring(30).'.si';
+        $domainname = self::randomstring(30).'.com';
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
-
-        $delete = new \Metaregistrar\EPP\eppDeleteDomainRequest($domain);
-        $response = $this->conn->writeandread($delete);
-
+        $this->assertInstanceOf('Metaregistrar\EPP\eppDomain', $domain);
+        $delete = new \Metaregistrar\EPP\verisignEppDeleteDomainRequest($domain);
+        $delete->setSubProduct('dotCOM');
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppDeleteDomainRequest', $delete);
+        $response = $this->conn->writeandread($delete);        
         $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
-
         $this->expectException('Metaregistrar\EPP\eppException', 'Error 2303: Object does not exist');
         $this->assertFalse($response->Success());
     }

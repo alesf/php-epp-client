@@ -14,8 +14,7 @@ class eppInfoContactTest extends eppTestCase
         $contact = new Metaregistrar\EPP\eppContactHandle($contactid);
         $info = new Metaregistrar\EPP\verisignEppInfoContactRequest($contact);
         $info->setSubProduct('dotCOM');
-        $response = $this->conn->writeandread($info);
-        echo $response->saveXML();
+        $response = $this->conn->writeandread($info);        
         $this->assertInstanceOf('Metaregistrar\EPP\eppInfoContactResponse', $response);
         /* @var $response Metaregistrar\EPP\eppInfoContactResponse */
         $this->assertTrue($response->Success());
@@ -35,8 +34,7 @@ class eppInfoContactTest extends eppTestCase
         $contact->setPassword($password);
         $info = new Metaregistrar\EPP\verisignEppInfoContactRequest($contact);
         $info->setSubProduct('dotCOM');
-        $response = $this->conn->writeandread($info);
-        echo $response->saveXML();
+        $response = $this->conn->writeandread($info);        
         $this->assertInstanceOf('Metaregistrar\EPP\eppInfoContactResponse', $response);
         /* @var $response Metaregistrar\EPP\eppInfoContactResponse */
         $this->assertTrue($response->Success());

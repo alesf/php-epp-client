@@ -12,10 +12,12 @@ class eppDeleteContactTest extends eppTestCase
     {
         $contacthandle = $this->createContact();
         $contact = new Metaregistrar\EPP\eppContactHandle($contacthandle);
-        $delete = new Metaregistrar\EPP\eppDeleteContactRequest($contact);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppContactHandle', $contact);
+        $delete = new Metaregistrar\EPP\verisignEppDeleteContactRequest($contact);        
+        $delete->setSubProduct('dotCOM');
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppDeleteContactRequest', $delete);
         $response = $this->conn->writeandread($delete);
         $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
-        /* @var $response Metaregistrar\EPP\eppDeleteResponse */
         $this->assertTrue($response->Success());
         $this->assertEquals('Command completed successfully', $response->getResultMessage());
         $this->assertEquals(1000, $response->getResultCode());
@@ -30,12 +32,12 @@ class eppDeleteContactTest extends eppTestCase
         $message = null;
         $contacthandle = 'O99999';
         $contact = new Metaregistrar\EPP\eppContactHandle($contacthandle);
-        $delete = new Metaregistrar\EPP\eppDeleteContactRequest($contact);
-        // echo $delete->saveXML();
-        $response = $this->conn->writeandread($delete);
-        // print_r($response);
-        $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
-        /* @var $response Metaregistrar\EPP\eppDeleteResponse */
+        $this->assertInstanceOf('Metaregistrar\EPP\eppContactHandle', $contact);
+        $delete = new Metaregistrar\EPP\verisignEppDeleteContactRequest($contact);
+        $delete->setSubProduct('dotCOM');
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppDeleteContactRequest', $delete);
+        $response = $this->conn->writeandread($delete);        
+        $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);         
         try {
             $this->assertFalse($response->Success());
         } catch (Metaregistrar\EPP\eppException $e) {
@@ -50,13 +52,18 @@ class eppDeleteContactTest extends eppTestCase
      */
     public function testDeleteWrongContact()
     {
-        // TODO: create contact that is linked to domain and then try to remove it
-        // it should return an erroe
+        // below is domain with specific contact handle id that should return error
+        //
+        // <domain:name>rs59ZfVND8xp5tV92f8g.com</domain:name>       
+        // <domain:contact type="admin">MRG5cc02328eab18</domain:contact>
 
         $message = null;
-        $contacthandle = self::randomstring(8);
+        $contacthandle = 'MRG5cc02328eab18';
         $contact = new Metaregistrar\EPP\eppContactHandle($contacthandle);
-        $delete = new Metaregistrar\EPP\eppDeleteContactRequest($contact);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppContactHandle', $contact);
+        $delete = new Metaregistrar\EPP\verisignEppDeleteContactRequest($contact);
+        $delete->setSubProduct('dotCOM');
+        $this->assertInstanceOf('Metaregistrar\EPP\verisignEppDeleteContactRequest', $delete);
         $response = $this->conn->writeandread($delete);
         $this->assertInstanceOf('Metaregistrar\EPP\eppDeleteResponse', $response);
         /* @var $response Metaregistrar\EPP\eppDeleteResponse */
@@ -65,6 +72,6 @@ class eppDeleteContactTest extends eppTestCase
         } catch (Metaregistrar\EPP\eppException $e) {
             $message = $e->getMessage();
         }
-        $this->assertEquals('Error 2303: Object does not exist', $message);
+        $this->assertEquals('Error 2305: Object association prohibits operation (Contact is associated with other objects)', $message);
     }
 }

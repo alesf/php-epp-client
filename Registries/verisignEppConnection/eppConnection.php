@@ -15,6 +15,7 @@ class verisignEppConnection extends eppConnection
         parent::addService('rgp-poll', 'http://www.verisign.com/epp/rgp-poll-1.0');
 
         parent::useExtension("namestoreExt-1.1");
+        parent::useExtension("idnLang-1.0");
         // parent::useExtension("thinRegistrar");
 
         parent::enableLaunchphase('claim');

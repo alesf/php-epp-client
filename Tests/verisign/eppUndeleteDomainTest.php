@@ -31,29 +31,25 @@ class eppRestoreDomainTest extends eppTestCase
 
     public function testRemoveDomainDeleteStatus()
     {
-        $domainname = $this->createDomain();
-        $domain = new Metaregistrar\EPP\eppDomain($domainname);
-
-        $delete = new \Metaregistrar\EPP\eppDeleteDomainRequest($domain);
-        $response = $this->conn->writeandread($delete);
-
-        // $info_domain = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
-        // $info_response = $this->conn->writeandread($info_domain);
-        // echo $info_response->saveXML();
-        // exit();
-
+        // ST: avtomatsko pobriše domeno in ne nastavi statusa... preveri pri Alešu
+        $domain_name = $this::randomstring(20).'.com';
+        $result_domainname = $this->createDomain($domain_name);
+        $this->assertEquals($domain_name, $result_domainname);
+        $domain = new Metaregistrar\EPP\eppDomain($domain_name);
+        $delete = new \Metaregistrar\EPP\verisignEppDeleteDomainRequest($domain);
+        $delete->setSubProduct('dotCOM');
+        $response = $this->conn->writeandread($delete);        
+        $this->assertTrue($response->Success());
+        $this->assertEquals('Command completed successfully', $response->getResultMessage());
+        $this->assertEquals(1000, $response->getResultCode());         
+        return;
         $add = null;
         $mod = null;
-        $del = new Metaregistrar\EPP\eppDomain($domainname);
+        $del = new Metaregistrar\EPP\eppDomain($domain_name);
         $del->addStatus('pendingDelete');
-        $update = new Metaregistrar\EPP\eppUpdateDomainRequest($domain, $add, $del, $mod, true);
-
-        echo $update->saveXML();
-
-        $response = $this->conn->writeandread($update);
-
-        echo $response->saveXML();
-
-        $this->assertTrue($response->Success());
+        $update = new Metaregistrar\EPP\verisignEppUpdateDomainRequest($domain, $add, $del, $mod, true);
+        $update->setSubProduct('dotCOM');        
+        $response = $this->conn->writeandread($update);        
+        $this->assertTrue($response->Success());        
     }
 }

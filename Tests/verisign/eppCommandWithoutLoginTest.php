@@ -6,8 +6,9 @@ class eppCommandWithoutLoginTest extends eppTestCase
     public function testCommandWithoutLogin()
     {
         $conn = new Metaregistrar\EPP\verisignEppConnection(false);
-        $conn->setHostname('epp-ote.verisign-grs.com');
+        $conn->setHostname('ssl://epp-ote.verisign-grs.com');
         $conn->setPort(700);
+        $conn->enableCertification('/home/samot/projects/php-epp-client/Tests/verisign/core.storkregistry.com.CA.pem', null, true);
         if ($conn->connect()) {
             $domain = new Metaregistrar\EPP\eppDomain('fasfasfasfashfgaf.com');
             $info = new Metaregistrar\EPP\eppInfoDomainRequest($domain);

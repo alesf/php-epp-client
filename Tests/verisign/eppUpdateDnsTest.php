@@ -5,6 +5,7 @@ class eppUpdateDnsTest extends eppTestCase
 {
     /**
      * Test successful dns update
+     * @group ignore_me
      */
     public function testUpdateDnsSuccess() {
         $domainname = $this->createDns();
@@ -36,6 +37,7 @@ class eppUpdateDnsTest extends eppTestCase
 
     /**
      * Test successful dns update
+     * @group ignore_me
      */
     public function testSignDnsSuccess() {
         $domainname = $this->createDns();
@@ -54,6 +56,6 @@ class eppUpdateDnsTest extends eppTestCase
         $info = new Metaregistrar\EPP\metaregInfoDnsRequest($domain);
         $response = $this->conn->writeandread($info);
         /* @var $response Metaregistrar\EPP\metaregInfoDnsResponse */
-        echo $response->saveXML();
+        // echo $response->saveXML();
     }
 }

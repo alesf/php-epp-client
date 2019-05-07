@@ -12,7 +12,7 @@ class eppCreateTest extends eppTestCase
         $conn = Metaregistrar\EPP\eppConnection::create(dirname(__FILE__).'/testsetup.ini');
         $this->assertInstanceOf('Metaregistrar\EPP\eppConnection', $conn);
         /* @var $conn Metaregistrar\EPP\eppConnection */
-        $this->assertEquals($conn->getHostname(), 'epp-ote.verisign-grs.com');
+        $this->assertEquals($conn->getHostname(), 'ssl://epp-ote.verisign-grs.com');
         $this->assertEquals($conn->getPort(), 700);
     }
 

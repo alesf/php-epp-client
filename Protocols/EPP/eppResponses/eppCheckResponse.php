@@ -84,7 +84,8 @@ class eppCheckResponse extends eppResponse {
      *
      * @return array of checked hosts with status true/false
      */
-    public function getCheckedHostsExtended() {
+    public function getCheckedHostsExtended()
+    {
         $result = null;
         if ($this->getResultCode() == self::RESULT_SUCCESS) {
             $xpath = $this->xPath();

@@ -89,6 +89,11 @@ class eppCreateContactTest extends eppTestCase
         $response = $this->conn->writeandread($contact);
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateContactResponse', $response);
         /* @var $response Metaregistrar\EPP\eppCreateContactResponse */
-        $this->expectException('Metaregistrar\EPP\eppException', "Error 2001: Command syntax error (NameStore Extension not provided)");
+        
+        // ST: Why assert exception if no request is sent?
+        //
+        // $this->expectException('Metaregistrar\EPP\eppException', "Error 2001: Command syntax error (NameStore Extension not provided)");
+        // 
+        // ST
     }
 }

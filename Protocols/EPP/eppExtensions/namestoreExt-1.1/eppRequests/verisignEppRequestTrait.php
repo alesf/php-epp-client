@@ -44,4 +44,6 @@ trait verisignEppRequestTrait
 
         return $this->namestoreextension;
     }
+
+    
 }
