@@ -6,8 +6,9 @@ class eppCreateDomainIDNTest extends eppTestCase
     
     public function testCheckDomainIDNAvailable()
     {        
-        $domainname = $this->randomstring(12).'ščžäžđ.com';        
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domainname);        
+        $domainname = $this->randomstring(12).'ščžäžđ.com'; 
+        $domainname = idn_to_ascii($domainname, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+        $domain = new \Metaregistrar\EPP\eppDomain($domainname);        
         $this->assertInstanceOf('Metaregistrar\EPP\eppDomain', $domain);
         $check = new Metaregistrar\EPP\verisignEppCheckDomainRequest($domain);
         $check->setSubProduct('dotCOM');
@@ -32,14 +33,15 @@ class eppCreateDomainIDNTest extends eppTestCase
     {
         $contactid = $this->createContact();
         $domain_name = $this->randomstring(12).'öšćžß.com';
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);
         $domain->setPeriod(1);
         $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode($this->randomstring(8, true));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
-        $create = new \Metaregistrar\EPP\verisignEppCreateDomainIDNRequest($domain);
+        $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);
         $create->setSubProduct('dotCOM');
         $create->setIDNLang('ENG');        
         $response = $this->conn->writeandread($create);
@@ -53,7 +55,7 @@ class eppCreateDomainIDNTest extends eppTestCase
     // {
     //     $contactid = $this->createContact();
     //     $domain_name = $this->randomstring(12).'öšćžß.com';        
-    //     $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);        
+    //     $domain = new \Metaregistrar\EPP\eppDomainIDN($domain_name);        
     //     $domain->setPeriod(1);
     //     $domain->setRegistrant($contactid);
     //     $domain->setAuthorisationCode($this->randomstring(8, true));
@@ -71,15 +73,16 @@ class eppCreateDomainIDNTest extends eppTestCase
     public function testCreateDomainIDNMismatchLanguage()
     {
         $contactid = $this->createContact();
-        $domain_name = $this->randomstring(12).'žđöš.com';        
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);        
+        $domain_name = $this->randomstring(12).'žđöš.com';
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);        
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);        
         $domain->setPeriod(1);
         $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode($this->randomstring(8, true));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
-        $create = new \Metaregistrar\EPP\verisignEppCreateDomainIDNRequest($domain);
+        $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);
         $create->setSubProduct('dotCOM');
         // set chinese language
         $create->setIDNLang('CHI');
@@ -93,15 +96,16 @@ class eppCreateDomainIDNTest extends eppTestCase
     public function testCreateDomainIDNUnknownLanguage()
     {
         $contactid = $this->createContact();
-        $domain_name = $this->randomstring(12).'žđöš.com';        
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);        
+        $domain_name = $this->randomstring(12).'žđöš.com';      
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);  
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);        
         $domain->setPeriod(1);
         $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode($this->randomstring(8, true));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
-        $create = new \Metaregistrar\EPP\verisignEppCreateDomainIDNRequest($domain);
+        $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);
         $create->setSubProduct('dotCOM');           
         $create->setIDNLang('anhfj3478949');                
         $response = $this->conn->writeandread($create);                  
@@ -113,15 +117,16 @@ class eppCreateDomainIDNTest extends eppTestCase
     public function testCreateDomainIDNRussianLanguage()
     {
         $contactid = $this->createContact();
-        $domain_name = self::randomnumber(10) . 'Здравству.com';        
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);        
+        $domain_name = self::randomnumber(10) . 'Здравству.com';  
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);      
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);        
         $domain->setPeriod(1);
         $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode($this->randomstring(8, true));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
-        $create = new \Metaregistrar\EPP\verisignEppCreateDomainIDNRequest($domain);        
+        $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);        
         $create->setSubProduct('dotCOM');           
         $create->setIDNLang('RUS');                    
         $response = $this->conn->writeandread($create);                          
@@ -135,14 +140,15 @@ class eppCreateDomainIDNTest extends eppTestCase
     {
         $contactid = $this->createContact();
         $domain_name = 'Здравствуabc.com';        
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);        
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);        
         $domain->setPeriod(1);
         $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode($this->randomstring(8, true));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
-        $create = new \Metaregistrar\EPP\verisignEppCreateDomainIDNRequest($domain);        
+        $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);        
         $create->setSubProduct('dotCOM');           
         $create->setIDNLang('RUS');                    
         $response = $this->conn->writeandread($create);                          
@@ -154,8 +160,9 @@ class eppCreateDomainIDNTest extends eppTestCase
     public function testCreateHostIDN()
     {        
         $hostname = self::randomstring(30).'.hYayQdqGt5hTöšćžß.com';        
+        $hostname = idn_to_ascii($hostname, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
         $ipaddresses = ['8.8.8.8'] ;
-        $host = new Metaregistrar\EPP\verisignEppHostIDN($hostname, $ipaddresses);
+        $host = new Metaregistrar\EPP\eppHost($hostname, $ipaddresses);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
         $create = new Metaregistrar\EPP\verisignEppCreateHostRequest($host);
         $create->setSubProduct('dotCOM');
@@ -169,8 +176,9 @@ class eppCreateDomainIDNTest extends eppTestCase
 
     public function testCreateHostIDNFail()
     {        
-        $hostname = self::randomstring(30).'.hYayQdqGt5hTöšćžß.com';        
-    $ipaddresses = ['8.8.8.8'];
+        $hostname = self::randomstring(30).'.hYayQdqGt5hTöšćžß.com'; 
+        // $hostname = idn_to_ascii($hostname, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);       
+        $ipaddresses = ['8.8.8.8'];
         $host = new Metaregistrar\EPP\eppHost($hostname, $ipaddresses);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
         $create = new Metaregistrar\EPP\verisignEppCreateHostRequest($host);
@@ -184,14 +192,15 @@ class eppCreateDomainIDNTest extends eppTestCase
 
     public function testDeleteHostIDN()
     {
-        $hostname = self::randomstring(30).'.hYayQdqGt5hTöšćžß.com';                
+        $hostname = self::randomstring(30).'.hYayQdqGt5hTöšćžß.com';
+        $hostname = idn_to_ascii($hostname, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);             
         $ipaddresses = ['8.8.8.8'] ;
-        $host = new Metaregistrar\EPP\verisignEppHostIDN($hostname, $ipaddresses);
+        $host = new Metaregistrar\EPP\eppHost($hostname, $ipaddresses);
         $create = new Metaregistrar\EPP\verisignEppCreateHostRequest($host);
         $create->setSubProduct('dotCOM');        
         $response = $this->conn->writeandread($create);
         $this->assertTrue($response->Success());
-        $host = new Metaregistrar\EPP\verisignEppHostIDN($hostname);
+        $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
         $delete = new Metaregistrar\EPP\verisignEppDeleteHostRequest($host);
         $delete->setSubProduct('dotCOM');
@@ -206,15 +215,16 @@ class eppCreateDomainIDNTest extends eppTestCase
     public function testDeleteDomainIDN() 
     {
         $contactid = $this->createContact();
-        $domain_name = $this->randomstring(12).'öšćžß.com';           
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);        
+        $domain_name = $this->randomstring(12).'öšćžß.com';       
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);    
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);        
         $domain->setPeriod(1);
         $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode($this->randomstring(8, true));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
-        $create = new \Metaregistrar\EPP\verisignEppCreateDomainIDNRequest($domain);
+        $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);
         $create->setSubProduct('dotCOM');      
         $create->setIDNLang('ENG');                    
         $response = $this->conn->writeandread($create);               
@@ -233,7 +243,8 @@ class eppCreateDomainIDNTest extends eppTestCase
     {
         $contactid = $this->createContact();
         $domain_name = $this->randomstring(12).'öšćžß.com';           
-        $domain = new \Metaregistrar\EPP\verisignEppDomainIDN($domain_name);        
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);        
         $domain->setPeriod(1);
         $domain->setRegistrant($contactid);
         $domain->setAuthorisationCode($this->randomstring(8, true));

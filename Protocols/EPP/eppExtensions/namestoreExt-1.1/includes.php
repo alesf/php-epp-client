@@ -13,7 +13,7 @@ include_once(dirname(__FILE__) . '/eppRequests/verisignEppInfoContactRequest.php
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppUpdateContactRequest.php');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppCheckDomainRequest.php');
-include_once(dirname(__FILE__) . '/eppRequests/verisignEppCreateDomainRequest.php');
+include_once(dirname(__FILE__) . '/eppRequests/verisignEppNamestoreCreateDomainRequest.php');
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppDeleteDomainRequest.php');
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppInfoDomainRequest.php');
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppUpdateDomainRequest.php');
@@ -34,7 +34,7 @@ $this->addCommandResponse('Metaregistrar\EPP\verisignEppInfoContactRequest', 'Me
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppUpdateContactRequest', 'Metaregistrar\EPP\eppUpdateContactResponse');
 
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppCheckDomainRequest', 'Metaregistrar\EPP\eppCheckDomainResponse');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppCreateDomainRequest', 'Metaregistrar\EPP\eppCreateDomainResponse');
+$this->addCommandResponse('Metaregistrar\EPP\verisignEppNamestoreCreateDomainRequest', 'Metaregistrar\EPP\eppCreateDomainResponse');
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppDeleteDomainRequest', 'Metaregistrar\EPP\eppDeleteResponse');
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppInfoDomainRequest', 'Metaregistrar\EPP\eppInfoDomainResponse');
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppUpdateDomainRequest', 'Metaregistrar\EPP\eppUpdateDomainResponse');

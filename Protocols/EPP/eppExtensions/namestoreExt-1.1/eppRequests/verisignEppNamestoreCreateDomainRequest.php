@@ -1,7 +1,7 @@
 <?php
 namespace Metaregistrar\EPP;
 
-class verisignEppCreateDomainRequest extends eppCreateDomainRequest
+class verisignEppNamestoreCreateDomainRequest extends eppCreateDomainRequest
 {
     use verisignEppRequestTrait;
 

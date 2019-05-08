@@ -1,7 +1,7 @@
 <?php
 namespace Metaregistrar\EPP;
 
-class verisignEppCreateDomainIDNRequest extends verisignEppCreateDomainRequest
+class verisignEppCreateDomainRequest extends verisignEppNamestoreCreateDomainRequest
 {
     
     protected $idnlangextension = null;
