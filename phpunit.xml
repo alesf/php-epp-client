@@ -1,0 +1,31 @@
+<phpunit
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/3.7/phpunit.xsd"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         forceCoversAnnotation="false"
+         processIsolation="false"
+         stopOnError="true"
+         stopOnFailure="true"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         verbose="false">
+    <testsuites>
+      <testsuite name="Verisign">
+        <directory suffix="Test.php">Tests/verisign</directory>
+      </testsuite>
+      <testsuite name="Arnes">
+        <directory suffix="Test.php">Tests/si</directory>
+      </testsuite>
+      <testsuite name="EURid">
+        <directory suffix="Test.php">Tests/eurid</directory>
+      </testsuite>
+    </testsuites>
+    <groups>
+      <exclude>
+        <group>ignore_me</group>
+      </exclude>
+    </groups>
+</phpunit>

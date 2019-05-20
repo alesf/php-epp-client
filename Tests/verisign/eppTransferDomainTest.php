@@ -10,7 +10,7 @@ class eppTransferDomainTest extends eppTestCase
     {
         $user1 = dirname(__FILE__).'/testsetup.ini';
         $user2 = dirname(__FILE__).'/testsetup2.ini';
-        $domainname = self::randomstring(30).'.com';        
+        $domainname = self::randomstring(30).'.com';
         $password = '2Te$tPWS$';
         // $password_hash = hash('sha256', $password);
         $this->tearDown();
@@ -39,7 +39,7 @@ class eppTransferDomainTest extends eppTestCase
     {
         $user1 = dirname(__FILE__).'/testsetup.ini';
         $user2 = dirname(__FILE__).'/testsetup2.ini';
-        $domainname = self::randomstring(30).'.com';        
+        $domainname = self::randomstring(30).'.com';
         $password = '2Te$tPWS$';
         // $password_hash = hash('sha256', $password);
         $this->tearDown();
@@ -69,12 +69,12 @@ class eppTransferDomainTest extends eppTestCase
             $this->assertFalse($response->Success());
         }
     }
-     
+
     public function testDomainTransferStatus()
     {
         $user1 = dirname(__FILE__).'/testsetup.ini';
         $user2 = dirname(__FILE__).'/testsetup2.ini';
-        $domainname = self::randomstring(30).'.com';        
+        $domainname = self::randomstring(30).'.com';
         $password = '2Te$tPWS$';
         // $password_hash = hash('sha256', $password);
         $this->tearDown();
@@ -100,7 +100,7 @@ class eppTransferDomainTest extends eppTestCase
             // now we test the domain transfer status
             $status = new \Metaregistrar\EPP\verisignEppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_QUERY, $domain);
             $status->setSubProduct('dotCOM');
-            $response = $this->conn->writeandread($status);            
+            $response = $this->conn->writeandread($status);
             $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
             $this->assertTrue($response->Success());
             $this->assertEquals('Command completed successfully', $response->getResultMessage());
@@ -115,12 +115,12 @@ class eppTransferDomainTest extends eppTestCase
             $domain->setAuthorisationCode($password);
             $accept = new \Metaregistrar\EPP\verisignEppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_APPROVE, $domain);
             $accept->setSubProduct('dotCOM');
-            $response = $this->conn->writeandread($accept);            
+            $response = $this->conn->writeandread($accept);
             $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
             $this->assertTrue($response->Success());
             $this->assertEquals('Command completed successfully', $response->getResultMessage());
             $this->assertEquals(1000, $response->getResultCode());
-            
+
             // now we test the domain transfer status
             $this->tearDown();
             $this->setUp($user1);
@@ -128,7 +128,7 @@ class eppTransferDomainTest extends eppTestCase
             $domain->setAuthorisationCode($password);
             $status = new \Metaregistrar\EPP\verisignEppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_QUERY, $domain);
             $status->setSubProduct('dotCOM');
-            $response = $this->conn->writeandread($status);            
+            $response = $this->conn->writeandread($status);
             $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
             $this->assertTrue($response->Success());
             $this->assertEquals('Command completed successfully', $response->getResultMessage());
@@ -142,7 +142,7 @@ class eppTransferDomainTest extends eppTestCase
     {
         $user1 = dirname(__FILE__).'/testsetup.ini';
         $user2 = dirname(__FILE__).'/testsetup2.ini';
-        $domainname = self::randomstring(30).'.com';        
+        $domainname = self::randomstring(30).'.com';
         $password = '2Te$tPWS$';
         // $password_hash = hash('sha256', $password);
         $this->tearDown();
@@ -168,7 +168,7 @@ class eppTransferDomainTest extends eppTestCase
             // now we test the domain transfer status
             $status = new \Metaregistrar\EPP\verisignEppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_QUERY, $domain);
             $status->setSubProduct('dotCOM');
-            $response = $this->conn->writeandread($status);            
+            $response = $this->conn->writeandread($status);
             $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
             $this->assertTrue($response->Success());
             $this->assertEquals('Command completed successfully', $response->getResultMessage());
@@ -183,12 +183,12 @@ class eppTransferDomainTest extends eppTestCase
             $domain->setAuthorisationCode($password);
             $accept = new \Metaregistrar\EPP\verisignEppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_REJECT, $domain);
             $accept->setSubProduct('dotCOM');
-            $response = $this->conn->writeandread($accept);            
+            $response = $this->conn->writeandread($accept);
             $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
             $this->assertTrue($response->Success());
             $this->assertEquals('Command completed successfully', $response->getResultMessage());
             $this->assertEquals(1000, $response->getResultCode());
-            
+
             // now we test the domain transfer status
             $this->tearDown();
             $this->setUp($user1);
@@ -196,7 +196,7 @@ class eppTransferDomainTest extends eppTestCase
             $domain->setAuthorisationCode($password);
             $status = new \Metaregistrar\EPP\verisignEppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_QUERY, $domain);
             $status->setSubProduct('dotCOM');
-            $response = $this->conn->writeandread($status);            
+            $response = $this->conn->writeandread($status);
             $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
             $this->assertTrue($response->Success());
             $this->assertEquals('Command completed successfully', $response->getResultMessage());
@@ -205,12 +205,12 @@ class eppTransferDomainTest extends eppTestCase
             $this->assertEquals('clientRejected', $response->getTransferStatus());
         }
     }
-   
+
     public function testCancelDomainTransfer()
     {
         $user1 = dirname(__FILE__).'/testsetup.ini';
         $user2 = dirname(__FILE__).'/testsetup2.ini';
-        $domainname = self::randomstring(30).'.com';        
+        $domainname = self::randomstring(30).'.com';
         $password = '2Te$tPWS$';
         // $password_hash = hash('sha256', $password);
         $this->tearDown();
@@ -252,8 +252,8 @@ class eppTransferDomainTest extends eppTestCase
             $this->assertTrue($response->Success());
             $this->assertEquals('Command completed successfully', $response->getResultMessage());
             $this->assertEquals(1000, $response->getResultCode());
-            
-            // now we test the domain transfer status           
+
+            // now we test the domain transfer status
             $status = new \Metaregistrar\EPP\verisignEppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_QUERY, $domain);
             $status->setSubProduct('dotCOM');
             $response = $this->conn->writeandread($status);
@@ -270,13 +270,13 @@ class eppTransferDomainTest extends eppTestCase
     {
         $user1 = dirname(__FILE__).'/testsetup.ini';
         $user2 = dirname(__FILE__).'/testsetup2.ini';
-        $domainname = self::randomstring(30).'.com';        
+        $domainname = self::randomstring(30).'.com';
         $password = '2Te$tPWS$';
         // $password_hash = hash('sha256', $password);
         $this->tearDown();
         $this->setUp($user2);
-        $this->createDomain($domainname);  
-        // no authorisation code is entered     
+        $this->createDomain($domainname);
+        // no authorisation code is entered
         $this->tearDown();
         $this->setUp($user1);
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
@@ -286,6 +286,6 @@ class eppTransferDomainTest extends eppTestCase
         $response = $this->conn->writeandread($transfer);
         $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
         $this->expectException('Metaregistrar\EPP\eppException', 'Error 2202: Invalid authorization information (The requester has given authinfo which doesn\'t match)');
-        $this->assertFalse($response->Success());        
+        $this->assertFalse($response->Success());
     }
 }

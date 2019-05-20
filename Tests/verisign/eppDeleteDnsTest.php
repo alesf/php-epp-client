@@ -9,7 +9,7 @@ class eppDeleteDnsTest extends eppTestCase
      */
     public function testDeleteDnsSuccess()
     {
-        $domainname = $this->createDns();        
+        $domainname = $this->createDns();
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppDomain', $domain);
         $delete = new Metaregistrar\EPP\metaregDeleteDnsRequest($domain);
@@ -21,7 +21,6 @@ class eppDeleteDnsTest extends eppTestCase
         $this->assertTrue($response->Success());
         $this->assertEquals('Command completed successfully', $response->getResultMessage());
         $this->assertEquals(1000, $response->getResultCode());
-
     }
 
 
@@ -40,7 +39,6 @@ class eppDeleteDnsTest extends eppTestCase
         /* @var $response Metaregistrar\EPP\metaregDeleteDnsResponse */
         $this->setExpectedException('Metaregistrar\EPP\eppException', 'Error 2201: Authorization error; Domain is not yours');
         $this->assertFalse($response->Success());
-
     }
 
 
@@ -59,6 +57,5 @@ class eppDeleteDnsTest extends eppTestCase
         /* @var $response Metaregistrar\EPP\metaregDeleteDnsResponse */
         $this->setExpectedException('Metaregistrar\EPP\eppException', 'Error 2303: Object does not exist; The domain '.$domainname.' does not have a zone.');
         $this->assertFalse($response->Success());
-
     }
 }

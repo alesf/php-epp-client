@@ -1,0 +1,9 @@
+{
+	"phpunit.args": [
+		"--configuration ./phpunit.xml"
+	],
+	"phpunit.phpunit": "./vendor/phpunit/phpunit/phpunit",
+	"better-phpunit.commandSuffix": null,
+	"better-phpunit.phpunitBinary": "./vendor/phpunit/phpunit/phpunit",
+	"better-phpunit.xmlConfigFilepath": "./phpunit.xml"
+}
