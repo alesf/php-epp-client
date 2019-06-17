@@ -3,6 +3,9 @@ include_once(dirname(__FILE__).'/eppTestCase.php');
 
 class eppDnssecTest extends eppTestCase {
 
+     /**
+     * @group ignore_me
+     */
     public function testCreateWithDnssecSuccess() {
         $contactid = $this->createContact();
         $domain = new \Metaregistrar\EPP\eppDomain($this->randomstring(20).'.frl');

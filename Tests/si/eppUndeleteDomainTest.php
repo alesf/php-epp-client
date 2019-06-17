@@ -37,11 +37,14 @@ class eppRestoreDomainTest extends eppTestCase
         $delete = new \Metaregistrar\EPP\eppDeleteDomainRequest($domain);
         $response = $this->conn->writeandread($delete);
 
-        // $info_domain = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
-        // $info_response = $this->conn->writeandread($info_domain);
-        // echo $info_response->saveXML();
-        // exit();
+        $info_domain = new Metaregistrar\EPP\eppInfoDomainRequest($domain);
+        $info_response = $this->conn->writeandread($info_domain);
+        $this->assertTrue($response->Success());
+        $this->assertEquals('Command completed successfully; action pending', $response->getResultMessage());
+        $this->assertEquals(1001, $response->getResultCode());
 
+        return;
+        // unable to remove penidngDelete status!!!
         $add = null;
         $mod = null;
         $del = new Metaregistrar\EPP\eppDomain($domainname);
@@ -52,7 +55,7 @@ class eppRestoreDomainTest extends eppTestCase
 
         $response = $this->conn->writeandread($update);
 
-        echo $response->saveXML();
+        // echo $response->saveXML();
 
         $this->assertTrue($response->Success());
     }

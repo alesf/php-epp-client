@@ -192,8 +192,10 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
     {
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $delete = new \Metaregistrar\EPP\eppDeleteDomainRequest($domain);
-        if ($response = $this->conn->request($delete)) {
-            if ($response->getResultCode() == 1000) {
+        $response = $this->conn->writeandread($delete);
+        if ($response) {
+            // delete always returns response 1001
+            if ($response->getResultCode() == 1001) {
                 return true;
             }
         }
@@ -222,7 +224,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         }
 
         $update = new Metaregistrar\EPP\eppUpdateDomainRequest($domain, $add, $del, $mod, true);
-        echo $update->saveXML();
+        // echo $update->saveXML();
         // $response = $this->conn->writeandread($update);
         if ($response = $this->conn->request($update)) {
             if ($response->getResultCode() == 1000) {
