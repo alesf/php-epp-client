@@ -35,6 +35,71 @@ class eppCreateDomainTest extends eppTestCase
         $this->assertEquals(1000, $response->getResultCode());
     }
 
+    public function testCreateDomainWithRegistrantAndHost()
+    {
+        $c_reg = $this->createContact('registrant');
+        $c_billing = 'c446232'; // you probably already have a billing contact
+        $c_tech = 'c446264'; // you probably already have a tech contact
+        $domain = new \Metaregistrar\EPP\eppDomain('a-test-' . $this->randomstring(20).'.eu');
+        $domain->setPeriod(1);
+        $domain->setRegistrant($c_reg);
+        $domain->setAuthorisationCode('fubar');
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_tech, 'tech'));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_billing, 'billing'));
+        $hostname = 'ns1.siel.si';
+        $host = new Metaregistrar\EPP\eppHost($hostname);
+        $domain->addHost($host);
+        $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain, $this->forcehostattr);
+
+        try {
+            $response = $this->conn->writeandread($create);
+        } catch (eppException $e) {
+            print_r($e->getMessage());
+            print_r($e->getLastCommand());
+            $create->domainobject->ownerDocument->formatOutput = true;
+            print_r($create->domainobject->ownerDocument->saveXML());
+            exit();
+        }
+
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCreateDomainResponse', $response);
+        /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */
+        $this->assertTrue($response->Success());
+        $this->assertEquals('Command completed successfully', $response->getResultMessage());
+        $this->assertEquals(1000, $response->getResultCode());
+    }
+
+    public function testCreateDomainWithRegistrantAndGlueRecord()
+    {
+        $c_reg = $this->createContact('registrant');
+        $c_billing = 'c446232'; // you probably already have a billing contact
+        $c_tech = 'c446264'; // you probably already have a tech contact
+        $domain = new \Metaregistrar\EPP\eppDomain('a-test-' . $this->randomstring(20).'.eu');
+        $domain->setPeriod(1);
+        $domain->setRegistrant($c_reg);
+        $domain->setAuthorisationCode('fubar');
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_tech, 'tech'));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($c_billing, 'billing'));
+        $hostname = 'ns1.siel.si';
+        $ip = '8.8.8.8';
+        $host = new Metaregistrar\EPP\eppHost($hostname, $ip);
+        $domain->addHost($host);
+        $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain, $this->forcehostattr);
+        try {
+            $response = $this->conn->writeandread($create);
+        } catch (eppException $e) {
+            print_r($e->getMessage());
+            print_r($e->getLastCommand());
+            $create->domainobject->ownerDocument->formatOutput = true;
+            print_r($create->domainobject->ownerDocument->saveXML());
+            exit();
+        }
+        $this->expectException('Metaregistrar\EPP\eppException', "Error 2308: Data management policy violation; ");
+        $this->assertFalse($response->Success());
+
+
+    }
+
+
     public function testCreateDomainWithoutRegistrant()
     {
         $domain = new \Metaregistrar\EPP\eppDomain($this->randomstring(20).'.eu');

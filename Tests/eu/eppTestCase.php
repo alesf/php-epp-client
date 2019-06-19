@@ -111,10 +111,11 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         $postalinfo = new Metaregistrar\EPP\eppContactPostalInfo($name, $city, $country, $organization, $address, $province, $postcode, Metaregistrar\EPP\eppContact::TYPE_LOC);
         $contactinfo = new Metaregistrar\EPP\euridEppContact($postalinfo, $email, $telephone);
         $contactinfo->setPassword($password);
-        $contactinfo->setContactExtType($type);
+        if ($type) {
+            $contactinfo->setContactExtType($type);
+        }
         $contactinfo->setContactExtLang('en');
         $create = new Metaregistrar\EPP\euridEppCreateContactRequest($contactinfo);
-
         $response = null;
 
         try {
@@ -173,6 +174,35 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         }
 
         return null;
+    }
+
+    protected function updateDomain($domainname, $data)
+    {
+        $domain = new Metaregistrar\EPP\eppDomain($domainname);
+        $add = null;
+        $del = null;
+        $mod = null;
+        foreach ($data as $type => $var) {
+            if (!empty($var)) {
+                $$type = new Metaregistrar\EPP\eppDomain($domainname);
+            }
+            if (isset($var['hosts'])) {
+                foreach ($var['hosts'] as $host) {
+                    $host = new Metaregistrar\EPP\eppHost($host);
+                    $$type->addHost($host);
+                }
+            }
+            if (isset($var['auth'])) {
+                $$type->setAuthorisationCode($var['auth']);
+            }
+        }
+        $update = new Metaregistrar\EPP\eppUpdateDomainRequest($domain, $add, $del, $mod, true);
+        if ($response = $this->conn->request($update)) {
+            if ($response->getResultCode() == 1000) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function deleteDomain($domainname)

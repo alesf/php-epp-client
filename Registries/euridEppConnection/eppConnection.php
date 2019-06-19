@@ -16,6 +16,7 @@ class euridEppConnection extends eppConnection
         parent::useExtension('domain-ext-2.1');
         parent::useExtension('contact-ext-1.1');
         parent::useExtension('registrarFinance-1.0');
+        parent::useExtension('authInfo-1.1');
 
         // parent::addCommandResponse('Metaregistrar\EPP\euridEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
         // parent::addCommandResponse('Metaregistrar\EPP\euridEppInfoDomainRequest', 'Metaregistrar\EPP\euridEppInfoDomainResponse');

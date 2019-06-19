@@ -7,7 +7,7 @@ class eppUpdateDomainTest extends eppTestCase
      * Test update of hosts on a domain name
      * Expects a standard result for a free domainname
      */
-    public function testUpdateDomainHostAttr()
+    public function testUpdateDomainHostAttrFail()
     {
         $domainname = self::randomstring(30) . '.si';
         $domain = new Metaregistrar\EPP\eppDomain($domainname);

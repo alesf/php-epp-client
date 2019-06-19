@@ -6,6 +6,11 @@ class eppDeleteDomainTest extends eppTestCase
     /**
      * Test successful domain restore
      * @throws \Metaregistrar\EPP\eppException
+     * @group ignore_me
+     *
+     * EURID doesn't support rgp-1.0
+     * response:  Error 2103: Unimplemented extension; value:urn:ietf:params:xml:ns:rgp-1.0 (Unknown extURI.)
+     *
      */
     public function testDeleteDomainSuccess()
     {
