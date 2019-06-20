@@ -288,4 +288,60 @@ class eppTransferDomainTest extends eppTestCase
         $this->expectException('Metaregistrar\EPP\eppException', 'Error 2202: Invalid authorization information (The requester has given authinfo which doesn\'t match)');
         $this->assertFalse($response->Success());
     }
+
+    public function testCreateDomainForTransfer()
+    {
+        $user2 = dirname(__FILE__).'/testsetup2.ini';
+        $domainname = 'transfer-'.self::randomnumber(3).'.com';
+        $password = '2Te$tPWS$';
+
+        echo "\n$domainname : $password\n";
+
+        $this->tearDown();
+        $this->setUp($user2);
+        $this->createDomain($domainname, true);
+        $this->updateDomain($domainname, ['mod' => ['auth' => $password]]);
+
+        $this->assertTrue(true);
+    }
+
+    public function testApproveDomainForTransfer()
+    {
+        $num = 527;
+        $domainname = "transfer-{$num}.com";
+
+        $user2 = dirname(__FILE__).'/testsetup2.ini';
+        $this->tearDown();
+        $this->setUp($user2);
+
+        $domain = new \Metaregistrar\EPP\eppDomain($domainname);
+        $transfer = new \Metaregistrar\EPP\verisignEppTransferRequest(
+            \Metaregistrar\EPP\eppTransferRequest::OPERATION_APPROVE,
+            $domain
+        );
+        $transfer->setSubProduct('dotCOM');
+        $response = $this->conn->writeandread($transfer);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
+        $this->assertTrue($response->Success());
+    }
+
+    public function testRejectDomainForTransfer()
+    {
+        $num = 528;
+        $domainname = "transfer-{$num}.com";
+
+        $user2 = dirname(__FILE__).'/testsetup2.ini';
+        $this->tearDown();
+        $this->setUp($user2);
+
+        $domain = new \Metaregistrar\EPP\eppDomain($domainname);
+        $transfer = new \Metaregistrar\EPP\verisignEppTransferRequest(
+            \Metaregistrar\EPP\eppTransferRequest::OPERATION_REJECT,
+            $domain
+        );
+        $transfer->setSubProduct('dotCOM');
+        $response = $this->conn->writeandread($transfer);
+        $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
+        $this->assertTrue($response->Success());
+    }
 }

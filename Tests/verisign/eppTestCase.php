@@ -125,8 +125,23 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         if (!$hostname) {
             $hostname = self::randomstring(30).'.HCtM7kDdxtU3dBNXzy2X.com';
         }
-        $ipaddresses = ['8.8.8.8'] ;
+        $ipaddresses = ['8.8.8.8'];
         $host = new Metaregistrar\EPP\eppHost($hostname, $ipaddresses);
+        $create = new Metaregistrar\EPP\verisignEppCreateHostRequest($host);
+        $create->setSubProduct('dotCOM');
+        $response = $this->conn->writeandread($create);
+        if ($response->Success()) {
+            return $hostname;
+        }
+        return null;
+    }
+
+    protected function createNS($hostname = null)
+    {
+        if (!$hostname) {
+            $hostname = self::randomstring(30).'.HCtM7kDdxtU3dBNXzy2X.eu';
+        }
+        $host = new Metaregistrar\EPP\eppHost($hostname);
         $create = new Metaregistrar\EPP\verisignEppCreateHostRequest($host);
         $create->setSubProduct('dotCOM');
         $response = $this->conn->writeandread($create);
@@ -191,7 +206,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         return $domainname;
     }
 
-    protected function createDomain($domainname = null)
+    protected function createDomain($domainname = null, $nameservers = false)
     {
         // If no domain name was given, test with a random .com domain name
         if (!$domainname) {
@@ -208,13 +223,11 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
 
-        // $hostname = $this->createHost($this->randomstring(20).'.'.$domainname);
-        // $host = new \Metaregistrar\EPP\eppHost($hostname);
-        // $domain->addHost($host);
-
-        // $hostname = $this->createHost($this->randomstring(20).'.'.$domainname);
-        // $host = new \Metaregistrar\EPP\eppHost($this->randomstring(20).'.'.$domainname);
-        // $domain->addHost($host);
+        if ($nameservers) {
+            $domain->addHost(new \Metaregistrar\EPP\eppHost($this->createNS()));
+            $domain->addHost(new \Metaregistrar\EPP\eppHost($this->createNS()));
+            $domain->addHost(new \Metaregistrar\EPP\eppHost($this->createNS()));
+        }
 
         $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);
         $create->setSubProduct('dotCOM');
