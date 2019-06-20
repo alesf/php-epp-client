@@ -376,7 +376,6 @@ class eppConnection {
             stream_set_timeout($this->connection, $this->timeout);
             if ($errno == 0) {
                 $meta = stream_get_meta_data($this->connection);
-                print_r(stream_context_get_options($this->connection));
                 if (isset($meta['crypto'])) {
                     $this->writeLog("Stream opened with protocol ".$meta['crypto']['protocol'].", cipher ".$meta['crypto']['cipher_name'].", ".$meta['crypto']['cipher_bits']." bits ".$meta['crypto']['cipher_version'],"Connection made");
                 } else {
