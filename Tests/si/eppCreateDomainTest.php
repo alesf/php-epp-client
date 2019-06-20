@@ -15,7 +15,7 @@ class eppCreateDomainTest extends eppTestCase
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
         $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain);
         $response = $this->conn->writeandread($create);
-        echo $response->saveXML();
+        // echo $response->saveXML();
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateDomainResponse', $response);
         /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */
         $this->assertTrue($response->Success());
@@ -98,4 +98,27 @@ class eppCreateDomainTest extends eppTestCase
         $this->expectException('Metaregistrar\EPP\eppException', "Error 2001: Command syntax error; Element '{urn:ietf:params:xml:ns:domain-1.0}create': Missing child element(s). Expected is one of ( {urn:ietf:params:xml:ns:domain-1.0}contact, {urn:ietf:params:xml:ns:domain-1.0}authInfo ).");
         $this->assertFalse($response->Success());
     }
+
+    public function testCreateIDNDomainWithRegistrant()
+    {
+        $contactid = $this->createContact();
+        $domain_name = $this->randomstring(20).'.si';
+        $domain_name = idn_to_ascii($domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+        $domain = new \Metaregistrar\EPP\eppDomain($domain_name);
+        $domain->setPeriod(1);
+        $domain->setRegistrant($contactid);
+        $domain->setAuthorisationCode('fubar');
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
+        $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
+        $create = new \Metaregistrar\EPP\eppCreateDomainRequest($domain);
+        $response = $this->conn->writeandread($create);
+        // echo $response->saveXML();
+        $this->assertInstanceOf('Metaregistrar\EPP\eppCreateDomainResponse', $response);
+        /* @var $response Metaregistrar\EPP\eppCreateDomainResponse */
+        $this->assertTrue($response->Success());
+        $this->assertEquals('Command completed successfully', $response->getResultMessage());
+        $this->assertEquals(1000, $response->getResultCode());
+    }
+
 }

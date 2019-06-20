@@ -39,7 +39,8 @@ class eppCheckDomainTest extends eppTestCase
      */
     public function testCheckDomainTaken()
     {
-        $domainname = 'test.si';
+        $domainname = self::randomstring(30).'.si';
+        $this->createDomain($domainname);
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppDomain', $domain);
         $check = new Metaregistrar\EPP\eppCheckRequest($domain);
@@ -65,9 +66,11 @@ class eppCheckDomainTest extends eppTestCase
     /**
      * Test if test.frl domain name is reserved
      * Expects a standard result for a taken domain name
+     * @group ignore_me
      */
     public function testCheckDomainReserved()
     {
+        // TODO: check dfq is domain reserved
         $domainname = 'test.si';
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppDomain', $domain);

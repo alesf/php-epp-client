@@ -5,7 +5,8 @@ class eppCreateHostTest extends eppTestCase
 {
     public function testCreateHostSi()
     {
-        $hostname = self::randomstring(10).'.test.si';
+        // Host creation from another registrar
+        $hostname = self::randomstring(16).'.test.si';
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
         $create = new Metaregistrar\EPP\eppCreateHostRequest($host);
@@ -15,24 +16,23 @@ class eppCreateHostTest extends eppTestCase
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateHostResponse', $response);
 
         if ($response instanceof Metaregistrar\EPP\eppCreateHostResponse) {
-            $this->assertTrue($response->Success());
+            $this->expectException('Metaregistrar\EPP\eppException', "Error 2308: Data management policy violation");
+            $this->assertFalse($response->Success());
         }
     }
 
+
     public function testCreateHostSiWithIp()
     {
-        // TODO: naredi domeno - dodaj host za tisto domeno
-
-        $this->assertTrue(true);
-        return true;
-
-        $hostname = self::randomstring(30).'.test.si';
+        // host creation own domain wit IP
+        $domain_name = self::randomstring(30).'.si';
+        $domain = $this->createDomain($domain_name);
+        $hostname = self::randomstring(9) . '.' . $domain_name;
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);
         $host->setIpAddress('8.8.8.8');
         $create = new Metaregistrar\EPP\eppCreateHostRequest($host);
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateHostRequest', $create);
-
         $response = $this->conn->writeandread($create);
         $this->assertInstanceOf('Metaregistrar\EPP\eppCreateHostResponse', $response);
         if ($response instanceof Metaregistrar\EPP\eppCreateHostResponse) {
@@ -42,6 +42,7 @@ class eppCreateHostTest extends eppTestCase
 
     public function testCreateHostSiWithIpError()
     {
+        // Host creation from another registrar with IP - should return error
         $hostname = self::randomstring(30).'.test.si';
         $host = new Metaregistrar\EPP\eppHost($hostname);
         $this->assertInstanceOf('Metaregistrar\EPP\eppHost', $host);

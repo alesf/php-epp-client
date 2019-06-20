@@ -3,8 +3,12 @@ include_once(dirname(__FILE__).'/eppTestCase.php');
 
 class eppDeleteDnsTest extends eppTestCase
 {
+
+    // DNS tests??????
+
     /**
      * Test successful dns delete
+     * @group ignore_me
      */
     public function testDeleteDnsSuccess()
     {
@@ -24,6 +28,7 @@ class eppDeleteDnsTest extends eppTestCase
     /**
      * Test failed dns delete
      * @throws \Metaregistrar\EPP\eppException;
+     * @group ignore_me
      */
     public function testDeleteDnsWrongDomain()
     {
@@ -42,6 +47,7 @@ class eppDeleteDnsTest extends eppTestCase
     /**
      * Test failed dns delete
      * @throws \Metaregistrar\EPP\eppException;
+     * @group ignore_me
      */
     public function testDeleteDnsDomainEmpty()
     {

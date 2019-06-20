@@ -5,26 +5,7 @@ include_once(dirname(__FILE__).'/eppTestCase.php');
 
 class eppTransferDomainTest extends eppTestCase
 {
-    /**
-     * @group demo
-     */
-    public function testPrepareTransferDomain()
-    {
-        $domainname = self::randomstring(10).'.si';
-        $password = 'transfer';
-        $password_hash = hash('sha256', $password);
 
-        $user2 = dirname(__FILE__).'/testsetup2.ini';
-        $this->tearDown();
-        $this->setUp($user2);
-
-        $this->createDomain($domainname);
-        $this->updateDomain($domainname, ['mod' => ['auth' => $password_hash]]);
-    }
-
-    /**
-     * @group test
-     */
     public function testRequestTransferDomain()
     {
         $user1 = dirname(__FILE__).'/testsetup.ini';
@@ -37,8 +18,8 @@ class eppTransferDomainTest extends eppTestCase
         $this->tearDown();
         $this->setUp($user2);
 
-        $this->createDomain($domainname);
-        $this->updateDomain($domainname, ['mod' => ['auth' => $password_hash]]);
+        $this->assertEquals($this->createDomain($domainname), $domainname);
+        $this->assertTrue($this->updateDomain($domainname, ['mod' => ['auth' => $password_hash]]));
 
         // ----
 
@@ -51,7 +32,7 @@ class eppTransferDomainTest extends eppTestCase
         $transfer = new \Metaregistrar\EPP\eppTransferRequest(\Metaregistrar\EPP\eppTransferRequest::OPERATION_REQUEST, $domain);
 
         $response = $this->conn->writeandread($transfer);
-        echo $response->SaveXML();
+        // echo $response->SaveXML();
 
         $this->assertInstanceOf('Metaregistrar\EPP\eppTransferResponse', $response);
 
@@ -108,19 +89,21 @@ class eppTransferDomainTest extends eppTestCase
 
     public function testDomainTransferStatus()
     {
+        // test doesn-t make sense because of the Arnes transfer domain specific
         $this->assertTrue(true);
-        # code...
+
     }
+
 
     public function testCancelDomainTransfer()
     {
+        // test doesn-t make sense because of the Arnes transfer domain specific
         $this->assertTrue(true);
-        # code...
     }
 
     public function testTransferWithoutCode()
     {
+        // test doesn-t make sense because of the Arnes transfer domain specific
         $this->assertTrue(true);
-        # code...
     }
 }
