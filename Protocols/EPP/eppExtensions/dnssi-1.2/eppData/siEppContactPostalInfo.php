@@ -19,6 +19,7 @@ class siEppContactPostalInfo extends eppContactPostalInfo
      * @param string $province
      * @param string $zipcode
      * @param string $type POSTAL_TYPE_LOC or POSTAL_TYPE_INT
+     * @param string $contactType ARNES_CONTACT_TYPE_PERSON or ARNES_CONTACT_TYPE_ORG
      */
     public function __construct(
         $name = null,
@@ -28,11 +29,12 @@ class siEppContactPostalInfo extends eppContactPostalInfo
         $street = null,
         $province = null,
         $zipcode = null,
-        $type = self::POSTAL_TYPE_INT
+        $type = self::POSTAL_TYPE_INT,
+        $contactType = self::ARNES_CONTACT_TYPE_PERSON
     ) {
         parent::__construct($name, $city, $countrycode, $organisationName, $street, $province, $zipcode, $type);
 
-        $this->contactType = self::ARNES_CONTACT_TYPE_PERSON;
+        $this->setContactType($contactType);
     }
 
     /**
