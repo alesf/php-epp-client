@@ -41,15 +41,15 @@ class eppUpdateDomainRequest extends eppDomainRequest {
         # Object create structure
         #
         $this->domainobject->appendChild($this->createElement('domain:name', $domainname));
-        if ($addInfo instanceof eppDomain) {
-            $addcmd = $this->createElement('domain:add');
-            $this->addDomainChanges($addcmd, $addInfo);
-            $this->domainobject->appendChild($addcmd);
-        }
         if ($removeInfo instanceof eppDomain) {
             $remcmd = $this->createElement('domain:rem');
             $this->addDomainChanges($remcmd, $removeInfo);
             $this->domainobject->appendChild($remcmd);
+        }
+        if ($addInfo instanceof eppDomain) {
+            $addcmd = $this->createElement('domain:add');
+            $this->addDomainChanges($addcmd, $addInfo);
+            $this->domainobject->appendChild($addcmd);
         }
         if ($updateInfo instanceof eppDomain) {
             $chgcmd = $this->createElement('domain:chg');
