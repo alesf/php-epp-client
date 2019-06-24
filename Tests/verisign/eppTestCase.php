@@ -124,13 +124,28 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
     {
         if (!$hostname) {
             $hostname = self::randomstring(30).'.HCtM7kDdxtU3dBNXzy2X.com';
-        }                
-        $ipaddresses = ['8.8.8.8'] ;
-        $host = new Metaregistrar\EPP\eppHost($hostname, $ipaddresses);        
+        }
+        $ipaddresses = ['8.8.8.8'];
+        $host = new Metaregistrar\EPP\eppHost($hostname, $ipaddresses);
         $create = new Metaregistrar\EPP\verisignEppCreateHostRequest($host);
-        $create->setSubProduct('dotCOM');        
-        $response = $this->conn->writeandread($create);       
-        if ($response->Success()) {            
+        $create->setSubProduct('dotCOM');
+        $response = $this->conn->writeandread($create);
+        if ($response->Success()) {
+            return $hostname;
+        }
+        return null;
+    }
+
+    protected function createNS($hostname = null)
+    {
+        if (!$hostname) {
+            $hostname = self::randomstring(30).'.HCtM7kDdxtU3dBNXzy2X.eu';
+        }
+        $host = new Metaregistrar\EPP\eppHost($hostname);
+        $create = new Metaregistrar\EPP\verisignEppCreateHostRequest($host);
+        $create->setSubProduct('dotCOM');
+        $response = $this->conn->writeandread($create);
+        if ($response->Success()) {
             return $hostname;
         }
         return null;
@@ -181,44 +196,42 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
 
     protected function createDns($domainname = null)
     {
-        $domainname = $this->createDomain($domainname);        
+        $domainname = $this->createDomain($domainname);
         $domain = new Metaregistrar\EPP\eppDomain($domainname);
         $records[] = ['name' => $domainname, 'type' => 'A', 'content' => '127.0.0.1', 'ttl' => 3600];
-        $create = new Metaregistrar\EPP\metaregCreateDnsRequest($domain, $records); 
-        // echo $create->saveXML();                       
+        $create = new Metaregistrar\EPP\metaregCreateDnsRequest($domain, $records);
+        // echo $create->saveXML();
         $response = $this->conn->request($create);
         // echo $response;
         return $domainname;
     }
 
-    protected function createDomain($domainname = null)
+    protected function createDomain($domainname = null, $nameservers = false)
     {
         // If no domain name was given, test with a random .com domain name
         if (!$domainname) {
             $domainname = $this->randomstring(20).'.com';
         }
-        
+
         $domain = new \Metaregistrar\EPP\eppDomain($domainname);
         $domain->setPeriod(1);
         $domain->setAuthorisationCode('DM$r5$$78');
 
-        $contactid = $this->createContact();        
+        $contactid = $this->createContact();
         $domain->setRegistrant($contactid);
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_ADMIN));
         $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_TECH));
         // $domain->addContact(new \Metaregistrar\EPP\eppContactHandle($contactid, \Metaregistrar\EPP\eppContactHandle::CONTACT_TYPE_BILLING));
 
-        // $hostname = $this->createHost($this->randomstring(20).'.'.$domainname);        
-        // $host = new \Metaregistrar\EPP\eppHost($hostname);
-        // $domain->addHost($host);
-
-        // $hostname = $this->createHost($this->randomstring(20).'.'.$domainname);
-        // $host = new \Metaregistrar\EPP\eppHost($this->randomstring(20).'.'.$domainname);
-        // $domain->addHost($host);
+        if ($nameservers) {
+            $domain->addHost(new \Metaregistrar\EPP\eppHost($this->createNS()));
+            $domain->addHost(new \Metaregistrar\EPP\eppHost($this->createNS()));
+            $domain->addHost(new \Metaregistrar\EPP\eppHost($this->createNS()));
+        }
 
         $create = new \Metaregistrar\EPP\verisignEppCreateDomainRequest($domain);
-        $create->setSubProduct('dotCOM');        
-        $response = $this->conn->writeandread($create);        
+        $create->setSubProduct('dotCOM');
+        $response = $this->conn->writeandread($create);
         if ($response) {
             /* @var $response \Metaregistrar\EPP\eppCreateDomainResponse */
             return $response->getDomainName();
@@ -261,7 +274,7 @@ class eppTestCase extends \PHPUnit\Framework\TestCase
         }
 
         $update = new Metaregistrar\EPP\verisignEppUpdateDomainRequest($domain, $add, $del, $mod, true);
-        $update->setSubProduct('dotCOM'); // TODO: correct ending        
+        $update->setSubProduct('dotCOM'); // TODO: correct ending
         // $response = $this->conn->writeandread($update);
         if ($response = $this->conn->request($update)) {
             if ($response->getResultCode() == 1000) {

@@ -37,4 +37,25 @@ class eppInfoContactTest extends eppTestCase
         $this->assertEquals('Command completed successfully', $response->getResultMessage());
         $this->assertEquals(1000, $response->getResultCode());
     }
+
+    /**
+     * Test succesful contact info giving an authcode
+     * @throws \Metaregistrar\EPP\eppException
+     */
+    public function testInfoContactContactType()
+    {
+        $contactid = parent::createContact();
+        $contact = new Metaregistrar\EPP\eppContactHandle($contactid);
+        $contact->setPassword('foobar');
+        $info = new Metaregistrar\EPP\eppInfoContactRequest($contact);
+        $response = $this->conn->writeandread($info);
+        // print_r($response->saveXML());
+        $this->assertInstanceOf('Metaregistrar\EPP\siEppInfoContactResponse', $response);
+        /* @var $response Metaregistrar\EPP\siEppInfoContactResponse */
+        $this->assertTrue($response->Success());
+        $this->assertEquals('Command completed successfully', $response->getResultMessage());
+        $this->assertEquals(1000, $response->getResultCode());
+
+        $this->assertEquals('person', $response->getContactType());
+    }
 }

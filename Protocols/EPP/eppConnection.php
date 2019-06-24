@@ -126,6 +126,12 @@ class eppConnection {
     protected $local_cert_path = null;
 
     /**
+     * Path to certificate file
+     * @var string
+     */
+    protected $cert_authority = null;
+
+    /**
      * Password of certificate file
      * @var string
      */
@@ -349,6 +355,9 @@ class eppConnection {
         $context = stream_context_create();
         stream_context_set_option($context, 'ssl','verify_peer', $this->verify_peer);
         stream_context_set_option($context, 'ssl', 'verify_peer_name', $this->verify_peer_name);
+        if ($this->cert_authority) {
+            stream_context_set_option($context, 'ssl', 'cafile', $this->cert_authority);
+        }
         if ($this->local_cert_path) {
             stream_context_set_option($context, 'ssl', 'local_cert', $this->local_cert_path);
             if (isset($this->local_cert_pwd) && (strlen($this->local_cert_pwd)>0)) {
@@ -889,6 +898,10 @@ class eppConnection {
         $this->verify_peer_name = $verify_peer_name;
     }
 
+    public function setCertificateAuthority($certificate_path) {
+        $this->cert_authority = $certificate_path;
+    }
+
     /**
      * @param boolean $allow_self_signed
      */
@@ -1088,6 +1101,9 @@ class eppConnection {
             } else {
                 $this->verify_peer_name = false;
             }
+        }
+        if (array_key_exists('cafile',$result)) {
+            $this->cert_authority = $result['cafile'];
         }
         if (array_key_exists('allowselfsigned',$result)) {
             if (($result['allowselfsigned']=='true') || ($result['allowselfsigned']=='yes') || ($result['allowselfsigned']=='1')) {
