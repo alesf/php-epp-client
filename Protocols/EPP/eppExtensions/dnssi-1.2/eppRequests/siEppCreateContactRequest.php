@@ -39,4 +39,25 @@ class siEppCreateContactRequest extends eppCreateContactRequest
             $this->getExtension()->appendChild($dnssiext);
         }
     }
+
+    /**
+     *
+     * @param eppContact $contact
+     * @throws eppException
+     */
+    public function setContact(eppContact $contact) {
+        #
+        # Object create structure
+        #
+        $this->setContactId($contact->getId());
+        $this->setPostalInfo($contact->getPostalInfo(0));
+        if ($contact->getPostalInfoLength() == 2) {
+            $this->setPostalInfo($contact->getPostalInfo(1));
+        }
+        $this->setVoice($contact->getVoice());
+        $this->setFax($contact->getFax());
+        $this->setEmail($contact->getEmail());
+        $this->setPassword($contact->getPassword());
+        $this->setDisclose($contact->getDisclose());
+    }
 }

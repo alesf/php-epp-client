@@ -11,7 +11,7 @@ class eppCreateContactRequest extends eppContactRequest {
     function __construct($createinfo, $namespacesinroot = true) {
         $this->setNamespacesinroot($namespacesinroot);
         parent::__construct(eppRequest::TYPE_CREATE);
-        
+
         if ($createinfo){
             if ($createinfo instanceof eppContact) {
                 $this->setContact($createinfo);
@@ -25,7 +25,7 @@ class eppCreateContactRequest extends eppContactRequest {
     function __destruct() {
         parent::__destruct();
     }
-    
+
     /**
      *
      * @param eppContact $contact
