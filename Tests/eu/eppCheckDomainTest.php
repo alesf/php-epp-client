@@ -57,7 +57,7 @@ class eppCheckDomainTest extends eppTestCase
                 $this->assertArrayHasKey('available', $check);
                 $this->assertFalse($check['available']);
                 $this->assertArrayHasKey('reason', $check);
-                $this->assertSame('in use', $check['reason']);
+                $this->assertSame('registered', $check['reason']);
             }
         }
     }
@@ -86,7 +86,7 @@ class eppCheckDomainTest extends eppTestCase
                 $this->assertArrayHasKey('available', $check);
                 $this->assertFalse($check['available']);
                 $this->assertArrayHasKey('reason', $check);
-                $this->assertSame('in use', $check['reason']);
+                $this->assertSame('registered', $check['reason']);
             }
         }
     }

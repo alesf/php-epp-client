@@ -43,6 +43,7 @@ class euridEppCreateContactRequest extends eppCreateContactRequest {
                 $org = true;
             }
         }
+        $create->appendChild($this->createElement('contact-ext:lang', $createinfo->getContactExtLang()));
         if ($org) {
             $create->appendChild($this->createElement('contact-ext:naturalPerson','false'));
         } else {
@@ -51,7 +52,6 @@ class euridEppCreateContactRequest extends eppCreateContactRequest {
         if (is_string($createinfo->getContactExtCountryOfCitizenship())) {
             $create->appendChild($this->createElement('contact-ext:countryOfCitizenship',$createinfo->getContactExtCountryOfCitizenship()));
         }
-        $create->appendChild($this->createElement('contact-ext:lang', $createinfo->getContactExtLang()));
         $this->getExtension()->appendChild($create);
     }
 
