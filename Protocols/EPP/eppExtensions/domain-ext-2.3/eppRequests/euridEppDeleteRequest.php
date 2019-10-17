@@ -31,7 +31,7 @@ class euridEppDeleteRequest extends eppDeleteRequest
     {
         $ext = $this->createElement('extension');
         $contactext = $this->createElement('domain-ext:delete');
-        $contactext->setAttribute('xmlns:domain-ext', 'http://www.eurid.eu/xml/epp/domain-ext-2.1');
+        $contactext->setAttribute('xmlns:domain-ext', 'http://www.eurid.eu/xml/epp/domain-ext-2.3');
         $schedule = $contactext->appendChild($this->createElement('domain-ext:schedule'));
         $schedule->appendChild($this->createElement('domain-ext:delDate', $this->domain_deleteDate));
         $ext->appendChild($contactext);
