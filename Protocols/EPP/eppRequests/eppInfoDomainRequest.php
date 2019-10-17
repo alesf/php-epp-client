@@ -53,7 +53,9 @@ class eppInfoDomainRequest extends eppDomainRequest {
         if (!is_null($domain->getAuthorisationCode()))
         {
             $authinfo = $this->createElement('domain:authInfo');
-            $authinfo->appendChild($this->createElement('domain:pw', $domain->getAuthorisationCode()));
+            $pw = $authinfo->appendChild($this->createElement('domain:pw'));
+            $pw->appendChild($this->createCDATASection($domain->getAuthorisationCode()));
+            // $authinfo->appendChild($this->createElement('domain:pw', $domain->getAuthorisationCode()));
             $this->domainobject->appendChild($authinfo);
         }
     }
