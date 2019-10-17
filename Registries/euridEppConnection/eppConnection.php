@@ -13,8 +13,8 @@ class euridEppConnection extends eppConnection
             'http://www.eurid.eu/xml/epp/registrarFinance-1.0' => 'registrar',
         ));
         parent::useExtension('authInfo-1.1');
-        parent::useExtension('domain-ext-2.1');
-        parent::useExtension('contact-ext-1.1');
+        parent::useExtension('domain-ext-2.3');
+        parent::useExtension('contact-ext-1.3');
         parent::useExtension('registrarFinance-1.0');
 
         // parent::addCommandResponse('Metaregistrar\EPP\euridEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
