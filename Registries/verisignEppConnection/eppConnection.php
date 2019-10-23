@@ -32,14 +32,4 @@ class verisignEppConnection extends eppConnection
         // <extURI>urn:ietf:params:xml:ns:launch-1.0</extURI>
         // <extURI>urn:ietf:params:xml:ns:changePoll-1.0</extURI>
     }
-
-    public function getNamestoreExtExtension($subProduct = 'dotCOM')
-    {
-        $this->namestoreextension = $this->createElement('namestoreExt:namestoreExt');
-        $subProduct = $this->createElement('namestoreExt:subProduct', $subProduct);
-        $this->namestoreextension->appendChild($subProduct);
-        $this->namestoreextension->setAttribute('xmlns:namestoreExt', 'http://www.verisign-grs.com/epp/namestoreExt-1.1');
-
-        return $this->namestoreextension;
-    }
 }

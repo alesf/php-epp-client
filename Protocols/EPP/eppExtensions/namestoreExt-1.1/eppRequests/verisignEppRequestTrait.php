@@ -3,7 +3,7 @@ namespace Metaregistrar\EPP;
 
 trait verisignEppRequestTrait
 {
-    protected $namestoreextension = null;
+    protected $namestoreExtension = null;
     protected $subProduct = null;
 
     protected $subProducts = [
@@ -16,7 +16,7 @@ trait verisignEppRequestTrait
         'jobs' => 'dotJOBS',
     ];
 
-    public function setSubProductSmart($domain)
+    public function setSubProductAuto($domain)
     {
         list($domainName, $ext) = explode('.', $domain);
         $this->subProduct = 'dot' . strtoupper($ext);
@@ -33,16 +33,16 @@ trait verisignEppRequestTrait
 
     private function setNamestoreExtExtension($subProduct)
     {
-        $this->namestoreextension = $this->createElement('namestoreExt:namestoreExt');
+        $this->namestoreExtension = $this->createElement('namestoreExt:namestoreExt');
         $subProductNode = $this->createElement('namestoreExt:subProduct', $subProduct);
-        $this->namestoreextension->appendChild($subProductNode);
-        $this->namestoreextension->setAttribute('xmlns:namestoreExt', 'http://www.verisign-grs.com/epp/namestoreExt-1.1');
-        $this->namestoreextension->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $this->namestoreextension->setAttribute('xsi:schemaLocation', 'http://www.verisign-grs.com/epp/namestoreExt-1.1 namestoreExt-1.1.xsd');
+        $this->namestoreExtension->appendChild($subProductNode);
+        $this->namestoreExtension->setAttribute('xmlns:namestoreExt', 'http://www.verisign-grs.com/epp/namestoreExt-1.1');
+        $this->namestoreExtension->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $this->namestoreExtension->setAttribute('xsi:schemaLocation', 'http://www.verisign-grs.com/epp/namestoreExt-1.1 namestoreExt-1.1.xsd');
 
-        $this->getExtension()->appendChild($this->namestoreextension);
+        $this->getExtension()->appendChild($this->namestoreExtension);
 
-        return $this->namestoreextension;
+        return $this->namestoreExtension;
     }
 
 
