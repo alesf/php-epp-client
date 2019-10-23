@@ -19,7 +19,7 @@ trait verisignEppRequestTrait
     public function setSubProductSmart($domain)
     {
         list($domainName, $ext) = explode('.', $domain);
-        $this->subProduct = $ext;
+        $this->subProduct = 'dot' . strtoupper($ext);
         $this->setNamestoreExtExtension($ext);
         $this->addSessionId();
     }
@@ -45,5 +45,5 @@ trait verisignEppRequestTrait
         return $this->namestoreextension;
     }
 
-    
+
 }
