@@ -36,11 +36,9 @@ class euridEppContact extends eppContact {
     private $contactExtVat  = null;
     private $countryOfCitizenship = null;
 
-
     public function __construct($postalInfo = null, $email = null, $voice = null, $fax = null, $password = null, $status = null) {
         parent::__construct($postalInfo, $email, $voice, $fax, $password, $status );
     }
-
 
     public function setContactExtType($type)
     {
@@ -84,7 +82,7 @@ class euridEppContact extends eppContact {
         if (in_array($country, $this->acceptedCitizenshipCodes)) {
             $this->countryOfCitizenship = $country;
         } else {
-            throw new \Exception('Country of citizenship not supported.');
+            throw new \Exception('Contact country of citizenship not supported.');
         }
     }
 

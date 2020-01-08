@@ -123,9 +123,9 @@ class eppResponse extends \DOMDocument {
      */
     public function Success() {
         $resultcode = $this->getResultCode();
-        $success = ($resultcode{0} == '1');
+        $success = ($resultcode[0] == '1');
         if (!$success) {
-            switch ($resultcode{1}) {
+            switch ($resultcode[1]) {
                 case '0':
                     $this->setProblemtype('syntax');
                     break;
@@ -212,7 +212,7 @@ class eppResponse extends \DOMDocument {
 
     /**
      *
-     * @return string|null
+     * @return null|string
      */
     public function getResultCode() {
         $result = $this->queryPath('/epp:epp/epp:response/epp:result/@code');
@@ -386,6 +386,9 @@ class eppResponse extends \DOMDocument {
         }
     }
 
+    /**
+     * @param $exceptionhandler
+     */
     public function addException($exceptionhandler) {
         $this->exceptions[] = $exceptionhandler;
     }
