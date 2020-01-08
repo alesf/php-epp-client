@@ -1,9 +1,8 @@
 vendor/*
 .idea
-.ini
 *.ini
 *.pem
 *.crt
-.pem
+*.key
 Tests/testsetup*
 .DS_Store

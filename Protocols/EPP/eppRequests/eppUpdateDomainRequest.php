@@ -34,7 +34,6 @@ class eppUpdateDomainRequest extends eppDomainRequest {
      * @param eppDomain $addInfo
      * @param eppDomain $removeInfo
      * @param eppDomain $updateInfo
-     * @return \domElement
      */
     public function updateDomain($domainname, $addInfo, $removeInfo, $updateInfo) {
         #
@@ -95,8 +94,13 @@ class eppUpdateDomainRequest extends eppDomainRequest {
         }
         if (strlen($domain->getAuthorisationCode())) {
             $authinfo = $this->createElement('domain:authInfo');
-            $pw = $this->createElement('domain:pw');
-            $pw->appendChild($this->createCDATASection($domain->getAuthorisationCode()));
+            if ($this->useCdata()) {
+                $pw = $this->createElement('domain:pw');
+                $pw->appendChild($this->createCDATASection($domain->getAuthorisationCode()));
+            }
+            else {
+                $pw = $this->createElement('domain:pw',$domain->getAuthorisationCode());
+            }
             $authinfo->appendChild($pw);
             $element->appendChild($authinfo);
         }
