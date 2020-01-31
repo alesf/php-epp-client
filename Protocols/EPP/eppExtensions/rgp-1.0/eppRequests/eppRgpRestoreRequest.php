@@ -31,8 +31,12 @@ class eppRgpRestoreRequest extends eppUpdateDomainRequest
         $restore->setAttribute('op', $type);
         if ($type == 'report') {
             $report = $this->createElement('rgp:report');
-            $preData = $this->createElement('rgp:preData', '<![CDATA[' . $report['preData'] . ']]>');
-            $postData = $this->createElement('rgp:postData', '<![CDATA[' . $report['postData'] . ']]>');
+            // $preData = $this->createElement('rgp:preData', '<![CDATA[' . $report['preData'] . ']]>');
+            // $postData = $this->createElement('rgp:postData', '<![CDATA[' . $report['postData'] . ']]>');
+            $preData = $this->createElement('rgp:preData');
+            $preData->appendChild($this->createCDATASection($report['preData']));
+            $postData = $this->createElement('rgp:postData');
+            $postData->appendChild($this->createCDATASection($report['postData']));
             $delTime = $this->createElement('rgp:delTime', $report['delTime']);
             $resTime = $this->createElement('rgp:resTime', $report['resTime']);
             $resReason = $this->createElement('rgp:resReason', 'Registrant error.');
