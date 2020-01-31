@@ -13,7 +13,7 @@ class eppRgpRestoreRequest extends eppUpdateDomainRequest
      * @param eppDomain|null $removeinfo
      * @param eppDomain|null $updateinfo
      */
-    public function __construct(eppDomain $objectname, $addinfo = null, $removeinfo = null, $updateinfo = null, $type = 'request', $report = null)
+    public function __construct(eppDomain $objectname, $addinfo = null, $removeinfo = null, $updateinfo = null, $type = 'request', $reportData = null)
     {
         if ($objectname instanceof eppDomain) {
             $domainname = $objectname->getDomainname();
@@ -34,11 +34,11 @@ class eppRgpRestoreRequest extends eppUpdateDomainRequest
             // $preData = $this->createElement('rgp:preData', '<![CDATA[' . $report['preData'] . ']]>');
             // $postData = $this->createElement('rgp:postData', '<![CDATA[' . $report['postData'] . ']]>');
             $preData = $this->createElement('rgp:preData');
-            $preData->appendChild($this->createCDATASection($report['preData']));
+            $preData->appendChild($this->createCDATASection($reportData['preData']));
             $postData = $this->createElement('rgp:postData');
-            $postData->appendChild($this->createCDATASection($report['postData']));
-            $delTime = $this->createElement('rgp:delTime', $report['delTime']);
-            $resTime = $this->createElement('rgp:resTime', $report['resTime']);
+            $postData->appendChild($this->createCDATASection($reportData['postData']));
+            $delTime = $this->createElement('rgp:delTime', $reportData['delTime']);
+            $resTime = $this->createElement('rgp:resTime', $reportData['resTime']);
             $resReason = $this->createElement('rgp:resReason', 'Registrant error.');
             $statement = $this->createElement('rgp:statement', 'This registrar has not restored the ' . $domainname . ' in order to assume the rights to use or sell the ' . $domainname . ' for itself or for any third party.');
             $statement2 = $this->createElement('rgp:statement', 'The information in this report is true to best of this registrar\'s knowledge, and this registrar acknowledges that intentionally supplying false information in this report shall constitute an incurable material breach of the Registry-Registrar Agreement.');
