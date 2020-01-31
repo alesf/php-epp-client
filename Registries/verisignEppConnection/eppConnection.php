@@ -20,12 +20,13 @@ class verisignEppConnection extends eppConnection
 
         parent::enableLaunchphase('claim');
         parent::enableDnssec();
-        parent::enableRgp();
+        // parent::enableRgp();
         parent::addExtension("whoisInf", "http://www.verisign.com/epp/whoisInf-1.0");
         parent::addExtension("idnLang", "http://www.verisign.com/epp/idnLang-1.0");
         parent::addExtension("namestoreExt", "http://www.verisign-grs.com/epp/namestoreExt-1.1");
         parent::addExtension("sync", "http://www.verisign.com/epp/sync-1.0");
         parent::addExtension("relatedDomain", "http://www.verisign.com/epp/relatedDomain-1.0");
+        parent::addExtension('rgp', 'http://www.verisign.com/epp/rgp-1.0');
 
         // <extURI>urn:ietf:params:xml:ns:coa-1.0</extURI>
         // <extURI>urn:ietf:params:xml:ns:verificationCode-1.0</extURI>

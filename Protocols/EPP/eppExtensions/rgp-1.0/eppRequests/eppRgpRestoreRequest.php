@@ -13,7 +13,7 @@ class eppRgpRestoreRequest extends eppUpdateDomainRequest
      * @param eppDomain|null $removeinfo
      * @param eppDomain|null $updateinfo
      */
-    public function __construct(eppDomain $objectname, $addinfo = null, $removeinfo = null, $updateinfo = null)
+    public function __construct(eppDomain $objectname, $addinfo = null, $removeinfo = null, $updateinfo = null, $type = 'request')
     {
         if ($objectname instanceof eppDomain) {
             $domainname = $objectname->getDomainname();
@@ -27,7 +27,7 @@ class eppRgpRestoreRequest extends eppUpdateDomainRequest
         $rgp = $this->createElement('rgp:update');
         //$this->addExtension('xmlns:rgp', 'urn:ietf:params:xml:ns:rgp-1.0');
         $restore = $this->createElement('rgp:restore');
-        $restore->setAttribute('op', 'request');
+        $restore->setAttribute('op', $type);
         $rgp->appendChild($restore);
         $this->getExtension()->appendChild($rgp);
         $this->addSessionId();

@@ -33,6 +33,7 @@ class eppHttpsConnection extends eppHttpConnection {
         if ($this->local_cert_path) {
             curl_setopt($ch, CURLOPT_SSLCERT, $this->local_cert_path);
             curl_setopt($ch, CURLOPT_SSLCERTPASSWD, $this->local_cert_pwd);
+            curl_setopt($ch, CURLOPT_SSLVERSION, 6);
         } else // Otherwise ignore cert check
         {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
