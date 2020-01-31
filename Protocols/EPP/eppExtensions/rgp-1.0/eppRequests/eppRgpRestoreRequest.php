@@ -33,7 +33,7 @@ class eppRgpRestoreRequest extends eppUpdateDomainRequest
             $report = $this->createElement('rgp:report');
             $preData = $this->createElement('rgp:preData', $report['preData']);
             $postData = $this->createElement('rgp:postData', $report['postData']);
-            $delTime = $this->createElement('rgp:delTime', $report['resTime']);
+            $delTime = $this->createElement('rgp:delTime', $report['delTime']);
             $resTime = $this->createElement('rgp:resTime', $report['resTime']);
             $resReason = $this->createElement('rgp:resReason', 'Registrant error.');
             $statement = $this->createElement('rgp:statement', 'This registrar has not restored the ' . $domainname . ' in order to assume the rights to use or sell the ' . $domainname . ' for itself or for any third party.');
