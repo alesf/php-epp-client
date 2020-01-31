@@ -27,7 +27,7 @@ include_once(dirname(__FILE__) . '/eppRequests/verisignEppUpdateHostRequest.php'
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppTransferRequest.php');
 
-include_once(dirname(__FILE__) . '/eppRequests/verisignEppRgpRestoreRequestRequest.php');
+include_once(dirname(__FILE__) . '/eppRequests/verisignEppRgpRestoreRequest.php');
 
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppCheckContactRequest', 'Metaregistrar\EPP\eppCheckContactResponse');
 $this->addCommandResponse('Metaregistrar\EPP\verisignEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
