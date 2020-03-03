@@ -21,4 +21,10 @@ class siEppCreateDomainRequest extends eppCreateDomainRequest
             $this->domainobject->appendChild($authinfo);
         }
     }
+
+    public function dnsCheck($check = true)
+    {
+        $dnscheck = $this->createElement('dnsCheck:create', $check);
+        $this->domainobject->appendChild($dnscheck);
+    }
 }
