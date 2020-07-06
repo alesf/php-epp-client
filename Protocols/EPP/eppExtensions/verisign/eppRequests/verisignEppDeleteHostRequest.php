@@ -1,5 +1,5 @@
 <?php
-namespace Metaregistrar\EPP;
+namespace Metaregistrar\EPP\VeriSign;
 
 class verisignEppDeleteHostRequest extends eppDeleteHostRequest {
     use verisignEppExtension;

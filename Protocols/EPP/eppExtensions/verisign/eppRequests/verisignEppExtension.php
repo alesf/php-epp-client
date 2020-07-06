@@ -6,8 +6,8 @@
 // +----------------------------------------------------------------------
 // | Author : Jansen <jansen.shi@qq.com>
 // +----------------------------------------------------------------------
-namespace Metaregistrar\EPP;
-trait verisignEppExtension{
+namespace Metaregistrar\EPP\VeriSign;
+trait verisignEppExtension {
     /**
      * add verisign namestore extension
      * @param eppDomain $domain

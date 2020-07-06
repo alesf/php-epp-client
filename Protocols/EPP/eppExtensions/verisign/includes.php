@@ -16,63 +16,63 @@ $this->addExtension('changePoll', 'urn:ietf:params:xml:ns:changePoll-1.0');
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppExtension.php');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppCheckDomainRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppCheckDomainRequest', 'Metaregistrar\EPP\eppCheckDomainResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppCheckDomainRequest', 'Metaregistrar\EPP\eppCheckDomainResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppInfoDomainRequest.php');
 include_once(dirname(__FILE__) . '/eppResponses/verisignEppInfoDomainResponse.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppInfoDomainRequest', 'Metaregistrar\EPP\verisignEppInfoDomainResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppInfoDomainRequest', 'Metaregistrar\EPP\VeriSign\verisignEppInfoDomainResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppCreateDomainRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppCreateDomainRequest', 'Metaregistrar\EPP\eppCreateDomainResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppCreateDomainRequest', 'Metaregistrar\EPP\eppCreateDomainResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppDeleteDomainRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppDeleteDomainRequest', 'Metaregistrar\EPP\eppDeleteResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppDeleteDomainRequest', 'Metaregistrar\EPP\eppDeleteResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppRenewDomainRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppRenewDomainRequest', 'Metaregistrar\EPP\eppRenewResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppRenewDomainRequest', 'Metaregistrar\EPP\eppRenewResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppUpdateDomainRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppUpdateDomainRequest', 'Metaregistrar\EPP\eppUpdateDomainResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppUpdateDomainRequest', 'Metaregistrar\EPP\eppUpdateDomainResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppRealNameDomainRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppRealNameDomainRequest', 'Metaregistrar\EPP\eppUpdateDomainResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppRealNameDomainRequest', 'Metaregistrar\EPP\eppUpdateDomainResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppTransferDomainRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppTransferDomainRequest', 'Metaregistrar\EPP\eppTransferResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppTransferDomainRequest', 'Metaregistrar\EPP\eppTransferResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppRestoreDomainRequest.php');
 include_once(dirname(__FILE__) . '/eppResponses/verisignEppRestoreDomainResponse.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppRestoreDomainRequest', 'Metaregistrar\EPP\verisignEppRestoreDomainResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppRestoreDomainRequest', 'Metaregistrar\EPP\VeriSign\verisignEppRestoreDomainResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppCheckContactRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppCheckContactRequest', 'Metaregistrar\EPP\eppCheckContactResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppCheckContactRequest', 'Metaregistrar\EPP\eppCheckContactResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppInfoContactRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppInfoContactRequest', 'Metaregistrar\EPP\eppInfoContactResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppInfoContactRequest', 'Metaregistrar\EPP\eppInfoContactResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppCreateContactRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppDeleteContactRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppDeleteContactRequest', 'Metaregistrar\EPP\eppDeleteResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppDeleteContactRequest', 'Metaregistrar\EPP\eppDeleteResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppUpdateContactRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppUpdateContactRequest', 'Metaregistrar\EPP\eppUpdateContactResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppUpdateContactRequest', 'Metaregistrar\EPP\eppUpdateContactResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppCheckHostRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppCheckHostRequest', 'Metaregistrar\EPP\eppCheckHostResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppCheckHostRequest', 'Metaregistrar\EPP\eppCheckHostResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppInfoHostRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppInfoHostRequest', 'Metaregistrar\EPP\eppInfoHostResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppInfoHostRequest', 'Metaregistrar\EPP\eppInfoHostResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppCreateHostRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppCreateHostRequest', 'Metaregistrar\EPP\eppCreateHostResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppCreateHostRequest', 'Metaregistrar\EPP\eppCreateHostResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppDeleteHostRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppDeleteHostRequest', 'Metaregistrar\EPP\eppDeleteResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppDeleteHostRequest', 'Metaregistrar\EPP\eppDeleteResponse');
 
 include_once(dirname(__FILE__) . '/eppRequests/verisignEppUpdateHostRequest.php');
-$this->addCommandResponse('Metaregistrar\EPP\verisignEppUpdateHostRequest', 'Metaregistrar\EPP\eppUpdateHostResponse');
+$this->addCommandResponse('Metaregistrar\EPP\VeriSign\verisignEppUpdateHostRequest', 'Metaregistrar\EPP\eppUpdateHostResponse');
 
 include_once(dirname(__FILE__) . '/eppResponses/verisignEppPollResponse.php');
-$this->addCommandResponse('Metaregistrar\EPP\eppPollRequest', 'Metaregistrar\EPP\verisignEppPollResponse');
+$this->addCommandResponse('Metaregistrar\EPP\eppPollRequest', 'Metaregistrar\EPP\VeriSign\verisignEppPollResponse');

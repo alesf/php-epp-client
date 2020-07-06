@@ -1,5 +1,5 @@
 <?php
-namespace Metaregistrar\EPP;
+namespace Metaregistrar\EPP\VeriSign;
 
 class verisignEppCreateContactRequest extends eppCreateContactRequest {
     use verisignEppExtension;

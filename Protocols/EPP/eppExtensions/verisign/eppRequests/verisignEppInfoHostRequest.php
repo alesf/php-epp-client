@@ -1,5 +1,5 @@
 <?php
-namespace Metaregistrar\EPP;
+namespace Metaregistrar\EPP\VeriSign;
 
 class verisignEppInfoHostRequest extends eppInfoHostRequest {
     use verisignEppExtension;
