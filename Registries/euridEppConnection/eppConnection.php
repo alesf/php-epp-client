@@ -11,12 +11,12 @@ class euridEppConnection extends eppConnection
             'urn:ietf:params:xml:ns:domain-1.0' => 'domain',
             'urn:ietf:params:xml:ns:contact-1.0' => 'contact',
             'http://www.eurid.eu/xml/epp/registrarFinance-1.0' => 'registrar',
-            'http://www.eurid.eu/xml/epp/poll-1.2' => 'poll',
         ));
         parent::useExtension('authInfo-1.1');
         parent::useExtension('domain-ext-2.3');
         parent::useExtension('contact-ext-1.3');
         parent::useExtension('registrarFinance-1.0');
+        parent::useExtension('poll-1.2'); // 'http://www.eurid.eu/xml/epp/poll-1.2' => 'poll',
 
         // parent::addCommandResponse('Metaregistrar\EPP\euridEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
         // parent::addCommandResponse('Metaregistrar\EPP\euridEppInfoDomainRequest', 'Metaregistrar\EPP\euridEppInfoDomainResponse');
