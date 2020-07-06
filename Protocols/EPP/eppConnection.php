@@ -155,6 +155,11 @@ class eppConnection {
      */
     protected $verify_peer_name = true;
 
+    /**
+     * @var bool Using stream_set_blocking true or false on connections
+     */
+    protected $blocking = false;
+
     protected $logentries = array();
 
     protected $checktransactionids = true;
@@ -372,7 +377,7 @@ class eppConnection {
         }
         $this->connection = stream_socket_client($this->hostname.':'.$this->port, $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $context);
         if (is_resource($this->connection)) {
-            stream_set_blocking($this->connection, false);
+            stream_set_blocking($this->connection, $this->blocking);
             stream_set_timeout($this->connection, $this->timeout);
             if ($errno == 0) {
                 $meta = stream_get_meta_data($this->connection);
@@ -418,15 +423,18 @@ class eppConnection {
      * @return bool
      * @throws eppException
      */
-    public function logout()
-    {
-        $logout = new eppLogoutRequest();
-        if ($response = $this->request($logout)) {
-            $this->writeLog("Logged out", "LOGOUT");
-            $this->loggedin = false;
-            return true;
+    public function logout() {
+        if ($this->loggedin) {
+            $logout = new eppLogoutRequest();
+            if ($response = $this->request($logout)) {
+                $this->writeLog("Logged out","LOGOUT");
+                $this->loggedin = false;
+                return true;
+            } else {
+                throw new eppException("Logout failed: ".$response->getResultMessage(),0,null,null,$logout->saveXML());
+            }
         } else {
-            throw new eppException("Logout failed: ".$response->getResultMessage(), 0, null, null, $logout->saveXML());
+            return true;
         }
     }
 
@@ -1013,9 +1021,12 @@ class eppConnection {
         $this->retry = $retry;
     }
 
-    public function addDefaultNamespace($xmlns, $namespace)
-    {
-        $this->defaultnamespace[$namespace] = 'xmlns:' . $xmlns;
+    public function addDefaultNamespace($xmlns, $namespace, $addxmlns=true) {
+        if ($addxmlns) {
+            $this->defaultnamespace[$namespace] = 'xmlns:' . $xmlns;
+        } else {
+            $this->defaultnamespace[$namespace] = $xmlns;
+        }
     }
 
     public function getDefaultNamespaces()
@@ -1038,8 +1049,15 @@ class eppConnection {
         $this->language = $language;
     }
 
-    public function getResponses()
-    {
+    public function setBlocking($blocking) {
+        $this->blocking = $blocking;
+    }
+
+    public function getBlocking() {
+        return $this->blocking;
+    }
+
+    public function getResponses() {
         return $this->responses;
     }
 
@@ -1143,7 +1161,6 @@ class eppConnection {
      * Enables logging
      */
     private function enableLogging() {
-        date_default_timezone_set("Europe/Amsterdam");
         $this->logging = true;
     }
 

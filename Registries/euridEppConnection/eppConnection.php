@@ -16,7 +16,7 @@ class euridEppConnection extends eppConnection
         parent::useExtension('domain-ext-2.3');
         parent::useExtension('contact-ext-1.3');
         parent::useExtension('registrarFinance-1.0');
-        parent::useExtension('poll-1.2'); // 'http://www.eurid.eu/xml/epp/poll-1.2' => 'poll',
+        parent::useExtension('poll-1.2');
 
         /* parse the eurid extensions */
         parent::addCommandResponse('Metaregistrar\EPP\eppInfoContactRequest', 'Metaregistrar\EPP\euridEppInfoContactResponse');
