@@ -18,8 +18,7 @@ class euridEppConnection extends eppConnection
         parent::useExtension('registrarFinance-1.0');
         parent::useExtension('poll-1.2'); // 'http://www.eurid.eu/xml/epp/poll-1.2' => 'poll',
 
-        // parent::addCommandResponse('Metaregistrar\EPP\euridEppCreateContactRequest', 'Metaregistrar\EPP\eppCreateContactResponse');
-        // parent::addCommandResponse('Metaregistrar\EPP\euridEppInfoDomainRequest', 'Metaregistrar\EPP\euridEppInfoDomainResponse');
-        // parent::addCommandResponse('Metaregistrar\EPP\euridEppDeleteRequest', 'Metaregistrar\EPP\eppDeleteResponse');
+        /* parse the eurid extensions */
+        parent::addCommandResponse('Metaregistrar\EPP\eppInfoContactRequest', 'Metaregistrar\EPP\euridEppInfoContactResponse');
     }
 }
