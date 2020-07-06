@@ -11,6 +11,7 @@ class euridEppConnection extends eppConnection
             'urn:ietf:params:xml:ns:domain-1.0' => 'domain',
             'urn:ietf:params:xml:ns:contact-1.0' => 'contact',
             'http://www.eurid.eu/xml/epp/registrarFinance-1.0' => 'registrar',
+            'http://www.eurid.eu/xml/epp/poll-1.2' => 'poll',
         ));
         parent::useExtension('authInfo-1.1');
         parent::useExtension('domain-ext-2.3');
