@@ -5,5 +5,10 @@
 	"phpunit.phpunit": "./vendor/phpunit/phpunit/phpunit",
 	"better-phpunit.commandSuffix": null,
 	"better-phpunit.phpunitBinary": "./vendor/phpunit/phpunit/phpunit",
-	"better-phpunit.xmlConfigFilepath": "./phpunit.xml"
+	"better-phpunit.xmlConfigFilepath": "./phpunit.xml",
+	"php-cs-fixer.rules": {
+		"position_after_anonymous_constructs": "same",
+		"position_after_control_structures": "same",
+		"position_after_functions_and_oop_constructs": "same",
+	}
 }

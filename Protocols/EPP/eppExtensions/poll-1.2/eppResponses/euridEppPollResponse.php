@@ -31,7 +31,7 @@ namespace Metaregistrar\EPP;
 </epp>
 */
 
-class euridEppPollResponse extends eppPollResponse{
+class euridEppPollResponse extends eppPollResponse {
     const TYPE_DOMAIN = "DOMAIN";
     const TYPE_WATERMARK = "WATERMARK";
     const TYPE_CONTACT = "CONTACT";
@@ -43,7 +43,7 @@ class euridEppPollResponse extends eppPollResponse{
         parent::__construct();
     }
 
-    public function getContext(){
+    public function getContext() {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/poll-1.2:pollData/poll-1.2:context');
         if ($result->length > 0) {
@@ -52,7 +52,8 @@ class euridEppPollResponse extends eppPollResponse{
             return null;
         }
     }
-    public function getObjectType(){
+
+    public function getObjectType() {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/poll-1.2:pollData/poll-1.2:objectType');
         if ($result->length > 0) {
@@ -62,7 +63,7 @@ class euridEppPollResponse extends eppPollResponse{
         }
     }
 
-    public function getObject(){
+    public function getObject() {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/poll-1.2:pollData/poll-1.2:object');
         if ($result->length > 0) {
@@ -72,7 +73,7 @@ class euridEppPollResponse extends eppPollResponse{
         }
     }
 
-    public function getObjectUnicode(){
+    public function getObjectUnicode() {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/poll-1.2:pollData/poll-1.2:objectUnicode');
         if ($result->length > 0) {
@@ -82,7 +83,7 @@ class euridEppPollResponse extends eppPollResponse{
         }
     }
 
-    public function getAction(){
+    public function getAction() {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/poll-1.2:pollData/poll-1.2:action');
         if ($result->length > 0) {
@@ -92,7 +93,7 @@ class euridEppPollResponse extends eppPollResponse{
         }
     }
 
-    public function getCode(){
+    public function getCode() {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/poll-1.2:pollData/poll-1.2:code');
         if ($result->length > 0) {
@@ -102,7 +103,7 @@ class euridEppPollResponse extends eppPollResponse{
         }
     }
 
-    public function getDetail(){
+    public function getDetail() {
         $xpath = $this->xPath();
         $result = $xpath->query('/epp:epp/epp:response/epp:resData/poll-1.2:pollData/poll-1.2:detail');
         if ($result->length > 0) {
