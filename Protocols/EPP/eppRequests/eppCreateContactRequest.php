@@ -116,7 +116,8 @@ class eppCreateContactRequest extends eppContactRequest {
         if (!is_null($password))
         {
             $authinfo = $this->createElement('contact:authInfo');
-            $authinfo->appendChild($this->createElement('contact:pw', $password));
+            $pw = $authinfo->appendChild($this->createElement('contact:pw'));
+            $pw->appendChild($this->createCDATASection($password));
             $this->contactobject->appendChild($authinfo);
         }
     }
