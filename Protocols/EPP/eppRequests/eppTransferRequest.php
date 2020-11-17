@@ -203,7 +203,7 @@ class eppTransferRequest extends eppRequest {
             } else {
                 $authinfo->appendChild($this->createElement('domain:pw', $domain->getAuthorisationCode()));
             }
-            $pw->appendChild($this->createCDATASection($domain->getAuthorisationCode()));
+            // $pw->appendChild($this->createCDATASection($domain->getAuthorisationCode()));
             //$authinfo->appendChild($this->createElement('domain:pw', $domain->getAuthorisationCode()));
             $this->domainobject->appendChild($authinfo);
         }
