@@ -1237,7 +1237,7 @@ class eppConnection {
      * @return array
      * @throws eppException
      */
-    static function loadSettings($directory = null, $settingsfile) {
+    static function loadSettings($directory, $settingsfile) {
         if ($directory) {
             $path = $directory . '/' . $settingsfile;
         } else {
