@@ -1,7 +1,9 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
-class eppConnection {
+class eppConnection
+{
 
     /**
      * Prevents loading the settings more then once
@@ -190,11 +192,12 @@ class eppConnection {
      * @return mixed
      * @throws eppException
      */
-    static function create($settingsfile, $debug=false) {
-        $result = self::loadSettings(null,$settingsfile);
+    static function create($settingsfile, $debug = false)
+    {
+        $result = self::loadSettings(null, $settingsfile);
         if ($result) {
             if (isset($result['interface'])) {
-                $classname = 'Metaregistrar\\EPP\\'.$result['interface'];
+                $classname = 'Metaregistrar\\EPP\\' . $result['interface'];
                 $c = new $classname($debug);
                 /* @var $c eppConnection */
                 $c->setConnectionDetails($result);
@@ -213,9 +216,8 @@ class eppConnection {
         }
         if ($settingsfile) {
             if (!$this->settingsloaded) {
-                $this->setConnectionDetails($this->loadSettings(null,$settingsfile));
+                $this->setConnectionDetails($this->loadSettings(null, $settingsfile));
             }
-
         }
         #
         # Initialize default values for config parameters
@@ -358,14 +360,14 @@ class eppConnection {
             $this->port = $port;
         }
         $context = stream_context_create();
-        stream_context_set_option($context, 'ssl','verify_peer', $this->verify_peer);
+        stream_context_set_option($context, 'ssl', 'verify_peer', $this->verify_peer);
         stream_context_set_option($context, 'ssl', 'verify_peer_name', $this->verify_peer_name);
         if ($this->cert_authority) {
             stream_context_set_option($context, 'ssl', 'cafile', $this->cert_authority);
         }
         if ($this->local_cert_path) {
             stream_context_set_option($context, 'ssl', 'local_cert', $this->local_cert_path);
-            if (isset($this->local_cert_pwd) && (strlen($this->local_cert_pwd)>0)) {
+            if (isset($this->local_cert_pwd) && (strlen($this->local_cert_pwd) > 0)) {
                 stream_context_set_option($context, 'ssl', 'passphrase', $this->local_cert_pwd);
             }
             if (isset($this->allow_self_signed)) {
@@ -375,26 +377,25 @@ class eppConnection {
                 stream_context_set_option($context, 'ssl', 'verify_peer', $this->verify_peer);
             }
         }
-        $this->connection = stream_socket_client($this->hostname.':'.$this->port, $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $context);
+        $this->connection = stream_socket_client($this->hostname . ':' . $this->port, $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $context);
         if (is_resource($this->connection)) {
             stream_set_blocking($this->connection, $this->blocking);
             stream_set_timeout($this->connection, $this->timeout);
             if ($errno == 0) {
                 $meta = stream_get_meta_data($this->connection);
                 if (isset($meta['crypto'])) {
-                    $this->writeLog("Stream opened to ".$this->getHostname()." port ".$this->getPort()." with protocol ".$meta['crypto']['protocol'].", cipher ".$meta['crypto']['cipher_name'].", ".$meta['crypto']['cipher_bits']." bits ".$meta['crypto']['cipher_version'],"Connection made");
+                    $this->writeLog("Stream opened to " . $this->getHostname() . " port " . $this->getPort() . " with protocol " . $meta['crypto']['protocol'] . ", cipher " . $meta['crypto']['cipher_name'] . ", " . $meta['crypto']['cipher_bits'] . " bits " . $meta['crypto']['cipher_version'], "Connection made");
                 } else {
-                    $this->writeLog("Stream opened to ".$this->getHostname()." port ".$this->getPort(),"Connection made");
+                    $this->writeLog("Stream opened to " . $this->getHostname() . " port " . $this->getPort(), "Connection made");
                 }
                 $this->connected = true;
                 $this->read();
             }
             return $this->connected;
         } else {
-            $this->writeLog("Connection could not be opened: $errno $errstr","ERROR");
+            $this->writeLog("Connection could not be opened: $errno $errstr", "ERROR");
             return false;
         }
-
     }
 
     /**
@@ -423,15 +424,16 @@ class eppConnection {
      * @return bool
      * @throws eppException
      */
-    public function logout() {
+    public function logout()
+    {
         if ($this->loggedin) {
             $logout = new eppLogoutRequest();
             if ($response = $this->request($logout)) {
-                $this->writeLog("Logged out","LOGOUT");
+                $this->writeLog("Logged out", "LOGOUT");
                 $this->loggedin = false;
                 return true;
             } else {
-                throw new eppException("Logout failed: ".$response->getResultMessage(),0,null,null,$logout->saveXML());
+                throw new eppException("Logout failed: " . $response->getResultMessage(), 0, null, null, $logout->saveXML());
             }
         } else {
             return true;
@@ -443,7 +445,7 @@ class eppConnection {
      * @return eppResponse|null
      * @throws eppException
      */
-    public function request($eppRequest)
+    public function request($eppRequest): eppResponse|null
     {
         $check = null;
         foreach ($this->getResponses() as $req => $check) {
@@ -454,8 +456,8 @@ class eppConnection {
 
         if (($response = $this->writeandread($eppRequest)) instanceof $check) {
             // $response->Success() will trigger an eppException when fails have occurred
-            if ((is_array($this->exceptions)) && (count($this->exceptions)>0)) {
-                foreach($this->exceptions as $exceptionhandler) {
+            if ((is_array($this->exceptions)) && (count($this->exceptions) > 0)) {
+                foreach ($this->exceptions as $exceptionhandler) {
                     $response->addException($exceptionhandler);
                 }
             }
@@ -463,7 +465,7 @@ class eppConnection {
             return $response;
         } else {
             /* @var $response eppResponse */
-            throw new eppException("Return class $check expected, but received a ".get_class($response)." class", 0, null, null, $eppRequest->saveXML());
+            throw new eppException("Return class $check expected, but received a " . get_class($response) . " class", 0, null, null, $eppRequest->saveXML());
         }
     }
 
@@ -574,9 +576,9 @@ class eppConnection {
                 $readSleepTimeIncrementEnabled = $this->readSleepTimeIncrementEnabled;
                 $readSleepTimeIncrementor1 = $this->readSleepTimeIncrementor1;
                 $readSleepTimeIncrementor2 = $this->readSleepTimeIncrementor2;
-//                $loops = 0;
+                //                $loops = 0;
                 while ($readLength > 0) {
-//                    $loops++;
+                    //                    $loops++;
                     if ($readbuffer = fread($this->connection, $readLength)) {
                         $readLength = $readLength - strlen($readbuffer);
                         $read .= $readbuffer;
@@ -620,7 +622,7 @@ class eppConnection {
                     $content .= $read;
                 }
             }
-            if ($nonBlocking && strlen($content)<1) {
+            if ($nonBlocking && strlen($content) < 1) {
                 //there is no content don't keep waiting
                 break;
             }
@@ -782,8 +784,8 @@ class eppConnection {
      */
     public function HandleXmlError($errno, $errstr, $errfile, $errline)
     {
-        if ($errno==E_WARNING && (substr_count($errstr, "DOMDocument::loadXML()")>0)) {
-            throw new eppException('ERROR reading EPP message: '.str_replace('DOMDocument::loadXML(): ', '', $errstr), $errno, null, $errfile.'('.$errline.')');
+        if ($errno == E_WARNING && (substr_count($errstr, "DOMDocument::loadXML()") > 0)) {
+            throw new eppException('ERROR reading EPP message: ' . str_replace('DOMDocument::loadXML(): ', '', $errstr), $errno, null, $errfile . '(' . $errline . ')');
         } else {
             return false;
         }
@@ -864,20 +866,20 @@ class eppConnection {
             $readcounter = 0;
             $xml = $this->read();
             // When no data is present on the stream, retry reading several times
-            while ((strlen($xml)==0) && ($readcounter < $this->retry)) {
+            while ((strlen($xml) == 0) && ($readcounter < $this->retry)) {
                 $xml = $this->read();
                 $readcounter++;
             }
 
             if (strlen($xml)) {
-                set_error_handler(array($this,'HandleXmlError'));
+                set_error_handler(array($this, 'HandleXmlError'));
                 if ($response->loadXML($xml)) {
                     restore_error_handler();
                     $response->preserveWhiteSpace = false;
                     $response->formatOutput = true;
                     $this->writeLog($response->formatContents(), "READ");
                     $clienttransid = $response->getClientTransactionId();
-                    if (($this->checktransactionids) && ($clienttransid) && ($clienttransid != $requestsessionid) && ($clienttransid!='{{clTRID}}')) {
+                    if (($this->checktransactionids) && ($clienttransid) && ($clienttransid != $requestsessionid) && ($clienttransid != '{{clTRID}}')) {
                         throw new eppException("Client transaction id $requestsessionid does not match returned $clienttransid", 0, null, null, $xml);
                     }
                     $response->setXpath($this->getServices());
@@ -910,7 +912,7 @@ class eppConnection {
             }
         }
         if (!$response) {
-            throw new eppException('No valid response class found for request class '.get_class($request));
+            throw new eppException('No valid response class found for request class ' . get_class($request));
         }
         return $response;
     }
@@ -995,22 +997,26 @@ class eppConnection {
         $this->port = $port;
     }
 
-    public function setVerifyPeer($verify_peer) {
+    public function setVerifyPeer($verify_peer)
+    {
         $this->verify_peer = $verify_peer;
     }
 
-    public function setVerifyPeerName($verify_peer_name) {
+    public function setVerifyPeerName($verify_peer_name)
+    {
         $this->verify_peer_name = $verify_peer_name;
     }
 
-    public function setCertificateAuthority($certificate_path) {
+    public function setCertificateAuthority($certificate_path)
+    {
         $this->cert_authority = $certificate_path;
     }
 
     /**
      * @param boolean $allow_self_signed
      */
-    public function setAllowSelfSigned(bool $allow_self_signed) {
+    public function setAllowSelfSigned(bool $allow_self_signed)
+    {
         $this->allow_self_signed = $allow_self_signed;
     }
 
@@ -1024,7 +1030,8 @@ class eppConnection {
         $this->retry = $retry;
     }
 
-    public function addDefaultNamespace($xmlns, $namespace, $addxmlns=true) {
+    public function addDefaultNamespace($xmlns, $namespace, $addxmlns = true)
+    {
         if ($addxmlns) {
             $this->defaultnamespace[$namespace] = 'xmlns:' . $xmlns;
         } else {
@@ -1052,15 +1059,18 @@ class eppConnection {
         $this->language = $language;
     }
 
-    public function setBlocking($blocking) {
+    public function setBlocking($blocking)
+    {
         $this->blocking = $blocking;
     }
 
-    public function getBlocking() {
+    public function getBlocking()
+    {
         return $this->blocking;
     }
 
-    public function getResponses() {
+    public function getResponses()
+    {
         return $this->responses;
     }
 
@@ -1106,9 +1116,9 @@ class eppConnection {
     public function useExtension($namespace)
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $includepath = dirname(__FILE__).'\\eppExtensions\\'.$namespace.'\\includes.php';
+            $includepath = dirname(__FILE__) . '\\eppExtensions\\' . $namespace . '\\includes.php';
         } else {
-            $includepath = dirname(__FILE__).'/eppExtensions/'.$namespace.'/includes.php';
+            $includepath = dirname(__FILE__) . '/eppExtensions/' . $namespace . '/includes.php';
         }
         if (is_file($includepath)) {
             include($includepath);
@@ -1122,7 +1132,8 @@ class eppConnection {
      * @param $xmlns
      * @param $namespace
      */
-    public function addService($xmlns, $namespace) {
+    public function addService($xmlns, $namespace)
+    {
         $this->objuri[$namespace] = $xmlns;
     }
 
@@ -1136,7 +1147,8 @@ class eppConnection {
         $this->exturi[$namespace] = $xmlns;
     }
 
-    public function addException($exceptionhandler) {
+    public function addException($exceptionhandler)
+    {
         $this->exceptions[] = $exceptionhandler;
     }
 
@@ -1163,7 +1175,8 @@ class eppConnection {
     /**
      * Enables logging
      */
-    private function enableLogging() {
+    private function enableLogging()
+    {
         $this->logging = true;
     }
 
@@ -1172,55 +1185,56 @@ class eppConnection {
      * @param array $result
      * @return bool
      */
-    public function setConnectionDetails($result) {
+    public function setConnectionDetails($result)
+    {
         $this->setHostname($result['hostname']);
         $this->setUsername($result['userid']);
         $this->setPassword($result['password']);
 
-        if (array_key_exists('port',$result)) {
+        if (array_key_exists('port', $result)) {
             $this->setPort($result['port']);
         } else {
             $this->setPort(700);
         }
 
-        if (array_key_exists('timeout',$result)) {
+        if (array_key_exists('timeout', $result)) {
             $this->setTimeout($result['timeout']);
         } else {
             $this->setTimeout(10);
         }
 
-        if (array_key_exists('logging',$result)) {
-            if (($result['logging']=='true') || ($result['logging']=='yes') || ($result['logging']=='1')) {
+        if (array_key_exists('logging', $result)) {
+            if (($result['logging'] == 'true') || ($result['logging'] == 'yes') || ($result['logging'] == '1')) {
                 $this->enableLogging();
             }
         }
 
-        if (array_key_exists('certificatefile',$result) && array_key_exists('certificatepassword',$result)) {
+        if (array_key_exists('certificatefile', $result) && array_key_exists('certificatepassword', $result)) {
             // Enter the path to your certificate and the password here
             $this->enableCertification($result['certificatefile'], $result['certificatepassword']);
-        } elseif (array_key_exists('certificatefile',$result)) {
+        } elseif (array_key_exists('certificatefile', $result)) {
             // Enter the path to your certificate without password
             $this->enableCertification($result['certificatefile'], null);
         }
-        if (array_key_exists('verifypeer',$result)) {
-            if (($result['verifypeer']=='true') || ($result['verifypeer']=='yes') || ($result['verifypeer']=='1')) {
+        if (array_key_exists('verifypeer', $result)) {
+            if (($result['verifypeer'] == 'true') || ($result['verifypeer'] == 'yes') || ($result['verifypeer'] == '1')) {
                 $this->verify_peer = true;
             } else {
                 $this->verify_peer = false;
             }
         }
-        if (array_key_exists('verifypeername',$result)) {
-            if (($result['verifypeername']=='true') || ($result['verifypeername']=='yes') || ($result['verifypeername']=='1')) {
+        if (array_key_exists('verifypeername', $result)) {
+            if (($result['verifypeername'] == 'true') || ($result['verifypeername'] == 'yes') || ($result['verifypeername'] == '1')) {
                 $this->verify_peer_name = true;
             } else {
                 $this->verify_peer_name = false;
             }
         }
-        if (array_key_exists('cafile',$result)) {
+        if (array_key_exists('cafile', $result)) {
             $this->cert_authority = $result['cafile'];
         }
-        if (array_key_exists('allowselfsigned',$result)) {
-            if (($result['allowselfsigned']=='true') || ($result['allowselfsigned']=='yes') || ($result['allowselfsigned']=='1')) {
+        if (array_key_exists('allowselfsigned', $result)) {
+            if (($result['allowselfsigned'] == 'true') || ($result['allowselfsigned'] == 'yes') || ($result['allowselfsigned'] == '1')) {
                 $this->allow_self_signed = true;
             } else {
                 $this->allow_self_signed = false;
@@ -1237,7 +1251,8 @@ class eppConnection {
      * @return array
      * @throws eppException
      */
-    static function loadSettings($directory, $settingsfile) {
+    static function loadSettings($directory, $settingsfile)
+    {
         if ($directory) {
             $path = $directory . '/' . $settingsfile;
         } else {
@@ -1247,7 +1262,7 @@ class eppConnection {
             $result = [];
             $settings = file($path, FILE_IGNORE_NEW_LINES);
             foreach ($settings as $setting) {
-                if (strlen(trim($setting))>0) {
+                if (strlen(trim($setting)) > 0) {
                     list($param, $value) = explode('=', $setting, 2);
                     $param = trim($param);
                     $value = trim($value);
@@ -1292,24 +1307,24 @@ class eppConnection {
     {
         if ($this->logging) {
             // Hide userid in the logging
-            $text = $this->hideTextBetween($text,'<clID>','</clID>');
+            $text = $this->hideTextBetween($text, '<clID>', '</clID>');
             // Hide password in the logging
-            $text = $this->hideTextBetween($text,'<pw>','</pw>');
-            $text = $this->hideTextBetween($text,'<pw><![CDATA[',']]></pw>');
+            $text = $this->hideTextBetween($text, '<pw>', '</pw>');
+            $text = $this->hideTextBetween($text, '<pw><![CDATA[', ']]></pw>');
             // Hide new password in the logging
-            $text = $this->hideTextBetween($text,'<newPW>','</newPW>');
-            $text = $this->hideTextBetween($text,'<newPW><![CDATA[',']]></newPW>');
+            $text = $this->hideTextBetween($text, '<newPW>', '</newPW>');
+            $text = $this->hideTextBetween($text, '<newPW><![CDATA[', ']]></newPW>');
             // Hide domain password in the logging
-            $text = $this->hideTextBetween($text,'<domain:pw>','</domain:pw>');
-            $text = $this->hideTextBetween($text,'<domain:pw><![CDATA[',']]></domain:pw>');
+            $text = $this->hideTextBetween($text, '<domain:pw>', '</domain:pw>');
+            $text = $this->hideTextBetween($text, '<domain:pw><![CDATA[', ']]></domain:pw>');
             // Hide contact password in the logging
-            $text = $this->hideTextBetween($text,'<contact:pw>','</contact:pw>');
-            $text = $this->hideTextBetween($text,'<contact:pw><![CDATA[',']]></contact:pw>');
+            $text = $this->hideTextBetween($text, '<contact:pw>', '</contact:pw>');
+            $text = $this->hideTextBetween($text, '<contact:pw><![CDATA[', ']]></contact:pw>');
             //echo "-----".date("Y-m-d H:i:s")."-----".$text."-----end-----\n";
             $log = "-----" . $action . "-----" . date("Y-m-d H:i:s") . "-----\n" . $text . "\n-----END-----" . date("Y-m-d H:i:s") . "-----\n";
             $this->logentries[] = $log;
             if ($this->logFile) {
-                file_put_contents($this->logFile, "\n".$log, FILE_APPEND);
+                file_put_contents($this->logFile, "\n" . $log, FILE_APPEND);
             }
         }
     }
@@ -1320,10 +1335,11 @@ class eppConnection {
      * @param $end
      * @return string
      */
-    protected function hideTextBetween($text, $start, $end) {
-        if (($startpos = strpos(strtolower($text),strtolower($start))) !== false) {
-            if (($endpos = strpos(strtolower($text),strtolower($end))) !== false) {
-                $text = substr($text,0,$startpos+strlen($start)).'XXXXXXXXXXXXXXXX'.substr($text,$endpos,99999);
+    protected function hideTextBetween($text, $start, $end)
+    {
+        if (($startpos = strpos(strtolower($text), strtolower($start))) !== false) {
+            if (($endpos = strpos(strtolower($text), strtolower($end))) !== false) {
+                $text = substr($text, 0, $startpos + strlen($start)) . 'XXXXXXXXXXXXXXXX' . substr($text, $endpos, 99999);
             }
         }
         return $text;
@@ -1333,12 +1349,9 @@ class eppConnection {
      * @param null|string $connectionComment
      * @return eppConnection
      */
-    public function setConnectionComment($connectionComment) {
+    public function setConnectionComment($connectionComment)
+    {
         $this->connectionComment = $connectionComment;
         return $this;
     }
-
-
-
-
 }
