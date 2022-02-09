@@ -7,10 +7,10 @@ class verisignEppCreateDomainRequest extends verisignEppNamestoreCreateDomainReq
     protected $idnlangextension = null;
     protected $idnlang = null;
 
-    public function setIDNLang($languuage)
+    public function setIDNLang($language)
     {
-        $this->idnlang = $languuage;
-        $this->setIDNLangExtension($languuage);
+        $this->idnlang = $language;
+        $this->setIDNLangExtension($language);
         $this->addSessionId();
     }
 
