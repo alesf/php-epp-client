@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 /*
@@ -6,7 +7,8 @@ namespace Metaregistrar\EPP;
  */
 
 
-class eppResponse extends \DOMDocument {
+class eppResponse extends \DOMDocument
+{
     const RESULT_SUCCESS = '1000';
     const RESULT_SUCCESS_ACTION_PENDING = '1001';
     const RESULT_NO_MESSAGES = '1300';
@@ -88,17 +90,20 @@ class eppResponse extends \DOMDocument {
      */
     public $defaultnamespace;
 
-    public function __construct($originalrequest = null) {
+    public function __construct($originalrequest = null)
+    {
         parent::__construct();
         $this->formatOutput = true;
         $this->originalrequest = $originalrequest;
         #$this->validateOnParse = true;
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
     }
 
-    public function findNamespace($namespace) {
+    public function findNamespace($namespace)
+    {
         if (!is_null($this->xpathuri)) {
             if (is_array($this->xpathuri)) {
                 if (in_array($namespace, $this->xpathuri)) {
@@ -109,36 +114,40 @@ class eppResponse extends \DOMDocument {
         return false;
     }
 
-    public function saveXML(\DOMNode $node = null, $options = null) {
+    #[\ReturnTypeWillChange]
+    public function saveXML(\DOMNode $node = NULL, $options = NULL)
+    {
         return str_replace("\t", '  ', parent::saveXML($node, LIBXML_NOEMPTYTAG));
     }
 
-    public function formatContents() {
+    public function formatContents()
+    {
         $result = '';
         $spacing = 2;
         $text = $this->saveXML();
-        $text = str_replace("\n",'',$text);
-        $text = str_replace('><',">\n<",$text);
-        $text = str_replace(' <'," \n<",$text);
-        $output = explode("\n",$text);
+        $text = str_replace("\n", '', $text);
+        $text = str_replace('><', ">\n<", $text);
+        $text = str_replace(' <', " \n<", $text);
+        $output = explode("\n", $text);
         $spaces = 0;
         foreach ($output as $line) {
-            if (strpos($line,'</')===0) {
+            if (strpos($line, '</') === 0) {
                 $spaces -= $spacing;
             }
-            $result .= substr('                          ',0,$spaces).$line."\n";
+            $result .= substr('                          ', 0, $spaces) . $line . "\n";
             $spaces += $spacing;
-            if (strpos($line,'?>')!==false) {
+            if (strpos($line, '?>') !== false) {
                 $spaces -= $spacing;
             }
-            if (strpos($line,'</')!==false) {
+            if (strpos($line, '</') !== false) {
                 $spaces -= $spacing;
             }
         }
         return $result;
     }
 
-    public function dumpContents() {
+    public function dumpContents()
+    {
         echo $this->formatContents();
     }
 
@@ -146,7 +155,8 @@ class eppResponse extends \DOMDocument {
      * @return bool
      * @throws eppException
      */
-    public function Success() {
+    public function Success()
+    {
         $resultcode = $this->getResultCode();
         $success = ($resultcode[0] == '1');
         if (!$success) {
@@ -205,14 +215,13 @@ class eppResponse extends \DOMDocument {
             if (strlen($resultreason)) {
                 $errorstring .= ' (' . $resultreason . ')';
             }
-            if ((is_array($this->exceptions)) && (count($this->exceptions)>0)) {
+            if ((is_array($this->exceptions)) && (count($this->exceptions) > 0)) {
                 foreach ($this->exceptions as $exceptionhandler) {
                     throw new $exceptionhandler($errorstring, $resultcode, null, $resultreason, $this->saveXML(), $this);
                 }
             } else {
                 throw new eppException($errorstring, $resultcode, null, $resultreason, $this->saveXML(), $this);
             }
-
         } else {
             return true;
         }
@@ -223,7 +232,8 @@ class eppResponse extends \DOMDocument {
      *
      * @param string $problemtype
      */
-    public function setProblemtype($problemtype) {
+    public function setProblemtype($problemtype)
+    {
         $this->problemtype = $problemtype;
     }
 
@@ -231,7 +241,8 @@ class eppResponse extends \DOMDocument {
      *
      * @return string
      */
-    public function getProblemtype() {
+    public function getProblemtype()
+    {
         return $this->problemtype;
     }
 
@@ -239,7 +250,8 @@ class eppResponse extends \DOMDocument {
      *
      * @return null|string
      */
-    public function getResultCode() {
+    public function getResultCode()
+    {
         $result = $this->queryPath('/epp:epp/epp:response/epp:result/@code');
         if ($result) {
             return $result;
@@ -251,21 +263,24 @@ class eppResponse extends \DOMDocument {
     /**
      * @return null|string
      */
-    public function getResultMessage() {
+    public function getResultMessage()
+    {
         return $this->queryPath('/epp:epp/epp:response/epp:result/epp:msg');
     }
 
     /**
      * @return null|string
      */
-    public function getResultReason() {
+    public function getResultReason()
+    {
         return $this->queryPath('/epp:epp/epp:response/epp:result/epp:extValue/epp:reason');
     }
 
     /**
      * @return null|string
      */
-    public function getResultValue() {
+    public function getResultValue()
+    {
         $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:extValue/epp:value');
         if (!$result) {
             $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:value');
@@ -276,7 +291,8 @@ class eppResponse extends \DOMDocument {
     /**
      * @return null|string
      */
-    public function getResultContactId() {
+    public function getResultContactId()
+    {
         $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:extValue/epp:value/contact:id');
         if (!$result) {
             $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:value/contact:id');
@@ -287,7 +303,8 @@ class eppResponse extends \DOMDocument {
     /**
      * @return null|string
      */
-    public function getResultDomainName() {
+    public function getResultDomainName()
+    {
         $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:extValue/epp:value/domain:name');
         if (!$result) {
             $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:value/domain:name');
@@ -298,7 +315,8 @@ class eppResponse extends \DOMDocument {
     /**
      * @return null|string
      */
-    public function getResultHostName() {
+    public function getResultHostName()
+    {
         $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:extValue/epp:value/host:name');
         if (!$result) {
             $result = $this->queryPath('/epp:epp/epp:response/epp:result/epp:value/host:name');
@@ -309,32 +327,37 @@ class eppResponse extends \DOMDocument {
     /**
      * @return null|string
      */
-    public function getResultHostAddr() {
+    public function getResultHostAddr()
+    {
         return $this->queryPath('/epp:epp/epp:response/epp:result/epp:extValue/epp:value/host:addr');
     }
 
     /**
      * @return null|string
      */
-    public function getResultHostStatus() {
+    public function getResultHostStatus()
+    {
         return $this->queryPath('/epp:epp/epp:response/epp:result/epp:extValue/epp:value/host:status/@s');
     }
 
     /**
      * @return null|string
      */
-    public function getServerTransactionId() {
+    public function getServerTransactionId()
+    {
         return $this->queryPath('/epp:epp/epp:response/epp:trID/epp:svTRID');
     }
 
     /**
      * @return null|string
      */
-    public function getClientTransactionId() {
+    public function getClientTransactionId()
+    {
         return $this->queryPath('/epp:epp/epp:response/epp:trID/epp:clTRID');
     }
 
-    public function setXpath($xpathuri) {
+    public function setXpath($xpathuri)
+    {
         if (!$this->xpathuri) {
             $this->xpathuri = $xpathuri;
         } else {
@@ -350,13 +373,14 @@ class eppResponse extends \DOMDocument {
      * @param array $matches
      * @return boolean
      */
-    public function hasElement($matches) {
+    public function hasElement($matches)
+    {
         libxml_use_internal_errors(true);
         $xpath = $this->xPath();
         foreach ($matches as $match) {
             $results = $xpath->query($match);
 
-            if ($results->length>0) {
+            if ($results->length > 0) {
                 libxml_clear_errors();
                 return true;
             }
@@ -369,7 +393,8 @@ class eppResponse extends \DOMDocument {
     /**
      * @return \DOMXpath
      */
-    public function xPath() {
+    public function xPath()
+    {
         $xpath = new \DOMXpath($this);
         $this->defaultnamespace = $this->documentElement->lookupNamespaceUri(null);
         $xpath->registerNamespace('epp', $this->defaultnamespace);
@@ -397,7 +422,8 @@ class eppResponse extends \DOMDocument {
      * @param null|\DOMElement $object
      * @return null|string
      */
-    public function queryPath($path, $object = null) {
+    public function queryPath($path, $object = null)
+    {
         if ($object) {
             $result = $object->getElementsByTagName($path);
         } else {
@@ -414,8 +440,8 @@ class eppResponse extends \DOMDocument {
     /**
      * @param $exceptionhandler
      */
-    public function addException($exceptionhandler) {
+    public function addException($exceptionhandler)
+    {
         $this->exceptions[] = $exceptionhandler;
     }
-
 }
