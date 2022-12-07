@@ -57,7 +57,7 @@ class eppHost
                 }
             }
         } else {
-            if (strlen($ipaddress)) {
+            if (is_string($ipaddress) && strlen($ipaddress)) {
                 $this->setIpAddress($ipaddress);
             }
         }
@@ -68,7 +68,7 @@ class eppHost
                 }
             }
         } else {
-            if (strlen($hoststatus)) {
+            if (is_string($hoststatus) && strlen($hoststatus)) {
                 $this->setHostStatus($hoststatus);
             }
         }
