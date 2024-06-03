@@ -163,7 +163,7 @@ class eppContact {
 
     /**
      * Gets the email address
-     * @return string
+     * @return string|null
      */
     public function getEmail() {
         return $this->email;
@@ -178,7 +178,7 @@ class eppContact {
      */
 
     public function setPassword($password) {
-        if ($password) {
+        if ($password !== null) {
             $this->password = htmlspecialchars($password, ENT_COMPAT, "UTF-8");
         } else {
             $this->password = null;
@@ -205,7 +205,7 @@ class eppContact {
 
     /**
      * Gets the phone number
-     * @return string
+     * @return string|null
      */
     public function getVoice() {
         return $this->voice;

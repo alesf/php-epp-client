@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 /**
@@ -36,9 +37,9 @@ class eppContactPostalInfo
      */
     public function __construct($name = null, $city = null, $countrycode = null, $organisationName = null, $street = null, $province = null, $zipcode = null, $type = eppContact::TYPE_AUTO)
     {
-        $this->street = array();
-
-        $this->setName($name);
+        if (null !== $name) {
+            $this->setName($name);
+        }
         #
         # Street can be an array of max 3 streets, or a string with an address
         #
@@ -70,12 +71,11 @@ class eppContactPostalInfo
                 $this->street = [];
             }
             if (count($this->street) < 3) {
-                if ((is_string($street)) && (strlen($street)>0)) {
+                if ((is_string($street)) && (strlen($street) > 0)) {
                     $this->street[count($this->street)] = htmlspecialchars($street, ENT_COMPAT, "UTF-8");
                 } else {
                     $this->street[count($this->street)] = $street;
                 }
-
             } else {
                 throw new eppException('Cannot add more than 3 street names to postal info');
             }
@@ -110,13 +110,13 @@ class eppContactPostalInfo
      * @param string $organisationName
      * @return void
      */
-    public function setOrganisationName($organisationName) {
-        if ((is_string($organisationName)) && (strlen($organisationName)>0)) {
+    public function setOrganisationName($organisationName)
+    {
+        if ((is_string($organisationName)) && (strlen($organisationName) > 0)) {
             $this->organisationName = htmlspecialchars($organisationName, ENT_COMPAT, "UTF-8");
         } else {
             $this->organisationName = $organisationName;
         }
-
     }
 
     /**
@@ -152,13 +152,13 @@ class eppContactPostalInfo
      * @param string $city
      * @return void
      */
-    public function setCity($city) {
-        if ((is_string($city)) && (strlen($city)>0)) {
+    public function setCity($city)
+    {
+        if ((is_string($city)) && (strlen($city) > 0)) {
             $this->city = htmlspecialchars($city, ENT_COMPAT, "UTF-8");
         } else {
             $this->city = $city;
         }
-
     }
 
     /**
@@ -194,18 +194,18 @@ class eppContactPostalInfo
      * @param string $province
      * @return void
      */
-    public function setProvince($province) {
-        if ((is_string($province)) && (strlen($province)>0)) {
+    public function setProvince($province)
+    {
+        if ((is_string($province)) && (strlen($province) > 0)) {
             $this->province = htmlspecialchars($province, ENT_COMPAT, "UTF-8");
         } else {
             $this->provice = $province;
         }
-
     }
 
     /**
      * Gets the province
-     * @return string
+     * @return string|null
      */
     public function getProvince()
     {

@@ -7,16 +7,19 @@
 // | Author : Jansen <jansen.shi@qq.com>
 // +----------------------------------------------------------------------
 namespace Metaregistrar\EPP\VeriSign;
-trait verisignEppExtension {
+
+trait verisignEppExtension
+{
     /**
      * add verisign namestore extension
      * @param eppDomain $domain
      * @author:Jansen <jansen.shi@qq.com>
      */
-    public function addNamestore(eppDomain $domain=null){
-        if ($domain instanceof eppDomain){
+    public function addNamestore(eppDomain $domain = null)
+    {
+        if ($domain instanceof eppDomain) {
             $tld = substr(strrchr($domain->getDomainname(), '.'), 1);
-        }else{
+        } else {
             $tld = 'com';
         }
         $namestoreExt = $this->createElement('namestoreExt:namestoreExt');
@@ -25,19 +28,45 @@ trait verisignEppExtension {
         $this->getExtension()->appendChild($namestoreExt);
     }
     /**
+     * add idn language extension
+     * @param string $lang idn language tag value
+     * @see https://www.verisign.com/assets/idn-valid-language-tags.pdf
+     */
+    public function addIdnLang(string $lang = 'ENG')
+    {
+        $idnLangExt = $this->createElement('idnLang:tag', $lang);
+        $idnLangExt->setAttribute('xmlns:idnLang', 'http://www.verisign.com/epp/idnLang-1.0');
+        $this->getExtension()->appendChild($idnLangExt);
+    }
+    /**
      * add verification code extendsion
      * @param string $rnvc real name verification code
      * @param string $dnvc domain name verification code
      * @author:Jansen <jansen.shi@qq.com>
      */
-    public function addVerificationCode(string $rnvc, string $dnvc=null){
+    public function addVerificationCode(string $rnvc = null, string $dnvc = null)
+    {
         //添加实名认证拓展
         $verifyExt = $this->createElement('verificationCode:encodedSignedCode');
         $verifyExt->setAttribute('xmlns:verificationCode', 'urn:ietf:params:xml:ns:verificationCode-1.0');
-        $verifyExt->appendChild($this->createElement('verificationCode:code', $rnvc));
-        if(!empty($dnvc)){
+        if (!empty($rnvc)) {
+            $verifyExt->appendChild($this->createElement('verificationCode:code', $rnvc));
+        }
+        if (!empty($dnvc)) {
             $verifyExt->appendChild($this->createElement('verificationCode:code', $dnvc));
         }
+        $this->getExtension()->appendChild($verifyExt);
+    }
+
+    /**
+     * add verification code info extendsion
+     * @return void
+     * @throws \DOMException
+     */
+    public function addVerificationCodeInfo()
+    {
+        $verifyExt = $this->createElement('verificationCode:info');
+        $verifyExt->setAttribute('xmlns:verificationCode', 'urn:ietf:params:xml:ns:verificationCode-1.0');
         $this->getExtension()->appendChild($verifyExt);
     }
 }

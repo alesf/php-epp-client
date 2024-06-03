@@ -1,18 +1,21 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
-class eppCreateContactRequest extends eppContactRequest {
+class eppCreateContactRequest extends eppContactRequest
+{
 
     /**
      * eppCreateContactRequest constructor.
      * @param eppContact|null $createinfo
      * @throws eppException
      */
-    function __construct($createinfo, $namespacesinroot = true) {
+    function __construct($createinfo, $namespacesinroot = true, $usecdata = true)
+    {
         $this->setNamespacesinroot($namespacesinroot);
         parent::__construct(eppRequest::TYPE_CREATE);
-
-        if ($createinfo){
+        $this->setUseCdata($usecdata);
+        if ($createinfo) {
             if ($createinfo instanceof eppContact) {
                 $this->setContact($createinfo);
             } else {
@@ -22,7 +25,8 @@ class eppCreateContactRequest extends eppContactRequest {
         $this->addSessionId();
     }
 
-    function __destruct() {
+    function __destruct()
+    {
         parent::__destruct();
     }
 
@@ -31,7 +35,8 @@ class eppCreateContactRequest extends eppContactRequest {
      * @param eppContact $contact
      * @throws eppException
      */
-    public function setContact(eppContact $contact) {
+    public function setContact(eppContact $contact)
+    {
         $this->setContactId($contact->getId());
         $this->setPostalInfo($contact->getPostalInfo(0));
         $this->setVoice($contact->getVoice());
@@ -49,7 +54,8 @@ class eppCreateContactRequest extends eppContactRequest {
      * Create the contact:id field
      * @param $contactid
      */
-    public function setContactId($contactid) {
+    public function setContactId($contactid)
+    {
         $this->contactobject->appendChild($this->createElement('contact:id', $contactid));
     }
 
@@ -58,12 +64,13 @@ class eppCreateContactRequest extends eppContactRequest {
      * @param eppContactPostalInfo $postal
      * @throws eppException
      */
-    public function setPostalInfo(eppContactPostalInfo $postal) {
+    public function setPostalInfo(eppContactPostalInfo $postal)
+    {
         $postalinfo = $this->createElement('contact:postalInfo');
         if (!$postal instanceof eppContactPostalInfo) {
             throw new eppException('PostalInfo must be filled on eppCreateContact request');
         }
-        if ($postal->getType()==eppContact::TYPE_AUTO) {
+        if ($postal->getType() == eppContact::TYPE_AUTO) {
             // If all fields are ascii, type = int (international) else type = loc (localization)
             if ((self::isAscii($postal->getName())) && (self::isAscii($postal->getOrganisationName())) && (self::isAscii($postal->getStreet(0)))) {
                 $postal->setType(eppContact::TYPE_INT);
@@ -94,51 +101,59 @@ class eppCreateContactRequest extends eppContactRequest {
     /**
      * @param $voice
      */
-    public function setVoice($voice) {
+    public function setVoice($voice)
+    {
         if ($voice) {
             $this->contactobject->appendChild($this->createElement('contact:voice', $voice));
         }
     }
 
-    public function setFax($fax) {
+    public function setFax($fax)
+    {
         if ($fax) {
             $this->contactobject->appendChild($this->createElement('contact:fax', $fax));
         }
     }
 
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         if ($email) {
             $this->contactobject->appendChild($this->createElement('contact:email', $email));
         }
     }
 
-    public function setPassword($password) {
-        if (!is_null($password))
-        {
+    public function setPassword($password)
+    {
+        if (!is_null($password)) {
             $authinfo = $this->createElement('contact:authInfo');
-            $pw = $authinfo->appendChild($this->createElement('contact:pw'));
-            $pw->appendChild($this->createCDATASection($password));
+            if ($this->useCdata()) {
+                $pw = $authinfo->appendChild($this->createElement('contact:pw'));
+                $pw->appendChild($this->createCDATASection($password));
+            } else {
+                $authinfo->appendChild($this->createElement('contact:pw', $password));
+            }
             $this->contactobject->appendChild($authinfo);
         }
     }
 
-    public function setDisclose($contactdisclose) {
+    public function setDisclose($contactdisclose)
+    {
         if (!is_null($contactdisclose)) {
             $disclose = $this->createElement('contact:disclose');
-            $disclose->setAttribute('flag',$contactdisclose);
+            $disclose->setAttribute('flag', $contactdisclose);
             $name = $this->createElement('contact:name');
-            if ($contactdisclose==1) {
-                $name->setAttribute('type',eppContact::TYPE_LOC);
+            if ($contactdisclose == 1) {
+                $name->setAttribute('type', eppContact::TYPE_LOC);
             }
             $disclose->appendChild($name);
             $org = $this->createElement('contact:org');
-            if ($contactdisclose==1) {
-                $org->setAttribute('type',eppContact::TYPE_LOC);
+            if ($contactdisclose == 1) {
+                $org->setAttribute('type', eppContact::TYPE_LOC);
             }
             $disclose->appendChild($org);
             $addr = $this->createElement('contact:addr');
-            if ($contactdisclose==1) {
-                $addr->setAttribute('type',eppContact::TYPE_LOC);
+            if ($contactdisclose == 1) {
+                $addr->setAttribute('type', eppContact::TYPE_LOC);
             }
             $disclose->appendChild($addr);
             $disclose->appendChild($this->createElement('contact:voice'));
@@ -147,7 +162,8 @@ class eppCreateContactRequest extends eppContactRequest {
         }
     }
 
-    public static function generateRandomString($length = 10) {
+    public static function generateRandomString($length = 10)
+    {
         $characters = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -157,4 +173,3 @@ class eppCreateContactRequest extends eppContactRequest {
         return $randomString;
     }
 }
-
