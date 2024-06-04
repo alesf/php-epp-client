@@ -1,11 +1,13 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class eppCreateDomainRequest extends eppDomainRequest
 {
     public $thin = false;
 
-    function __construct($createinfo, $forcehostattr = false, $namespacesinroot=true, $usecdata = true) {
+    function __construct($createinfo, $forcehostattr = false, $namespacesinroot = true, $usecdata = true)
+    {
         $this->setNamespacesinroot($namespacesinroot);
         $this->setForcehostattr($forcehostattr);
 
@@ -19,7 +21,8 @@ class eppCreateDomainRequest extends eppDomainRequest
         $this->addSessionId();
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
     }
 
@@ -27,7 +30,8 @@ class eppCreateDomainRequest extends eppDomainRequest
     /*
      * @param eppSecdns $secdns
      */
-    public function addSecdns($secdns) {
+    public function addSecdns($secdns)
+    {
         /* @var eppSecDNS $secdns */
         if (!$this->extension) {
             $this->extension = $this->createElement('extension');
@@ -81,7 +85,8 @@ class eppCreateDomainRequest extends eppDomainRequest
      * @return \DOMElement | null
      * @throws eppException
      */
-    public function setDomain(eppDomain $domain) {
+    public function setDomain(eppDomain $domain)
+    {
         if (!strlen($domain->getDomainname())) {
             throw new eppException('No valid domain name in create domain request');
         }
@@ -91,10 +96,20 @@ class eppCreateDomainRequest extends eppDomainRequest
         # Object create structure
         #
         $this->domainobject->appendChild($this->createElement('domain:name', $domain->getDomainname()));
+        if ($domain->getPeriod() > 0) {
+            $domainperiod = $this->createElement('domain:period', $domain->getPeriod());
             $domainperiod->setAttribute('unit', $domain->getPeriodUnit());
             $this->domainobject->appendChild($domainperiod);
         }
         $nsobjects = $domain->getHosts();
+        foreach ($nsobjects as $nsobject) {
+            /* @var $nsobject eppHost */
+            if (($this->getForcehostattr()) || ($nsobject->getIpAddressCount() > 0)) {
+                $nameservers->appendChild($this->addDomainHostAttr($nsobject));
+            } else {
+                $nameservers->appendChild($this->addDomainHostObj($nsobject));
+            }
+        }
         if ($domain->getHostLength() > 0) {
             $nameservers = $this->createElement('domain:ns');
             foreach ($nsobjects as $nsobject) {
@@ -108,16 +123,16 @@ class eppCreateDomainRequest extends eppDomainRequest
             $this->domainobject->appendChild($nameservers);
         }
         if (!$this->thin) {
-        // Verisign's production environment does not require a registrant, but the OTE environment does,
-        // so remove the above exception and add the following check
-        // if (strlen($domain->getRegistrant()) > 0) {
+            // Verisign's production environment does not require a registrant, but the OTE environment does,
+            // so remove the above exception and add the following check
+            // if (strlen($domain->getRegistrant()) > 0) {
             $this->domainobject->appendChild($this->createElement('domain:registrant', $domain->getRegistrant()));
         }
         $contacts = $domain->getContacts();
         if ($domain->getContactLength() > 0) {
             foreach ($contacts as $contact) {
                 /* @var $contact eppContactHandle */
-                if (in_array($contact->getContactType(),[eppContactHandle::CONTACT_TYPE_ADMIN,eppContactHandle::CONTACT_TYPE_BILLING,eppContactHandle::CONTACT_TYPE_TECH])) {
+                if (in_array($contact->getContactType(), [eppContactHandle::CONTACT_TYPE_ADMIN, eppContactHandle::CONTACT_TYPE_BILLING, eppContactHandle::CONTACT_TYPE_TECH])) {
                     $this->addDomainContact($this->domainobject, $contact->getContactHandle(), $contact->getContactType());
                 }
             }
@@ -155,7 +170,8 @@ class eppCreateDomainRequest extends eppDomainRequest
      * @param string $contactid
      * @param string $contacttype
      */
-    protected function addDomainContact($domain, $contactid, $contacttype) {
+    protected function addDomainContact($domain, $contactid, $contacttype)
+    {
         $domaincontact = $this->createElement('domain:contact', $contactid);
         $domaincontact->setAttribute('type', $contacttype);
         $domain->appendChild($domaincontact);
@@ -166,7 +182,8 @@ class eppCreateDomainRequest extends eppDomainRequest
      * @param eppHost $host
      * @return \DOMElement
      */
-    protected function addDomainHostAttr(eppHost $host) {
+    protected function addDomainHostAttr(eppHost $host)
+    {
 
         $ns = $this->createElement('domain:hostAttr');
         $ns->appendChild($this->createElement('domain:hostName', $host->getHostname()));
@@ -186,7 +203,8 @@ class eppCreateDomainRequest extends eppDomainRequest
      * @param eppHost $host
      * @return \DOMElement
      */
-    protected function addDomainHostObj(eppHost $host) {
+    protected function addDomainHostObj(eppHost $host)
+    {
         $ns = $this->createElement('domain:hostObj', $host->getHostname());
         return $ns;
     }
