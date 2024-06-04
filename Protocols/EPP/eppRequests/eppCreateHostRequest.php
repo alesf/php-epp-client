@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class eppCreateHostRequest extends eppHostRequest {
@@ -21,7 +22,7 @@ class eppCreateHostRequest extends eppHostRequest {
     /**
      *
      * @param eppHost $host
-     * @return \DOMElement
+     * @return void
      * @throws eppException
      */
     public function setHost(eppHost $host) {
@@ -42,6 +43,4 @@ class eppCreateHostRequest extends eppHostRequest {
         }
         return;
     }
-
 }
-

@@ -159,72 +159,73 @@ class eppResponse extends \DOMDocument
     {
         $resultcode = $this->getResultCode();
         $success = ($resultcode[0] == '1');
-        if (!$success) {
-            switch ($resultcode[1]) {
-                case '0':
-                    $this->setProblemtype('syntax');
-                    break;
-                case '1':
-                    $this->setProblemtype('implementation-specific');
-                    break;
-                case '2':
-                    $this->setProblemtype('security');
-                    break;
-                case '3':
-                    $this->setProblemtype('data management');
-                    break;
-                case '4':
-                    $this->setProblemtype('server system');
-                    break;
-                case '5':
-                    $this->setProblemtype('connection management');
-                    break;
-            }
-            $resultmessage = $this->getResultMessage();
-
-            $errorstring = "Error $resultcode: $resultmessage";
-            $id = null;
-            $value = $this->getResultValue();
-            if ($value) {
-                $id = 'value:' . $value;
-            }
-            $resultcontactid = $this->getResultContactId();
-            if ($resultcontactid) {
-                $id = 'contactid:' . $resultcontactid;
-            }
-            $resulthostname = $this->getResultHostName();
-            if ($resulthostname) {
-                $id = 'hostname:' . $resulthostname;
-            }
-            $resultdomainname = $this->getResultDomainName();
-            if ($resultdomainname) {
-                $id = 'domainname:' . $resultdomainname;
-            }
-            $resultstatus = $this->getResultHostStatus();
-            if ($resultstatus) {
-                $id = 'status:' . $resultstatus;
-            }
-            $resultaddr = $this->getResultHostAddr();
-            if ($resultaddr) {
-                $id = 'hostaddr:' . $resultaddr;
-            }
-            if ($id) {
-                $errorstring .= '; ' . $id;
-            }
-            $resultreason = $this->getResultReason();
-            if (is_string($resultreason) && strlen($resultreason)) {
-                $errorstring .= ' (' . $resultreason . ')';
-            }
-            if ((is_array($this->exceptions)) && (count($this->exceptions) > 0)) {
-                foreach ($this->exceptions as $exceptionhandler) {
-                    throw new $exceptionhandler($errorstring, $resultcode, null, $resultreason, $this->saveXML(), $this);
-                }
-            } else {
-                throw new eppException($errorstring, $resultcode, null, $resultreason, $this->saveXML(), $this);
-            }
-        } else {
+        if ($success) {
             return true;
         }
+
+        switch ($resultcode[1]) {
+            case '0':
+                $this->setProblemtype('syntax');
+                break;
+            case '1':
+                $this->setProblemtype('implementation-specific');
+                break;
+            case '2':
+                $this->setProblemtype('security');
+                break;
+            case '3':
+                $this->setProblemtype('data management');
+                break;
+            case '4':
+                $this->setProblemtype('server system');
+                break;
+            case '5':
+                $this->setProblemtype('connection management');
+                break;
+        }
+        $resultmessage = $this->getResultMessage();
+
+        $errorstring = "Error $resultcode: $resultmessage";
+        $id = null;
+        $value = $this->getResultValue();
+        if ($value) {
+            $id = 'value:' . $value;
+        }
+        $resultcontactid = $this->getResultContactId();
+        if ($resultcontactid) {
+            $id = 'contactid:' . $resultcontactid;
+        }
+        $resulthostname = $this->getResultHostName();
+        if ($resulthostname) {
+            $id = 'hostname:' . $resulthostname;
+        }
+        $resultdomainname = $this->getResultDomainName();
+        if ($resultdomainname) {
+            $id = 'domainname:' . $resultdomainname;
+        }
+        $resultstatus = $this->getResultHostStatus();
+        if ($resultstatus) {
+            $id = 'status:' . $resultstatus;
+        }
+        $resultaddr = $this->getResultHostAddr();
+        if ($resultaddr) {
+            $id = 'hostaddr:' . $resultaddr;
+        }
+        if ($id) {
+            $errorstring .= '; ' . $id;
+        }
+        $resultreason = $this->getResultReason();
+        if (is_string($resultreason) && strlen($resultreason)) {
+            $errorstring .= ' (' . $resultreason . ')';
+        }
+        if ((is_array($this->exceptions)) && (count($this->exceptions) > 0)) {
+            foreach ($this->exceptions as $exceptionhandler) {
+                throw new $exceptionhandler($errorstring, (int)$resultcode, null, $resultreason, $this->saveXML(), $this);
+            }
+        } else {
+            throw new eppException($errorstring, (int)$resultcode, null, $resultreason, $this->saveXML(), $this);
+        }
+
         return false;
     }
 

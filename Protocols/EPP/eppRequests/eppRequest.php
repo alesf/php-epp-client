@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 /*
@@ -145,7 +146,7 @@ class eppRequest extends \DOMDocument {
 
     /**
      * Appends an extension
-     * @param  DomElement $extension
+     * @param  \DomElement $extension
      */
     public function appendExtension(\DomElement $extension) {
         $this->getExtension()->appendChild($extension);
@@ -168,10 +169,10 @@ class eppRequest extends \DOMDocument {
     protected function setNamespace($xmlns, $namespace, $object = null) {
         $xmlns = str_replace('xmlns:', '', $xmlns);
         if ($this->rootNamespaces()) {
-            $this->getEpp()->setAttribute('xmlns:'.$xmlns, $namespace);
+            $this->getEpp()->setAttribute('xmlns:' . $xmlns, $namespace);
         } else {
             if ($object) {
-                $object->setAttribute('xmlns:'.$xmlns, $namespace);
+                $object->setAttribute('xmlns:' . $xmlns, $namespace);
             }
         }
     }
@@ -206,7 +207,7 @@ class eppRequest extends \DOMDocument {
     public function addNamespaces($namespaces) {
         if (is_array($namespaces)) {
             foreach ($namespaces as $namespace => $xmlns) {
-                if (strpos($namespace,'urn')!==false) {
+                if (strpos($namespace, 'urn') !== false) {
                     $this->getEpp()->setAttribute('xmlns:' . $xmlns, $namespace);
                 } else {
                     if ($this->rootNamespaces()) {

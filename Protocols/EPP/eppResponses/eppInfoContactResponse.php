@@ -1,8 +1,8 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class eppInfoContactResponse extends eppInfoResponse {
-
 
     /**
      *
@@ -66,7 +66,7 @@ class eppInfoContactResponse extends eppInfoResponse {
 
     /**
      *
-     * @return string contact_status
+     * @return array|null contact_status
      */
     public function getContactStatus() {
         $stat = null;
@@ -80,11 +80,10 @@ class eppInfoContactResponse extends eppInfoResponse {
 
     /**
      *
-     * @return array of statuses
+     * @return string array of statuses
      */
     public function getContactStatusCSV() {
         return parent::arrayToCSV($this->getContactStatus());
-
     }
 
     /**
@@ -113,7 +112,7 @@ class eppInfoContactResponse extends eppInfoResponse {
 
     /**
      *
-     * @return string contact_name
+     * @return string|null contact_name
      */
     public function getContactName() {
         $pi = $this->getContactPostalInfo();
@@ -173,13 +172,12 @@ class eppInfoContactResponse extends eppInfoResponse {
         } else {
             return null;
         }
-
     }
 
 
     /**
      *
-     * @return string company_name
+     * @return string|null company_name
      */
     public function getContactCompanyname() {
         $pi = $this->getContactPostalInfo();
@@ -257,22 +255,22 @@ class eppInfoContactResponse extends eppInfoResponse {
                 /* @var $addr \DOMElement */
                 $testcity = $addr->getElementsByTagName('city');
                 /* @var $postalresult \DOMElement */
-                
+
                 if ($testcity->length > 0) {
                     $city = $testcity->item(0)->nodeValue;
                 }
                 $testcc = $addr->getElementsByTagName('cc');
-                
+
                 if ($testcc->length > 0) {
                     $country = $testcc->item(0)->nodeValue;
                 }
                 $testpc = $addr->getElementsByTagName('pc');
-                
+
                 if ($testpc->length > 0) {
                     $zipcode = $testpc->item(0)->nodeValue;
                 }
                 $testsp = $addr->getElementsByTagName('sp');
-                
+
                 if ($testsp->length > 0) {
                     $province = $testsp->item(0)->nodeValue;
                 }
@@ -287,6 +285,4 @@ class eppInfoContactResponse extends eppInfoResponse {
         }
         return $postalinfo;
     }
-
-
 }

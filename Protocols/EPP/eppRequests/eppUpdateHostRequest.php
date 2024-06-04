@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class eppUpdateHostRequest extends eppHostRequest {
@@ -39,7 +40,7 @@ class eppUpdateHostRequest extends eppHostRequest {
      * @param eppHost $addInfo
      * @param eppHost $removeInfo
      * @param eppHost $updateInfo
-     * @return \DOMElement
+     * @return void
      * @throws eppException
      */
     public function updateHost($hostname, $addInfo, $removeInfo, $updateInfo) {
@@ -94,5 +95,4 @@ class eppUpdateHostRequest extends eppHostRequest {
             }
         }
     }
-
 }

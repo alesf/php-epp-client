@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class eppRenewRequest extends eppDomainRequest {
@@ -30,7 +31,7 @@ class eppRenewRequest extends eppDomainRequest {
         }
         if ($domain->getPeriod() > 0) {
             $domainperiod = $this->createElement('domain:period', $domain->getPeriod());
-            $domainperiod->setAttribute('unit', $domain->getPeriodUnit());
+            $domainperiod->setAttribute('unit', (string)$domain->getPeriodUnit());
             $this->domainobject->appendChild($domainperiod);
         }
     }

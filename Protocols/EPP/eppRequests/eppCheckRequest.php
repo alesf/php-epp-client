@@ -1,7 +1,13 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class eppCheckRequest extends eppRequest {
+
+    private $domainobject;
+    private $contactobject;
+    private $hostobject;
+
     function __construct($checkrequest) {
         parent::__construct();
 
@@ -28,7 +34,6 @@ class eppCheckRequest extends eppRequest {
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -102,6 +107,4 @@ class eppCheckRequest extends eppRequest {
         $check->appendChild($this->hostobject);
         $this->getCommand()->appendChild($check);
     }
-
-
 }

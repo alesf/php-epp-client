@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 /*
@@ -29,10 +30,10 @@ class eppInfoContactRequest extends eppContactRequest {
         # Domain check structure
         #
         $this->contactobject->appendChild($this->createElement('contact:id', $contacthandle->getContactHandle()));
-        if (!is_null($contacthandle->getPassword()))
-        {
+        if (!is_null($contacthandle->getPassword())) {
             $authinfo = $this->createElement('contact:authInfo');
             if ($this->useCdata()) {
+                // FIXME: second parameter of createCDATASection should be a string
                 $authinfo->appendChild($this->createElement('contact:pw', $this->createCDATASection($contacthandle->getPassword())));
             } else {
                 $authinfo->appendChild($this->createElement('contact:pw', $contacthandle->getPassword()));
@@ -40,5 +41,4 @@ class eppInfoContactRequest extends eppContactRequest {
             $this->contactobject->appendChild($authinfo);
         }
     }
-
 }

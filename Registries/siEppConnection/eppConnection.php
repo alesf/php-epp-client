@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class siEppConnection extends eppConnection
@@ -32,7 +33,7 @@ class siEppConnection extends eppConnection
             $this->loggedin = false;
             return true;
         } else {
-            throw new eppException("Logout failed: ".$response->getResultMessage(), 0, null, null, $logout->saveXML());
+            throw new eppException("Logout failed", 0, null, null, $logout->saveXML());
         }
     }
 }

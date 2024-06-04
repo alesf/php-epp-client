@@ -1,10 +1,11 @@
 <?php
+
 namespace Metaregistrar\EPP;
 
 class eppInfoResponse extends eppResponse {
     /**
      *
-     * @param array $arr
+     * @param array|null $arr
      * @return string
      */
     protected function arrayToCSV($arr) {
@@ -21,6 +22,4 @@ class eppInfoResponse extends eppResponse {
         }
         return $ret;
     }
-
-
 }

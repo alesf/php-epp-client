@@ -1,5 +1,7 @@
 <?php
+
 namespace Metaregistrar\EPP;
+
 /**
  * The Contact Info Object
  *
@@ -39,18 +41,18 @@ class eppContact {
 
     private $id = null;
     private $postalInfo = array();
-    private $voice=null;
-    private $fax=null;
-    private $email=null;
-    private $password=null;
-    private $status=null;
+    private $voice = null;
+    private $fax = null;
+    private $email = null;
+    private $password = null;
+    private $status = null;
     private $type = self::TYPE_AUTO;
     private $disclose = null;
 
 
     /**
      *
-     * @param eppContactPostalInfo $postalInfo
+     * @param eppContactPostalInfo|array $postalInfo
      * @param string $email
      * @param string $voice
      * @param string $fax
@@ -75,7 +77,6 @@ class eppContact {
         $this->setVoice($voice);
         $this->setFax($fax);
         $this->setStatus($status);
-
     }
 
     public function setDisclose($disclose) {
@@ -183,7 +184,6 @@ class eppContact {
         } else {
             $this->password = null;
         }
-
     }
 
     /**
@@ -251,16 +251,14 @@ class eppContact {
     /**
      * @return null
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
     /**
      * @param null $id
      */
-    public function setId($id)
-    {
+    public function setId($id) {
         $this->id = $id;
     }
 
@@ -273,6 +271,4 @@ class eppContact {
     public function generateContactId() {
         return uniqid('MRG');
     }
-
-
 }
