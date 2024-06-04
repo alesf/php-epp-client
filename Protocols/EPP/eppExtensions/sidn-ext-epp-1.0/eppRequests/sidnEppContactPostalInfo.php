@@ -1,4 +1,5 @@
 <?php
+
 namespace Metaregistrar\EPP;
 /*
  *
@@ -8,6 +9,7 @@ namespace Metaregistrar\EPP;
  * The name should contain the name of the organisation and the legalForm SIDN EPP extension shouldn't be a natural person.
  *
  */
+
 class sidnEppContactPostalInfo extends eppContactPostalInfo {
     private $legalForm;
 
@@ -30,7 +32,7 @@ class sidnEppContactPostalInfo extends eppContactPostalInfo {
             $this->legalForm = 'PERSOON';
         }
 
-        parent::__construct($name, $city, $countrycode, null, $street, $province, $zipcode, $type);
+        parent::__construct($name, $city, $countrycode, $organisationName, $street, $province, $zipcode, $type);
     }
 
     public function getLegalForm() {

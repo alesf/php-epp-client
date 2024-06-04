@@ -2,8 +2,7 @@
 
 namespace Metaregistrar\EPP;
 
-class eppConnection
-{
+class eppConnection {
 
     /**
      * Prevents loading the settings more then once
@@ -197,8 +196,7 @@ class eppConnection
      * @return mixed
      * @throws eppException
      */
-    static function create($settingsfile, $debug = false)
-    {
+    static function create($settingsfile, $debug = false) {
         $result = self::loadSettings(null, $settingsfile);
         if ($result) {
             if (isset($result['interface'])) {
@@ -214,8 +212,7 @@ class eppConnection
         }
     }
 
-    public function __construct($logging = false, $settingsfile = null)
-    {
+    public function __construct($logging = false, $settingsfile = null) {
         if ($logging) {
             $this->enableLogging();
         }
@@ -262,8 +259,7 @@ class eppConnection
         $this->responses['Metaregistrar\\EPP\\eppDeleteRequest'] = 'Metaregistrar\\EPP\\eppDeleteResponse';
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         //echo "\nMemory usage: ".memory_get_usage()." bytes \n";
         //echo "Peak memory usage: ".memory_get_peak_usage()." bytes \n\n";
         if ($this->connected) {
@@ -279,34 +275,28 @@ class eppConnection
         }
     }
 
-    public function enableLaunchphase($launchphase)
-    {
+    public function enableLaunchphase($launchphase) {
         $this->launchphase = $launchphase;
         $this->useExtension('launch-1.0');
     }
 
-    public function getLaunchphase()
-    {
+    public function getLaunchphase() {
         return $this->launchphase;
     }
 
-    public function enableDnssec()
-    {
+    public function enableDnssec() {
         $this->useExtension('secDNS-1.1');
     }
 
-    public function enableRgp()
-    {
+    public function enableRgp() {
         $this->useExtension('rgp-1.0');
     }
 
-    public function disableRgp()
-    {
+    public function disableRgp() {
         $this->removeExtension('urn:ietf:params:xml:ns:rgp-1.0');
     }
 
-    public function disableDnssec()
-    {
+    public function disableDnssec() {
         $this->removeExtension('urn:ietf:params:xml:ns:secDNS-1.1');
         unset($this->responses['Metaregistrar\\EPP\\eppDnssecUpdateDomainRequest']);
     }
@@ -317,15 +307,13 @@ class eppConnection
      * @param bool $selfsigned
      *
      */
-    public function enableCertification($certificatepath, $certificatepassword, $selfsigned = false)
-    {
+    public function enableCertification($certificatepath, $certificatepassword, $selfsigned = false) {
         $this->local_cert_path = $certificatepath;
         $this->local_cert_pwd = $certificatepassword;
         $this->allow_self_signed = $selfsigned;
     }
 
-    public function disableCertification()
-    {
+    public function disableCertification() {
         $this->local_cert_path = null;
         $this->local_cert_pwd = null;
         $this->allow_self_signed = null;
@@ -336,8 +324,7 @@ class eppConnection
      * Disconnects if connected
      * @return boolean
      */
-    public function disconnect()
-    {
+    public function disconnect() {
         if (is_resource($this->connection)) {
             //echo "fclosing $this->hostname\n";
             //@ob_flush();
@@ -356,8 +343,7 @@ class eppConnection
      * @return bool
      * @throws eppException
      */
-    public function connect($hostname = null, $port = null)
-    {
+    public function connect($hostname = null, $port = null) {
         if ($hostname) {
             $this->hostname = $hostname;
         }
@@ -411,8 +397,7 @@ class eppConnection
      * @param bool $usecdata Enclose the password field with [[CDATA]]
      * @return bool
      */
-    public function login($usecdata = false)
-    {
+    public function login($usecdata = false) {
         if (!$this->connected) {
             if (!$this->connect()) {
                 return false;
@@ -432,8 +417,7 @@ class eppConnection
      * @return bool
      * @throws eppException
      */
-    public function logout()
-    {
+    public function logout() {
         if ($this->loggedin) {
             $logout = new eppLogoutRequest();
             if ($response = $this->request($logout)) {
@@ -453,8 +437,7 @@ class eppConnection
      * @return eppResponse|null
      * @throws eppException
      */
-    public function request($eppRequest)
-    {
+    public function request($eppRequest) {
         $check = null;
         foreach ($this->getResponses() as $req => $check) {
             if (get_class($eppRequest) == $req) {
@@ -556,8 +539,7 @@ class eppConnection
      * @return string
      * @throws eppException
      */
-    public function read($nonBlocking = false)
-    {
+    public function read($nonBlocking = false) {
         $content = '';
         $time = time() + $this->timeout;
         $read = "";
@@ -649,8 +631,7 @@ class eppConnection
      * @param string $content
      * @return integer
      */
-    private function readInteger($content)
-    {
+    private function readInteger($content) {
         $int = unpack('N', substr($content, 0, 4));
         return $int[1];
     }
@@ -661,8 +642,7 @@ class eppConnection
      * @param string $content Your XML
      * @return string String to write
      */
-    private function addInteger($content)
-    {
+    private function addInteger($content) {
         $int = pack('N', intval(strlen($content) + 4));
         return $int . $content;
     }
@@ -673,8 +653,7 @@ class eppConnection
      * @return bool
      * @throws eppException
      */
-    public function write($content)
-    {
+    public function write($content) {
         //$this->writeLog("Writing: " . strlen($content) . " + 4 bytes","WRITE");
         $content = $this->addInteger($content);
         if (!is_resource($this->connection)) {
@@ -698,8 +677,7 @@ class eppConnection
      * @return boolean
      * @throws eppException
      */
-    public function writeRequest(eppRequest $content)
-    {
+    public function writeRequest(eppRequest $content) {
         //$requestsessionid = $content->getSessionId();
         $namespaces = $this->getDefaultNamespaces();
         if (is_array($namespaces)) {
@@ -759,8 +737,7 @@ class eppConnection
      * @return eppResponse
      * @throws eppException
      */
-    public function readResponse()
-    {
+    public function readResponse() {
         $response = new eppResponse();
         $xml = $this->read(true);
         if (strlen($xml)) {
@@ -790,8 +767,7 @@ class eppConnection
      * @return bool
      * @throws eppException
      */
-    public function HandleXmlError($errno, $errstr, $errfile, $errline)
-    {
+    public function HandleXmlError($errno, $errstr, $errfile, $errline) {
         if ($errno == E_WARNING && (substr_count($errstr, "DOMDocument::loadXML()") > 0)) {
             throw new eppException('ERROR reading EPP message: ' . str_replace('DOMDocument::loadXML(): ', '', $errstr), $errno, null, $errfile . '(' . $errline . ')');
         } else {
@@ -809,8 +785,7 @@ class eppConnection
      * @return eppResponse
      * @throws eppException
      */
-    public function writeandread($content)
-    {
+    public function writeandread($content) {
         $requestsessionid = $content->getSessionId();
         $namespaces = $this->getDefaultNamespaces();
         if (is_array($namespaces)) {
@@ -910,8 +885,7 @@ class eppConnection
         return null;
     }
 
-    public function createResponse($request)
-    {
+    public function createResponse($request) {
         $response = null;
         foreach ($this->getResponses() as $req => $res) {
             if (get_class($request) == $req) {
@@ -925,131 +899,106 @@ class eppConnection
         return $response;
     }
 
-    public function addCommandResponse($command, $response)
-    {
+    public function addCommandResponse($command, $response) {
         $this->responses[$command] = $response;
     }
 
-    public function getCheckTransactionIds()
-    {
+    public function getCheckTransactionIds() {
         return $this->checktransactionids;
     }
 
-    public function setCheckTransactionIds($value)
-    {
+    public function setCheckTransactionIds($value) {
         $this->checktransactionids = $value;
     }
 
-    public function getTimeout()
-    {
+    public function getTimeout() {
         return $this->timeout;
     }
 
-    public function setTimeout($timeout)
-    {
+    public function setTimeout($timeout) {
         $this->timeout = $timeout;
     }
 
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
     }
 
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $this->username = $username;
     }
 
-    public function getPassword()
-    {
+    public function getPassword() {
         return $this->password;
     }
 
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password = $password;
     }
 
-    public function getNewPassword()
-    {
+    public function getNewPassword() {
         return $this->newpassword;
     }
 
-    public function setNewPassword($password)
-    {
+    public function setNewPassword($password) {
         $this->newpassword = $password;
     }
 
-    public function getHostname()
-    {
+    public function getHostname() {
         return $this->hostname;
     }
 
-    public function setHostname($hostname)
-    {
+    public function setHostname($hostname) {
         $this->hostname = $hostname;
     }
 
-    public function setLogFile($filename)
-    {
+    public function setLogFile($filename) {
         $this->logFile = $filename;
     }
 
-    public function getPort()
-    {
+    public function getPort() {
         return $this->port;
     }
 
-    public function setPort($port)
-    {
+    public function setPort($port) {
         $this->port = $port;
     }
 
-    public function getSslContext()
-    {
+    public function getSslContext() {
         return $this->sslContext;
     }
 
-    public function setSslContext($sslContext)
-    {
+    public function setSslContext($sslContext) {
         $this->sslContext = $sslContext;
     }
 
-    public function setVerifyPeer($verify_peer)
-    {
+    public function setVerifyPeer($verify_peer) {
         $this->verify_peer = $verify_peer;
     }
 
-    public function setVerifyPeerName($verify_peer_name)
-    {
+    public function setVerifyPeerName($verify_peer_name) {
         $this->verify_peer_name = $verify_peer_name;
     }
 
-    public function setCertificateAuthority($certificate_path)
-    {
+    public function setCertificateAuthority($certificate_path) {
         $this->cert_authority = $certificate_path;
     }
 
     /**
      * @param boolean $allow_self_signed
      */
-    public function setAllowSelfSigned(bool $allow_self_signed)
-    {
+    public function setAllowSelfSigned(bool $allow_self_signed) {
         $this->allow_self_signed = $allow_self_signed;
     }
 
-    public function getRetry()
-    {
+    public function getRetry() {
         return $this->retry;
     }
 
-    public function setRetry($retry)
-    {
+    public function setRetry($retry) {
         $this->retry = $retry;
     }
 
-    public function addDefaultNamespace($xmlns, $namespace, $addxmlns = true)
-    {
+    public function addDefaultNamespace($xmlns, $namespace, $addxmlns = true) {
         if ($addxmlns) {
             $this->defaultnamespace[$namespace] = 'xmlns:' . $xmlns;
         } else {
@@ -1057,43 +1006,35 @@ class eppConnection
         }
     }
 
-    public function getDefaultNamespaces()
-    {
+    public function getDefaultNamespaces() {
         return $this->defaultnamespace;
     }
 
-    public function setVersion($version)
-    {
+    public function setVersion($version) {
         $this->version = $version;
     }
 
-    public function getVersion()
-    {
+    public function getVersion() {
         return $this->version;
     }
 
-    public function setLanguage($language)
-    {
+    public function setLanguage($language) {
         $this->language = $language;
     }
 
-    public function setBlocking($blocking)
-    {
+    public function setBlocking($blocking) {
         $this->blocking = $blocking;
     }
 
-    public function getBlocking()
-    {
+    public function getBlocking() {
         return $this->blocking;
     }
 
-    public function getResponses()
-    {
+    public function getResponses() {
         return $this->responses;
     }
 
-    public function getLanguage()
-    {
+    public function getLanguage() {
         return $this->language;
     }
 
@@ -1101,8 +1042,7 @@ class eppConnection
      * Set service list with one call
      * @param array $services
      */
-    public function setServices($services)
-    {
+    public function setServices($services) {
         $this->objuri = $services;
     }
 
@@ -1110,8 +1050,7 @@ class eppConnection
      * Get all supported services
      * @return array
      */
-    public function getServices()
-    {
+    public function getServices() {
         return $this->objuri;
     }
 
@@ -1119,8 +1058,7 @@ class eppConnection
      * Set all extensions in one call
      * @param array $extensions
      */
-    public function setExtensions($extensions)
-    {
+    public function setExtensions($extensions) {
         // Set all extensions at once in an array
         $this->exturi = $extensions;
     }
@@ -1131,8 +1069,7 @@ class eppConnection
      * @param string $namespace
      * @throws eppException
      */
-    public function useExtension($namespace)
-    {
+    public function useExtension($namespace) {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $includepath = dirname(__FILE__) . '\\eppExtensions\\' . $namespace . '\\includes.php';
         } else {
@@ -1150,8 +1087,7 @@ class eppConnection
      * @param $xmlns
      * @param $namespace
      */
-    public function addService($xmlns, $namespace)
-    {
+    public function addService($xmlns, $namespace) {
         $this->objuri[$namespace] = $xmlns;
     }
 
@@ -1160,41 +1096,34 @@ class eppConnection
      * @param string $xmlns
      * @param string $namespace
      */
-    public function addExtension($xmlns, $namespace)
-    {
+    public function addExtension($xmlns, $namespace) {
         $this->exturi[$namespace] = $xmlns;
     }
 
-    public function addException($exceptionhandler)
-    {
+    public function addException($exceptionhandler) {
         $this->exceptions[] = $exceptionhandler;
     }
 
-    public function removeExtension($namespace)
-    {
+    public function removeExtension($namespace) {
         unset($this->exturi[$namespace]);
     }
 
-    public function getExtensions()
-    {
+    public function getExtensions() {
         return $this->exturi;
     }
 
-    public function setXpathExtensions($extensions)
-    {
+    public function setXpathExtensions($extensions) {
         $this->xpathuri = $extensions;
     }
 
-    public function getXpathExtensions()
-    {
+    public function getXpathExtensions() {
         return $this->xpathuri;
     }
 
     /**
      * Enables logging
      */
-    private function enableLogging()
-    {
+    private function enableLogging() {
         $this->logging = true;
     }
 
@@ -1203,8 +1132,7 @@ class eppConnection
      * @param array $result
      * @return bool
      */
-    public function setConnectionDetails($result)
-    {
+    public function setConnectionDetails($result) {
         $this->setHostname($result['hostname']);
         $this->setUsername($result['userid']);
         $this->setPassword($result['password']);
@@ -1269,8 +1197,7 @@ class eppConnection
      * @return array
      * @throws eppException
      */
-    static function loadSettings($directory, $settingsfile)
-    {
+    static function loadSettings($directory, $settingsfile) {
         if ($directory) {
             $path = $directory . '/' . $settingsfile;
         } else {
@@ -1297,8 +1224,7 @@ class eppConnection
      * Returns if the session is still open
      * @return bool
      */
-    public function isConnected()
-    {
+    public function isConnected() {
         return $this->connected;
     }
 
@@ -1306,13 +1232,11 @@ class eppConnection
      * Return if the system is still logged in
      * @return bool
      */
-    public function isLoggedin()
-    {
+    public function isLoggedin() {
         return $this->loggedin;
     }
 
-    private function showLog()
-    {
+    private function showLog() {
         echo "==== LOG ====\n";
         if (property_exists($this, 'logentries')) {
             foreach ($this->logentries as $logentry) {
@@ -1321,8 +1245,7 @@ class eppConnection
         }
     }
 
-    protected function writeLog($text, $action)
-    {
+    protected function writeLog($text, $action) {
         if ($this->logging) {
             // Hide userid in the logging
             $text = $this->hideTextBetween($text, '<clID>', '</clID>');
@@ -1353,8 +1276,7 @@ class eppConnection
      * @param $end
      * @return string
      */
-    protected function hideTextBetween($text, $start, $end)
-    {
+    protected function hideTextBetween($text, $start, $end) {
         if (($startpos = strpos(strtolower($text), strtolower($start))) !== false) {
             if (($endpos = strpos(strtolower($text), strtolower($end))) !== false) {
                 $text = substr($text, 0, $startpos + strlen($start)) . 'XXXXXXXXXXXXXXXX' . substr($text, $endpos, 99999);
@@ -1367,8 +1289,7 @@ class eppConnection
      * @param null|string $connectionComment
      * @return eppConnection
      */
-    public function setConnectionComment($connectionComment)
-    {
+    public function setConnectionComment($connectionComment) {
         $this->connectionComment = $connectionComment;
         return $this;
     }

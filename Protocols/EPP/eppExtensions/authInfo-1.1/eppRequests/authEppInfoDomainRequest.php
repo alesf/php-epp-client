@@ -1,7 +1,6 @@
 <?php
 
 namespace Metaregistrar\EPP;
-
 /*
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
@@ -17,12 +16,12 @@ namespace Metaregistrar\EPP;
     </extension>
   </command>
 </epp>
+
+
 */
 
-class authEppInfoDomainRequest extends eppInfoDomainRequest
-{
-  function __construct($infodomain, $hosts = null, $withAuthcode = false)
-  {
+class authEppInfoDomainRequest extends eppInfoDomainRequest {
+  function __construct($infodomain, $hosts = null, $withAuthcode = false) {
     parent::__construct($infodomain, $hosts);
     if ($withAuthcode == true) {
       $this->addAuthExtension();
@@ -30,8 +29,8 @@ class authEppInfoDomainRequest extends eppInfoDomainRequest
     $this->addSessionId();
   }
 
-  public function addAuthExtension()
-  {
+
+  public function addAuthExtension() {
     $authext = $this->createElement('authInfo:info');
     $authext->setAttribute('xmlns:authInfo', 'http://www.eurid.eu/xml/epp/authInfo-1.1');
     $authext->appendChild($this->createElement('authInfo:request'));
