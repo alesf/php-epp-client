@@ -131,7 +131,7 @@ class eppContactPostalInfo {
 
     /**
      * Gets the name
-     * @return string
+     * @return string|null
      */
     public function getName() {
         return $this->name;
@@ -184,7 +184,7 @@ class eppContactPostalInfo {
         if ((is_string($province)) && (strlen($province) > 0)) {
             $this->province = htmlspecialchars($province, ENT_COMPAT, "UTF-8");
         } else {
-            $this->provice = $province;
+            $this->province = $province;
         }
     }
 
