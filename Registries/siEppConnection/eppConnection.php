@@ -27,13 +27,17 @@ class siEppConnection extends eppConnection
      */
     public function logout()
     {
+        if (!$this->loggedin) {
+            return true;
+        }
+
         $logout = new siEppLogoutRequest();
         if ($response = $this->request($logout)) {
             $this->writeLog("Logged out", "LOGOUT");
             $this->loggedin = false;
             return true;
-        } else {
-            throw new eppException("Logout failed", 0, null, null, $logout->saveXML());
         }
+
+        throw new eppException("Logout failed", 0, null, null, $logout->saveXML());
     }
 }
