@@ -1,6 +1,7 @@
 <?php
 
 namespace Metaregistrar\EPP;
+
 /*
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
@@ -21,19 +22,26 @@ namespace Metaregistrar\EPP;
 */
 
 class authEppInfoDomainRequest extends eppInfoDomainRequest {
-  function __construct($infodomain, $hosts = null, $withAuthcode = false) {
-    parent::__construct($infodomain, $hosts);
-    if ($withAuthcode == true) {
-      $this->addAuthExtension();
+    function __construct($infodomain, $hosts = null, $withAuthcode = false, $cancelAuthCode = false) {
+        parent::__construct($infodomain, $hosts);
+
+        if ($withAuthcode && $cancelAuthCode) {
+            throw new eppException('Cannot request and cancel authcode at the same time');
+        }
+
+        if ($withAuthcode) {
+            $this->addAuthExtension('authInfo:request');
+        } elseif ($cancelAuthCode) {
+            $this->addAuthExtension('authInfo:cancel');
+        }
+
+        $this->addSessionId();
     }
-    $this->addSessionId();
-  }
 
-
-  public function addAuthExtension() {
-    $authext = $this->createElement('authInfo:info');
-    $authext->setAttribute('xmlns:authInfo', 'http://www.eurid.eu/xml/epp/authInfo-1.1');
-    $authext->appendChild($this->createElement('authInfo:request'));
-    $this->getExtension()->appendChild($authext);
-  }
+    public function addAuthExtension(string $method) {
+        $authext = $this->createElement('authInfo:info');
+        $authext->setAttribute('xmlns:authInfo', 'http://www.eurid.eu/xml/epp/authInfo-1.1');
+        $authext->appendChild($this->createElement($method));
+        $this->getExtension()->appendChild($authext);
+    }
 }

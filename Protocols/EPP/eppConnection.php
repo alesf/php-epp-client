@@ -132,10 +132,10 @@ class eppConnection {
     protected $local_cert_path = null;
 
     /**
-     * Path to certificate file
+     * Path to private key file
      * @var string
      */
-    protected $cert_authority = null;
+    protected $local_pk_path = null;
 
     /**
      * Password of certificate file
@@ -184,6 +184,11 @@ class eppConnection {
      * @var null|string
      */
     protected $connectionComment = null;
+
+    /**
+     * @var null|string
+     */
+    protected $sourceIpAddr = null;
 
     /**
      * @var null|string
@@ -305,18 +310,21 @@ class eppConnection {
      * @param string $certificatepath
      * @param string | null $certificatepassword
      * @param bool $selfsigned
+     * @param string | null $certificatekeypath
      *
      */
-    public function enableCertification($certificatepath, $certificatepassword, $selfsigned = false) {
+    public function enableCertification($certificatepath, $certificatepassword, $selfsigned = false, $certificatekeypath = null) {
         $this->local_cert_path = $certificatepath;
         $this->local_cert_pwd = $certificatepassword;
         $this->allow_self_signed = $selfsigned;
+        $this->local_pk_path = $certificatekeypath;
     }
 
     public function disableCertification() {
         $this->local_cert_path = null;
         $this->local_cert_pwd = null;
         $this->allow_self_signed = null;
+        $this->local_pk_path = null;
     }
 
 
@@ -359,7 +367,10 @@ class eppConnection {
             }
             if ($this->local_cert_path) {
                 stream_context_set_option($context, 'ssl', 'local_cert', $this->local_cert_path);
-                if (isset($this->local_cert_pwd) && (strlen($this->local_cert_pwd) > 0)) {
+                if (isset($this->local_pk_path) && (strlen($this->local_pk_path)>0)) {
+                    stream_context_set_option($context, 'ssl', 'local_pk', $this->local_pk_path);
+                }
+                if (isset($this->local_cert_pwd) && (strlen($this->local_cert_pwd)>0)) {
                     stream_context_set_option($context, 'ssl', 'passphrase', $this->local_cert_pwd);
                 }
                 if (isset($this->allow_self_signed)) {
@@ -368,6 +379,11 @@ class eppConnection {
                 } else {
                     stream_context_set_option($context, 'ssl', 'verify_peer', $this->verify_peer);
                 }
+            }
+            if ($this->sourceIpAddr && filter_var($this->sourceIpAddr, FILTER_VALIDATE_IP)) {
+                stream_context_set_option($context, 'socket', 'bindto', $this->sourceIpAddr . ":0");
+            } else if (defined("METAREGISTRAR_EPP_SOURCE_IPADDR") && filter_var(METAREGISTRAR_EPP_SOURCE_IPADDR, FILTER_VALIDATE_IP)) {
+                stream_context_set_option($context, 'socket', 'bindto', METAREGISTRAR_EPP_SOURCE_IPADDR . ":0");
             }
             $this->sslContext = $context;
         }
@@ -386,10 +402,11 @@ class eppConnection {
                 $this->read();
             }
             return $this->connected;
-        } else {
-            $this->writeLog("Connection could not be opened: $errno $errstr", "ERROR");
-            return false;
         }
+
+        $this->writeLog("Connection could not be opened: $errno $errstr","ERROR");
+        return false;
+
     }
 
     /**
@@ -477,6 +494,11 @@ class eppConnection {
      * @var integer
      */
     private $readSleepTimeLimit = 100000;
+
+    /**
+     * @var integer
+     */
+    private $maxMessageLength = 1000000;
 
     /**
      * When using the readsleep incrementor, increment the sleep time with incrementor value 1 until the
@@ -595,8 +617,8 @@ class eppConnection {
                 $length = $this->readInteger($read) - 4;
                 //$this->writeLog("Reading next: $length bytes","READ");
             }
-            if ($length > 1000000) {
-                throw new eppException("Packet size is too big: $length. Closing connection", 0, null, null, $read);
+            if ($length > $this->maxMessageLength) {
+                throw new eppException("Packet size is too big: $length. Closing connection",0,null,null,$read);
             }
             //We know the length of what to read, so lets read the stuff
             if ((isset($length)) && ($length > 0)) {
@@ -1128,6 +1150,23 @@ class eppConnection {
     }
 
     /**
+     * @return integer
+     */
+    public function getMaxMessageLength()
+    {
+        return $this->maxMessageLength;
+    }
+
+    /**
+     * @param integer $maxMessageLength
+     * @return void
+     */
+    public function setMaxMessageLength($maxMessageLength)
+    {
+        $this->maxMessageLength = $maxMessageLength;
+    }
+
+    /**
      * Store the settings details ($result) in local variables for later use
      * @param array $result
      * @return bool
@@ -1154,16 +1193,8 @@ class eppConnection {
                 $this->enableLogging();
             }
         }
-
-        if (array_key_exists('certificatefile', $result) && array_key_exists('certificatepassword', $result)) {
-            // Enter the path to your certificate and the password here
-            $this->enableCertification($result['certificatefile'], $result['certificatepassword']);
-        } elseif (array_key_exists('certificatefile', $result)) {
-            // Enter the path to your certificate without password
-            $this->enableCertification($result['certificatefile'], null);
-        }
-        if (array_key_exists('verifypeer', $result)) {
-            if (($result['verifypeer'] == 'true') || ($result['verifypeer'] == 'yes') || ($result['verifypeer'] == '1')) {
+        if (array_key_exists('verifypeer',$result)) {
+            if (($result['verifypeer']=='true') || ($result['verifypeer']=='yes') || ($result['verifypeer']=='1')) {
                 $this->verify_peer = true;
             } else {
                 $this->verify_peer = false;
@@ -1185,6 +1216,14 @@ class eppConnection {
             } else {
                 $this->allow_self_signed = false;
             }
+        }
+        if (array_key_exists('certificatefile',$result)) {
+            $this->enableCertification(
+                $result['certificatefile'],
+                array_key_exists('certificatepassword',$result) ? $result['certificatepassword'] : null,
+                $this->allow_self_signed,
+                array_key_exists('certificatekey',$result) ? $result['certificatekey'] : null
+            );
         }
 
         $this->settingsloaded = true;
@@ -1293,4 +1332,17 @@ class eppConnection {
         $this->connectionComment = $connectionComment;
         return $this;
     }
+
+    /**
+     * @param null|string $sourceIpAddr
+     * @return eppConnection
+     */
+    public function setsourceIpAddr($sourceIpAddr) {
+        $this->sourceIpAddr = $sourceIpAddr;
+        return $this;
+    }
+
+
+
+
 }
