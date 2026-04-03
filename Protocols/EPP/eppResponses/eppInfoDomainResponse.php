@@ -44,7 +44,7 @@ class eppInfoDomainResponse extends eppInfoResponse {
     /**
      * Receive an array of statuses
      *
-     * @return null|string[]
+     * @return null|eppStatus[]
      */
     public function getDomainStatuses() {
         $statuses = null;
@@ -65,7 +65,12 @@ class eppInfoDomainResponse extends eppInfoResponse {
      * @return string statuses
      */
     public function getDomainStatusCSV() {
-        return parent::arrayToCSV($this->getDomainStatuses());
+        $statuses = [];
+        foreach ($this->getDomainStatuses() as $status) {
+            /* @var $status eppStatus */
+            $statuses[] = $status->getStatusname();
+        }
+        return parent::arrayToCSV($statuses);
     }
 
     /**

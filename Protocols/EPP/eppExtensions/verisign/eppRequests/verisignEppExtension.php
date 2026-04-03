@@ -15,9 +15,8 @@ trait verisignEppExtension
      * @param eppDomain $domain
      * @author:Jansen <jansen.shi@qq.com>
      */
-    public function addNamestore(eppDomain $domain = null)
-    {
-        if ($domain instanceof eppDomain) {
+    public function addNamestore(?eppDomain $domain = null){
+        if ($domain instanceof eppDomain){
             $tld = substr(strrchr($domain->getDomainname(), '.'), 1);
         } else {
             $tld = 'com';
@@ -44,9 +43,8 @@ trait verisignEppExtension
      * @param string $dnvc domain name verification code
      * @author:Jansen <jansen.shi@qq.com>
      */
-    public function addVerificationCode(string $rnvc = null, string $dnvc = null)
+    public function addVerificationCode(?string $rnvc = null, ?string $dnvc = null)
     {
-        //添加实名认证拓展
         $verifyExt = $this->createElement('verificationCode:encodedSignedCode');
         $verifyExt->setAttribute('xmlns:verificationCode', 'urn:ietf:params:xml:ns:verificationCode-1.0');
         if (!empty($rnvc)) {

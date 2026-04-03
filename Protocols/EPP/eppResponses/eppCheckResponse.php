@@ -2,14 +2,6 @@
 namespace Metaregistrar\EPP;
 
 class eppCheckResponse extends eppResponse {
-    public function __construct() {
-        parent::__construct();
-    }
-
-    public function __destruct() {
-        parent::__destruct();
-    }
-
     /**
      *
      * @return array of checked domains with status true/false
