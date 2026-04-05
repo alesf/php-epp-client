@@ -1,10 +1,10 @@
 <?php
 namespace Metaregistrar\EPP;
 
-class siEppUpdateContactRequest extends eppUpdateContactRequest
+class siEppUpdateContactVerificationRequest extends eppUpdateContactRequest
 {
     /**
-     * @var siEppVerificationReport|null
+     * @var eppVerificationReport|null
      */
     private $verificationReport;
 
@@ -13,7 +13,7 @@ class siEppUpdateContactRequest extends eppUpdateContactRequest
      * @param eppContact|null $addinfo
      * @param eppContact|null $removeinfo
      * @param eppContact|null $updateinfo
-     * @param siEppVerificationReport|null $verificationReport
+     * @param eppVerificationReport|null $verificationReport
      */
     public function __construct($objectname, $addinfo = null, $removeinfo = null, $updateinfo = null, $verificationReport = null)
     {
@@ -31,8 +31,8 @@ class siEppUpdateContactRequest extends eppUpdateContactRequest
         $this->addExtension('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 
         $verificationExt = $this->createElement('verification:update');
-        $verificationExt->setAttribute('xmlns:verification', siEppVerificationReport::VERIFICATION_NAMESPACE);
-        $verificationExt->setAttribute('xsi:schemaLocation', siEppVerificationReport::VERIFICATION_SCHEMA_LOCATION);
+        $verificationExt->setAttribute('xmlns:verification', eppVerificationReport::VERIFICATION_NAMESPACE);
+        $verificationExt->setAttribute('xsi:schemaLocation', eppVerificationReport::VERIFICATION_SCHEMA_LOCATION);
         $this->verificationReport->exportXML($this, $verificationExt);
         $this->getExtension()->appendChild($verificationExt);
     }

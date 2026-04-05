@@ -24,7 +24,7 @@ class siEppVerificationTest extends TestCase {
      */
     private function createContactInfoResponse($xml) {
         $request = new \Metaregistrar\EPP\eppInfoContactRequest(new \Metaregistrar\EPP\eppContactHandle('dummy'));
-        $response = new \Metaregistrar\EPP\siEppInfoContactResponse($request);
+        $response = new \Metaregistrar\EPP\siEppInfoContactVerificationResponse($request);
         $response->loadXML($xml);
         $response->setXpath($this->connection->getServices());
         $response->setXpath($this->connection->getExtensions());
@@ -38,7 +38,7 @@ class siEppVerificationTest extends TestCase {
     private function createDomainInfoResponse($xml) {
         $domain = new \Metaregistrar\EPP\eppDomain('dummy.si');
         $request = new \Metaregistrar\EPP\eppInfoDomainRequest($domain);
-        $response = new \Metaregistrar\EPP\siEppInfoDomainResponse($request);
+        $response = new \Metaregistrar\EPP\siEppInfoDomainVerificationResponse($request);
         $response->loadXML($xml);
         $response->setXpath($this->connection->getServices());
         $response->setXpath($this->connection->getExtensions());
@@ -52,15 +52,15 @@ class siEppVerificationTest extends TestCase {
      */
     public function testUpdateContactWithVerificationReport() {
         $contact = new \Metaregistrar\EPP\eppContactHandle('SI12345');
-        $verificationReport = new \Metaregistrar\EPP\siEppVerificationReport(
-            \Metaregistrar\EPP\siEppVerificationReport::RESULT_SUCCESS,
+        $verificationReport = new \Metaregistrar\EPP\eppVerificationReport(
+            \Metaregistrar\EPP\eppVerificationReport::RESULT_SUCCESS,
             '2023-11-26T22:00:00.0Z',
             'ID Card',
             'Process#321',
             'VerificationAgent'
         );
 
-        $request = new \Metaregistrar\EPP\siEppUpdateContactRequest($contact, null, null, null, $verificationReport);
+        $request = new \Metaregistrar\EPP\siEppUpdateContactVerificationRequest($contact, null, null, null, $verificationReport);
         $text = $request->saveXML(null, LIBXML_NOEMPTYTAG);
 
         // Verify verification:update extension structure
@@ -87,12 +87,12 @@ class siEppVerificationTest extends TestCase {
      */
     public function testUpdateContactWithVerificationReportMandatoryOnly() {
         $contact = new \Metaregistrar\EPP\eppContactHandle('SI12345');
-        $verificationReport = new \Metaregistrar\EPP\siEppVerificationReport(
-            \Metaregistrar\EPP\siEppVerificationReport::RESULT_FAILURE,
+        $verificationReport = new \Metaregistrar\EPP\eppVerificationReport(
+            \Metaregistrar\EPP\eppVerificationReport::RESULT_FAILURE,
             '2024-06-15T10:30:00.0Z'
         );
 
-        $request = new \Metaregistrar\EPP\siEppUpdateContactRequest($contact, null, null, null, $verificationReport);
+        $request = new \Metaregistrar\EPP\siEppUpdateContactVerificationRequest($contact, null, null, null, $verificationReport);
         $text = $request->saveXML(null, LIBXML_NOEMPTYTAG);
 
         $this->assertEquals('failure', $this->getTextBetween($text, '<verification:result>', '</verification:result>'));
@@ -116,15 +116,15 @@ class siEppVerificationTest extends TestCase {
         );
         $contact = new \Metaregistrar\EPP\eppContact($postalinfo, 'test@test.si', '+386.12345678');
 
-        $verificationReport = new \Metaregistrar\EPP\siEppVerificationReport(
-            \Metaregistrar\EPP\siEppVerificationReport::RESULT_SUCCESS,
+        $verificationReport = new \Metaregistrar\EPP\eppVerificationReport(
+            \Metaregistrar\EPP\eppVerificationReport::RESULT_SUCCESS,
             '2024-01-15T12:00:00.0Z',
             'Personal ID',
             'REF-001',
             'AgentX'
         );
 
-        $request = new \Metaregistrar\EPP\siEppCreateContactRequest($contact, $verificationReport);
+        $request = new \Metaregistrar\EPP\siEppCreateContactVerificationRequest($contact, $verificationReport);
         $text = $request->saveXML(null, LIBXML_NOEMPTYTAG);
 
         // Verify dnssi extension is present
@@ -484,9 +484,9 @@ class siEppVerificationTest extends TestCase {
      * Tests siEppVerificationReport data class
      */
     public function testVerificationReportDataClass() {
-        $report = new \Metaregistrar\EPP\siEppVerificationReport();
+        $report = new \Metaregistrar\EPP\eppVerificationReport();
 
-        $report->setResult(\Metaregistrar\EPP\siEppVerificationReport::RESULT_SUCCESS);
+        $report->setResult(\Metaregistrar\EPP\eppVerificationReport::RESULT_SUCCESS);
         $report->setVerificationDate('2024-01-15T12:00:00.0Z');
         $report->setMethod('Passport');
         $report->setReference('REF-999');
@@ -508,13 +508,13 @@ class siEppVerificationTest extends TestCase {
      * Tests siEppVerificationReport constants
      */
     public function testVerificationReportConstants() {
-        $this->assertEquals('success', \Metaregistrar\EPP\siEppVerificationReport::RESULT_SUCCESS);
-        $this->assertEquals('failure', \Metaregistrar\EPP\siEppVerificationReport::RESULT_FAILURE);
-        $this->assertEquals('none', \Metaregistrar\EPP\siEppVerificationReport::STATUS_NONE);
-        $this->assertEquals('pending', \Metaregistrar\EPP\siEppVerificationReport::STATUS_PENDING);
-        $this->assertEquals('serverHold', \Metaregistrar\EPP\siEppVerificationReport::STATUS_SERVERHOLD);
-        $this->assertEquals('verified', \Metaregistrar\EPP\siEppVerificationReport::STATUS_VERIFIED);
-        $this->assertEquals('failed', \Metaregistrar\EPP\siEppVerificationReport::STATUS_FAILED);
+        $this->assertEquals('success', \Metaregistrar\EPP\eppVerificationReport::RESULT_SUCCESS);
+        $this->assertEquals('failure', \Metaregistrar\EPP\eppVerificationReport::RESULT_FAILURE);
+        $this->assertEquals('none', \Metaregistrar\EPP\eppVerificationReport::STATUS_NONE);
+        $this->assertEquals('pending', \Metaregistrar\EPP\eppVerificationReport::STATUS_PENDING);
+        $this->assertEquals('serverHold', \Metaregistrar\EPP\eppVerificationReport::STATUS_SERVERHOLD);
+        $this->assertEquals('verified', \Metaregistrar\EPP\eppVerificationReport::STATUS_VERIFIED);
+        $this->assertEquals('failed', \Metaregistrar\EPP\eppVerificationReport::STATUS_FAILED);
     }
 
 

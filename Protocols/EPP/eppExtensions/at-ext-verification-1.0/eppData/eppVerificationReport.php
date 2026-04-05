@@ -4,7 +4,7 @@ namespace Metaregistrar\EPP;
 /**
  * Implementation of https://github.com/nic-at/epp-verification-extension
  */
-class siEppVerificationReport
+class eppVerificationReport
 {
     const VERIFICATION_NAMESPACE = 'http://www.nic.at/xsd/at-ext-verification-1.0';
     const VERIFICATION_SCHEMA_LOCATION = 'http://www.nic.at/xsd/at-ext-verification-1.0 at-ext-verification-1.0.xsd';

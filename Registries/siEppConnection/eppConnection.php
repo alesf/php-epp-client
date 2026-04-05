@@ -18,6 +18,7 @@ class siEppConnection extends eppConnection
 
         parent::useExtension("dnssi-1.2");
         parent::useExtension("registrar-1.0");
+        parent::useExtension("at-ext-verification-1.0");
     }
 
     /**
