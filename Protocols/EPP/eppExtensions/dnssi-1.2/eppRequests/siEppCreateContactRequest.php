@@ -3,8 +3,18 @@ namespace Metaregistrar\EPP;
 
 class siEppCreateContactRequest extends eppCreateContactRequest
 {
-    public function __construct($createinfo)
+    /**
+     * @var siEppVerificationReport|null
+     */
+    private $verificationReport;
+
+    /**
+     * @param eppContact $createinfo
+     * @param siEppVerificationReport|null $verificationReport
+     */
+    public function __construct($createinfo, $verificationReport = null)
     {
+        $this->verificationReport = $verificationReport;
         parent::__construct($createinfo);
 
         if ($createinfo instanceof eppContact) {
@@ -12,7 +22,19 @@ class siEppCreateContactRequest extends eppCreateContactRequest
             $this->addExtension('xmlns:dnssi', 'http://www.arnes.si/xml/epp/dnssi-1.2');
             $this->addDnssiExtension($createinfo);
         }
+        if ($this->verificationReport) {
+            $this->addVerificationExtension();
+        }
         $this->addSessionId();
+    }
+
+    private function addVerificationExtension()
+    {
+        $verificationExt = $this->createElement('verification:create');
+        $verificationExt->setAttribute('xmlns:verification', siEppVerificationReport::VERIFICATION_NAMESPACE);
+        $verificationExt->setAttribute('xsi:schemaLocation', siEppVerificationReport::VERIFICATION_SCHEMA_LOCATION);
+        $this->verificationReport->exportXML($this, $verificationExt);
+        $this->getExtension()->appendChild($verificationExt);
     }
 
     private function addDnssiExtension(eppContact $contact)
